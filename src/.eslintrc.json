@@ -1,0 +1,44 @@
+{
+  // Extiende las configuraciones base de ESLint y plugins adicionales
+  "extends": [
+    // Usa las reglas recomendadas por ESLint
+    "eslint:recommended",
+
+    // Usa las reglas recomendadas para React
+    "plugin:react/recommended",
+
+    // Usa las reglas recomendadas para Prettier para que ESLint y Prettier trabajen bien juntos
+    "plugin:prettier/recommended"
+  ],
+
+  // Especifica los plugins que se utilizarán
+  "plugins": [
+    // Agrega el plugin de Prettier para integrarlo con ESLint
+    "prettier"
+  ],
+
+  // Define las reglas personalizadas para el linting
+  "rules": {
+    "react/react-in-jsx-scope": "off", //Desactiva la importacion manual de react cuando se usa JSX
+    // Configura Prettier como una regla de error en ESLint
+    "prettier/prettier": [
+      "error", // Trata los problemas de formato de Prettier como errores
+      {
+        // Configuración de Prettier
+        "semi": true, // Añade puntos y comas al final de las sentencias
+        "singleQuote": true, // Usa comillas simples en lugar de comillas dobles
+        "printWidth": 80 // Define el ancho máximo de una línea antes de hacer un salto de línea
+      }
+    ],
+
+    // Desactiva la regla de ESLint para verificar los tipos de propiedades en React
+    "react/prop-types": "off"
+  },
+
+  // Define los entornos en los que se ejecutará el código
+  "env": {
+    "browser": true, // Define el entorno de ejecución como navegador
+    "node": true, // Define el entorno de ejecución como Node.js
+    "es6": true // Habilita las características de ECMAScript 6
+  }
+}
