@@ -37,8 +37,12 @@
 
   // Define los entornos en los que se ejecutará el código
   "env": {
-    "browser": true, // Define el entorno de ejecución como navegador
-    "node": true, // Define el entorno de ejecución como Node.js
+    "browser": true, // Define el entorno de ejecución como navegador, Browser Indica que el código se ejecutará en 
+    //un navegador, permitiendo el uso de variables globales como window y document.
+
+    "node": true, // Define el entorno de ejecución como Node.js, node: Indica que el código se ejecutará en 
+    //un entorno Node.js, permitiendo el uso de variables globales como require y module.
+    
     "es6": true // Habilita las características de ECMAScript 6
   }
 }

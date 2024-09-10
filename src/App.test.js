@@ -1,26 +1,17 @@
-// Importamos las utilidades 'render' y 'screen' de '@testing-library/react'
-// 'render' permite renderizar componentes en un entorno de pruebas.
-// 'screen' proporciona métodos para consultar el DOM simulado, como buscar elementos por su texto.
+// Importa las utilidades para pruebas de React
 import { render, screen } from '@testing-library/react';
 
-// Importamos el componente 'App' desde el archivo 'App.js', para probarlo.
+// Importa el componente que vamos a probar
 import App from './App';
 
-// Definimos una prueba utilizando el método 'test'.
-// El primer argumento es una descripción de la prueba ("renders learn react link").
-// El segundo argumento es una función que contiene la lógica de la prueba.
+// Define una prueba
 test('renders learn react link', () => {
-  
-  // Renderizamos el componente 'App' en el entorno de pruebas.
-  // Esto simula cómo se vería el componente cuando se renderiza en el navegador.
+  // Renderiza el componente App
   render(<App />);
-  
-  // Utilizamos 'screen.getByText' para buscar un elemento que contenga el texto "learn react".
-  // La expresión regular '/learn react/i' hace que la búsqueda no distinga entre mayúsculas y minúsculas.
-  // Si el texto es encontrado, se almacena en la constante 'linkElement'.
+
+  // Busca el elemento que contiene el texto "learn react"
   const linkElement = screen.getByText(/learn react/i);
-  
-  // Usamos 'expect' para verificar que el elemento 'linkElement' esté presente en el DOM.
-  // 'toBeInTheDocument()' es una afirmación que pasa si el elemento está en el DOM.
+
+  // Verifica que el elemento está en el documento
   expect(linkElement).toBeInTheDocument();
 });
