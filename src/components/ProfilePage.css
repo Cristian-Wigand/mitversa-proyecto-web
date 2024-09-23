@@ -65,3 +65,41 @@
     margin: 0;
   }
   
+
+  .update-form {
+    background-color: #333; /* Fondo oscuro para el formulario */
+    padding: 15px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra */
+    width: 300px; /* Ancho del formulario */
+    position: absolute; /* Para posicionarlo a la derecha */
+    right: 5%; /* Alineación a la derecha */
+    top: 20%; /* Alineación desde la parte superior */
+    transform: translateY(50px); /* Espaciado desde el perfil */
+    z-index: 10; /* Asegura que esté por encima de otros elementos */
+  }
+  
+  
+.update-form input {
+  width: 100%; /* Que los inputs ocupen todo el ancho del formulario */
+  margin-bottom: 10px; /* Espacio entre inputs */
+  padding: 8px; /* Espaciado interno de los inputs */
+  border: 1px solid #555; /* Borde de los inputs */
+  border-radius: 5px; /* Bordes redondeados de los inputs */
+}
+
+  
+  
+  .submit-button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
