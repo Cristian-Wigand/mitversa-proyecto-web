@@ -1,48 +1,24 @@
 {
-  // Extiende las configuraciones base de ESLint y plugins adicionales
   "extends": [
-    // Usa las reglas recomendadas por ESLint
-    "eslint:recommended",
-
-    // Usa las reglas recomendadas para React
-    "plugin:react/recommended",
-
-    // Usa las reglas recomendadas para Prettier para que ESLint y Prettier trabajen bien juntos
+    "react-app", // Incluye las reglas de eslint-config-react-app
     "plugin:prettier/recommended"
   ],
-
-  // Especifica los plugins que se utilizarán
-  "plugins": [
-    // Agrega el plugin de Prettier para integrarlo con ESLint
-    "prettier"
-  ],
-
-  // Define las reglas personalizadas para el linting
+  "plugins": ["prettier"],
   "rules": {
-    "react/react-in-jsx-scope": "off", //Desactiva la importacion manual de react cuando se usa JSX
-    // Configura Prettier como una regla de error en ESLint
     "prettier/prettier": [
-      "error", // Trata los problemas de formato de Prettier como errores
+      "error",
       {
-        // Configuración de Prettier
-        "semi": true, // Añade puntos y comas al final de las sentencias
-        "singleQuote": true, // Usa comillas simples en lugar de comillas dobles
-        "printWidth": 80 // Define el ancho máximo de una línea antes de hacer un salto de línea
+        "semi": true,
+        "singleQuote": true,
+        "printWidth": 80
       }
     ],
-
-    // Desactiva la regla de ESLint para verificar los tipos de propiedades en React
+    "react/react-in-jsx-scope": "off",
     "react/prop-types": "off"
   },
-
-  // Define los entornos en los que se ejecutará el código
   "env": {
-    "browser": true, // Define el entorno de ejecución como navegador, Browser Indica que el código se ejecutará en
-    //un navegador, permitiendo el uso de variables globales como window y document.
-
-    "node": true, // Define el entorno de ejecución como Node.js, node: Indica que el código se ejecutará en
-    //un entorno Node.js, permitiendo el uso de variables globales como require y module.
-
-    "es6": true // Habilita las características de ECMAScript 6
+    "browser": true,
+    "node": true,
+    "es6": true
   }
 }

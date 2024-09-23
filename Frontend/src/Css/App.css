@@ -1,0 +1,25 @@
+/* Estilos globales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Reem Kufi', sans-serif !important;
+}
+
+body {
+  max-width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: #ffffff;
+}
+
+/* Estilos para el contenedor principal */
+.App {
+  max-width: 95vw;
+}
+
+@media (max-width: 800px) {
+  .App {
+    max-width: 95vw;
+  }
+}

@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import NavBar from './components/NavBar'; // Importa el NavBar
-import Home from './components/Home'; // Importa el Home
+import Home_principal from './components/Home_principal'; // Importa el Home
 import SobreNosotros from './components/SobreNosotros'; // Importa el componente SobreNosotros
 import FormularioEnvio from './components/FormularioEnvio'; // Importa el formulario de envíos
 import Login from './components/Login'; // Importa el componente de Login
 import Contactanos from './components/Contactanos'; // Importa el componente Contactanos
 
-import './App.css'; // Importa los estilos
+import './Css/App.css'; // Importa los estilos
 
 const App = () => {
   return (
@@ -16,10 +16,10 @@ const App = () => {
       <NavBar />
 
       {/* Contenido principal de la aplicación */}
-      <div className="content">
+      <div className="App">
         <Routes>
           {/* Ruta para la página Home */}
-          <Route path="/" Component={Home} />
+          <Route path="/" Component={Home_principal} />
 
           {/* Ruta para la página Sobre Nosotros */}
           <Route path="/about" Component={SobreNosotros} />

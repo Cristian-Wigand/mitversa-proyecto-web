@@ -1,4 +1,5 @@
 // src/components/Register.js
+import '../Css/Register.css';
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
