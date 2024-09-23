@@ -1,4 +1,3 @@
-// src/components/Register.js
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -49,7 +48,7 @@ const Register = () => {
             required
           />
         </div>
-        <button type="submit">Registrarse</button>
+        <button className="auth-button" type="submit">Registrarse</button>
       </form>
       <p>
         ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión aquí</Link>
