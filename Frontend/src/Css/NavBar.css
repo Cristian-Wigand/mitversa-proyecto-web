@@ -1,0 +1,62 @@
+/* Contenedor principal del NavBar */
+.navbar-container {
+  display: flex;
+  align-items: stretch; /* Cambiado de center a stretch */
+  justify-content: space-between;
+  min-height: 110px; /* Mantiene la altura mínima */
+  width: 100%;
+  position: relative;
+}
+
+/* Lado izquierdo - 45% */
+.navbar-left {
+  width: 38.5%; /* Ocupa el 45% del ancho */
+  background-color: #ffffff; /* Fondo blanco */
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+/* Lado derecho - 55% */
+.navbar-right {
+  width: 61.5%; /* Ocupa el 55% del ancho */
+  background-color: #efe4b0; /* Color de fondo para el lado derecho */
+  display: flex;
+  align-items: center; /* Alinea los elementos verticalmente */
+  justify-content: flex-end; /* Para alinear los enlaces a la derecha */
+  padding-right: 20px;
+  padding-left: 20px; /* Agrega padding izquierdo si es necesario */
+}
+
+/* Enlaces y botón dentro del lado derecho del NavBar */
+.navbar-right a,
+.navbar-right .primary-button {
+  margin-right: 3rem; /* Espaciado entre los elementos */
+  text-decoration: none;
+  color: black;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Para quitar el margen del último elemento */
+.navbar-right a:last-child,
+.navbar-right .primary-button:last-child {
+  margin-right: 0; /* Elimina el margen derecho del último elemento */
+}
+
+/* Estilo del botón "Inicia sesión" */
+.primary-button {
+  padding: 0.9rem 1.75rem;
+  background-color: rgb(255, 255, 255); /* Color del botón "Inicia sesión" */
+  outline: none;
+  border: none;
+  border-radius: 5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.primary-button:hover {
+  background-color: rgb(253, 219, 68);
+}

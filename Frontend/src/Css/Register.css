@@ -1,0 +1,67 @@
+/* src/Register.css */
+
+.register-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background-color: #000; /* Fondo negro */
+  color: #fff; /* Texto blanco */
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Estilos de los campos del formulario de Register */
+.register-container form div {
+  margin-bottom: 15px;
+}
+
+.register-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.register-container input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background: #222;
+  color: #fff;
+}
+
+.register-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #28a745; /* Color verde para el botón de registro */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.register-container button:hover {
+  background-color: #218838; /* Verde más oscuro al pasar el mouse */
+}
+
+.register-container p {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Estilo para el enlace de iniciar sesión en la página de registro */
+.register-container p a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.register-container p a:hover {
+  text-decoration: underline;
+}
