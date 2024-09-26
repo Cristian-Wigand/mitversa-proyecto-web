@@ -19,7 +19,7 @@
 
 /* Lado derecho - 55% */
 .navbar-right {
-  width: 61.5%; /* Ocupa el 55% del ancho */
+  width: 46.5%; /* Ocupa el 55% del ancho */
   background-color: #efe4b0; /* Color de fondo para el lado derecho */
   display: flex;
   align-items: center; /* Alinea los elementos verticalmente */
@@ -41,7 +41,7 @@
 /* Para quitar el margen del último elemento */
 .navbar-right a:last-child,
 .navbar-right .primary-button:last-child {
-  margin-right: 0; /* Elimina el margen derecho del último elemento */
+  margin-right: 10; /* Elimina el margen derecho del último elemento */
 }
 
 /* Estilo del botón "Inicia sesión" */
