@@ -41,7 +41,7 @@
 /* Para quitar el margen del último elemento */
 .navbar-right a:last-child,
 .navbar-right .primary-button:last-child {
-  margin-right: 0; /* Elimina el margen derecho del último elemento */
+  margin-right: 10; /* Elimina el margen derecho del último elemento */
 }
 
 /* Estilo del botón "Inicia sesión" */
