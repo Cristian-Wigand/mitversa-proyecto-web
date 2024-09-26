@@ -6,6 +6,8 @@ import SobreNosotros from './components/SobreNosotros'; // Importa el componente
 import FormularioEnvio from './components/FormularioEnvio'; // Importa el formulario de envíos
 import Login from './components/Login'; // Importa el componente de Login
 import Contactanos from './components/Contactanos'; // Importa el componente Contactanos
+import ProfilePage from './components/ProfilePage';
+import AuthPage from './components/AuthPage';
 
 import './Css/App.css'; // Importa los estilos
 
@@ -20,19 +22,17 @@ const App = () => {
         <Routes>
           {/* Ruta para la página Home */}
           <Route path="/" Component={Home_principal} />
-
           {/* Ruta para la página Sobre Nosotros */}
           <Route path="/about" Component={SobreNosotros} />
-
           {/* Ruta para la página de Contacto */}
           <Route path="/contact" Component={Contactanos} />
-
           {/* Ruta para la página de inicio de sesión */}
           <Route path="/login" Component={Login} />
-
           {/* Ruta para el formulario de envíos */}
           <Route path="/envio" Component={FormularioEnvio} />
-
+          <Route path="/auth" element={<AuthPage />} />{' '}
+          {/* Ruta específica para login y registro */}
+          <Route path="/profilepage" element={<ProfilePage />} />
           {/* Otras rutas pueden agregarse aquí si es necesario */}
         </Routes>
       </div>

@@ -15,10 +15,10 @@ const NavBar = () => {
         <Link to="/">Home</Link>
         <Link to="/about">Sobre nosotros</Link>
         <Link to="/contact">Contáctanos</Link>
-        <Link to="/login">
+        <Link to="/auth">
           <button className="primary-button">Inicia sesión</button>
         </Link>
-        <Link to="/icono">icono</Link>
+        <Link to="/profilepage">icono</Link>
       </div>
     </nav>
   );
