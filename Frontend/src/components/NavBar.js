@@ -2,6 +2,7 @@ import React from 'react';
 import Logo from '../Assets/Mitversalogo2_pe.png';
 import { Link } from 'react-router-dom';
 import '../Css/NavBar.css';
+import iconoprofile from '../Assets/default-profile.jpg';
 
 const NavBar = () => {
   return (
@@ -22,7 +23,11 @@ const NavBar = () => {
         {/* Dropdown para ProfilePage */}
         <div className="dropdown">
           <Link to="/profilepage" className="dropbtn">
-            Icono
+            <img
+              src={iconoprofile}
+              alt="iconoprofile"
+              className="icono-profile"
+            />
           </Link>
           <div className="dropdown-content">
             <Link to="/profilepage">Ver perfil</Link>

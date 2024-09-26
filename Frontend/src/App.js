@@ -9,7 +9,7 @@ import Contactanos from './components/Contactanos'; // Importa el componente Con
 import ProfilePage from './components/ProfilePage';
 import AuthPage from './components/AuthPage';
 import GestionEnv from './components/GestionEnv';
-import GestionUser from './components/GestionUser';
+import UserManagementPage from './components/UserManagementPage';
 import GestionVeh from './components/GestionVeh';
 
 import './Css/App.css'; // Importa los estilos
@@ -38,7 +38,7 @@ const App = () => {
           <Route path="/profilepage" element={<ProfilePage />} />
           {/* Otras rutas pueden agregarse aquí si es necesario */}
           <Route path="/GestionEnv" element={<GestionEnv />} />
-          <Route path="/GestionUser" element={<GestionUser />} />
+          <Route path="/GestionUser" element={<UserManagementPage />} />
           <Route path="/GestionVeh" element={<GestionVeh />} />
         </Routes>
       </div>
