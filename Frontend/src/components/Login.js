@@ -1,6 +1,3 @@
-// src/components/Login.js
-import '../Css/Login.css';
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -36,11 +33,10 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit">Iniciar sesión</button>
+        <button className="auth-button" type="submit">
+          Iniciar sesión
+        </button>
       </form>
-      <p>
-        ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
-      </p>
     </div>
   );
 };
