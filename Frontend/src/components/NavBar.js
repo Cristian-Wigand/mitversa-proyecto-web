@@ -18,7 +18,20 @@ const NavBar = () => {
         <Link to="/auth">
           <button className="primary-button">Inicia sesión</button>
         </Link>
-        <Link to="/profilepage">icono</Link>
+
+        {/* Dropdown para ProfilePage */}
+        <div className="dropdown">
+          <Link to="/profilepage" className="dropbtn">
+            Icono
+          </Link>
+          <div className="dropdown-content">
+            <Link to="/profilepage">Ver perfil</Link>
+            <Link to="/GestionEnv">Gestionar envios</Link>
+            <Link to="/GestionUser">Gestionar usuarios</Link>
+            <Link to="/GestionVeh">Gestionar vehiculos</Link>
+            <Link to="/logout">Cerrar sesión</Link>
+          </div>
+        </div>
       </div>
     </nav>
   );
