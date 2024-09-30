@@ -8,6 +8,9 @@ import Login from './components/Login'; // Importa el componente de Login
 import Contactanos from './components/Contactanos'; // Importa el componente Contactanos
 import ProfilePage from './components/ProfilePage';
 import AuthPage from './components/AuthPage';
+import GestionEnv from './components/GestionEnv';
+import UserManagementPage from './components/UserManagementPage';
+import GestionVeh from './components/GestionVeh';
 
 import './Css/App.css'; // Importa los estilos
 
@@ -34,6 +37,9 @@ const App = () => {
           {/* Ruta específica para login y registro */}
           <Route path="/profilepage" element={<ProfilePage />} />
           {/* Otras rutas pueden agregarse aquí si es necesario */}
+          <Route path="/GestionEnv" element={<GestionEnv />} />
+          <Route path="/GestionUser" element={<UserManagementPage />} />
+          <Route path="/GestionVeh" element={<GestionVeh />} />
         </Routes>
       </div>
     </Router>

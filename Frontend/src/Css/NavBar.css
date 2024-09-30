@@ -60,3 +60,66 @@
 .primary-button:hover {
   background-color: rgb(253, 219, 68);
 }
+
+/* Dropdown Menu */
+
+/* Contenedor del dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Botón o enlace que activa el dropdown */
+.dropbtn {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  margin-right: 3rem; /* Mantiene el espaciado igual al resto de los enlaces */
+}
+
+/* Contenido del dropdown */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  top: 100%; /* Desplaza el dropdown debajo del ícono */
+  left: 50%; /* Posiciona el dropdown en el centro horizontal */
+  transform: translateX(-50%); /* Ajusta la posición para centrarlo */
+  margin-top: 0px; /* Opcional: Espacio extra para mover el menú más abajo */
+  border-radius: 10px; /* Borde redondeado */
+}
+
+/* Estilos para los enlaces dentro del dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Cambia el color de fondo al pasar el cursor sobre las opciones del dropdown */
+.dropdown-content a:hover {
+  background-color: #efe4b0;
+}
+
+/* Muestra el contenido del dropdown al hacer hover sobre el botón/enlace */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Opcional: elimina el margen del último ítem del dropdown */
+.dropdown-content a:last-child {
+  margin-right: 0;
+}
+
+.icono-profile {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
