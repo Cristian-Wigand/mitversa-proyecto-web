@@ -1,5 +1,6 @@
 import React from 'react';
 import '../Css/SobreNosotros.css';
+import '../Css/App.css';
 
 const SobreNosotros = () => {
   return (

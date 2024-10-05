@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../Css/UserManagementPage.css';
+import '../Css/App.css';
 
 const UserManagementPage = () => {
   const [createUserData, setCreateUserData] = useState({

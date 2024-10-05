@@ -3,6 +3,7 @@ import Logo from '../Assets/Mitversalogo2.png';
 import { FaInstagram } from 'react-icons/fa'; // Importar el ícono de Instagram
 
 import '../Css/Footer.css';
+import '../Css/App.css';
 
 const Footer = () => {
   return (

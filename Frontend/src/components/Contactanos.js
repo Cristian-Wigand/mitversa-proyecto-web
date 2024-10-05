@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'; // Importa useState y useRef
 import '../Css/Contactanos.css'; // Asegúrate de que no haya espacios innecesarios
+import '../Css/App.css';
 import { init, sendForm } from 'emailjs-com'; // Importa EmailJS
 
 const Contactanos = () => {

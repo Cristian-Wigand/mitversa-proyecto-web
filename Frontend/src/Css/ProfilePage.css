@@ -12,7 +12,7 @@
 }
 
 .profile-box {
-  background-color: #efe4b0; /* Fondo oscuro */
+  background-color: #efe4b0;
   padding: 20px;
   border-radius: 10px;
   color: white;
@@ -66,30 +66,30 @@
 }
 
 .update-form {
-  background-color: #333; /* Fondo oscuro para el formulario */
-  padding: 15px; /* Espaciado interno */
-  border-radius: 8px; /* Bordes redondeados */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra */
-  width: 300px; /* Ancho del formulario */
-  position: absolute; /* Para posicionarlo a la derecha */
-  right: 5%; /* Alineación a la derecha */
-  top: 20%; /* Alineación desde la parte superior */
-  transform: translateY(50px); /* Espaciado desde el perfil */
-  z-index: 10; /* Asegura que esté por encima de otros elementos */
+  background-color: #333;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 300px;
+  position: absolute;
+  right: 5%;
+  top: 20%;
+  transform: translateY(50px);
+  z-index: 10;
 }
 
 .update-form input {
-  width: 100%; /* Que los inputs ocupen todo el ancho del formulario */
-  margin-bottom: 10px; /* Espacio entre inputs */
-  padding: 8px; /* Espaciado interno de los inputs */
-  border: 1px solid #555; /* Borde de los inputs */
-  border-radius: 5px; /* Bordes redondeados de los inputs */
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #555;
+  border-radius: 5px;
 }
 
 .submit-button {
   padding: 5px 10px;
   background-color: #ffffff;
-  color: white;
+  color: #000; /* Cambié el color del texto a negro */
   border: none;
   border-radius: 3px;
   cursor: pointer;

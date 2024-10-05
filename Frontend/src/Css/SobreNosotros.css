@@ -25,13 +25,11 @@
 .title {
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 600;
-  color: #000;
   margin-bottom: 1rem;
 }
 
 .description {
   font-size: clamp(1rem, 3vw, 1.25rem);
-  color: rgb(124, 124, 124);
   line-height: 1.6;
   margin-bottom: 1.5rem;
 }
@@ -40,7 +38,6 @@
   list-style-type: none;
   padding: 0;
   font-size: clamp(1rem, 3vw, 1.25rem);
-  color: rgb(124, 124, 124);
 }
 
 .team-list li {
@@ -57,25 +54,9 @@
   font-size: 1.5rem;
 }
 
-/* Botón secundario si es necesario */
+/* Botón secundario */
 .secondary-button {
-  padding: 1rem 2.5rem;
-  background-color: #ffffff;
-  border: none;
-  border-radius: 5rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #000;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   margin-top: 1rem;
-}
-
-.secondary-button:hover {
-  background-color: rgb(253, 219, 68);
 }
 
 /* Estilos responsivos */
@@ -100,20 +81,10 @@
   .team-list {
     text-align: center;
   }
-
-  .secondary-button {
-    font-size: 1rem;
-    padding: 0.8rem 2rem;
-  }
 }
 
 @media (max-width: 600px) {
   .sobre-nosotros-section {
     max-width: 100%;
-  }
-
-  .secondary-button {
-    font-size: 0.9rem;
-    padding: 0.7rem 1.5rem;
   }
 }

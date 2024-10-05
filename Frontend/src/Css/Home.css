@@ -1,3 +1,5 @@
+/* src/components/Home.css */
+
 .home-container {
   position: relative;
 }
@@ -35,31 +37,6 @@
   max-width: 500px;
   color: rgb(124, 124, 124);
   margin: 1.5rem 0rem;
-}
-
-.secondary-button {
-  padding: 1rem 2.5rem;
-  background-color: #ffffff;
-  outline: none;
-  border: none;
-  border-radius: 5rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-  font-weight: 600;
-  color: rgb(0, 0, 0);
-  transition: 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.secondary-button svg {
-  margin-left: 0.75rem;
-  font-size: 1.5rem;
-}
-
-.secondary-button:hover {
-  background-color: rgb(253, 219, 68);
 }
 
 .home-image-section {
