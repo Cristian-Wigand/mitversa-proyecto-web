@@ -1,0 +1,65 @@
+/* src/Css/EstadoPaquete.css */
+.estado-paquete-container {
+    background-color: #d3d3d3; /* Color de fondo general */
+    padding: 1rem;
+    border-radius: 5px;
+    max-width: 800px; /* Ancho máximo */
+    margin: 7rem auto 0; /* Agregado margen superior de 1rem, centrado horizontalmente */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Agregar sombra para darle profundidad */
+  }
+  
+  .estado-ruta {
+    font-size: 1rem; /* Tamaño de la fuente */
+    margin-bottom: 1rem;
+  }
+  
+  .contenido-paquete,
+  .estado-envio {
+    background-color: white; /* Fondo blanco para los bloques de contenido */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem; /* Espaciado entre bloques */
+  }
+  
+  h2 {
+    margin: 0 0 0.5rem 0; /* Margen para los encabezados */
+    font-size: 1.5rem; /* Tamaño de la fuente por defecto */
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 600px) {
+    .estado-paquete-container {
+      padding: 0.5rem;
+    }
+  
+    h2 {
+      font-size: 1.2rem; /* Tamaño de la fuente para pantallas pequeñas */
+    }
+  
+    .contenido-paquete,
+    .estado-envio {
+      padding: 0.75rem; /* Reducir padding en pantallas pequeñas */
+    }
+  }
+  
+  @media (max-width: 400px) {
+    .estado-paquete-container {
+      padding: 0.25rem; /* Menos padding para pantallas muy pequeñas */
+    }
+  
+    h2 {
+      font-size: 1rem; /* Tamaño de la fuente más pequeño */
+    }
+  
+    .estado-ruta {
+      font-size: 0.9rem; /* Tamaño de la fuente más pequeño para la ruta */
+    }
+  
+    .contenido-paquete,
+    .estado-envio {
+      padding: 0.5rem; /* Menos padding en pantallas muy pequeñas */
+      font-size: 0.9rem; /* Tamaño de la fuente más pequeño */
+    }
+  }
+  

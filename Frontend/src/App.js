@@ -11,8 +11,8 @@ import AuthPage from './components/AuthPage';
 import GestionEnv from './components/GestionEnv';
 import UserManagementPage from './components/UserManagementPage';
 import GestionVeh from './components/GestionVeh';
-
-import './Css/App.css'; // Importa los estilos
+import VisualizarPaquete from './components/VisualizarPaquete';
+import EstadoPaquete from './components/EstadoPaquete';
 
 const App = () => {
   return (
@@ -40,6 +40,8 @@ const App = () => {
           <Route path="/GestionEnv" element={<GestionEnv />} />
           <Route path="/GestionUser" element={<UserManagementPage />} />
           <Route path="/GestionVeh" element={<GestionVeh />} />
+          <Route path="/VisualizarPaquete" element={<VisualizarPaquete />} />
+          <Route path="/EstadoPaquete" element={<EstadoPaquete />} />
         </Routes>
       </div>
     </Router>
