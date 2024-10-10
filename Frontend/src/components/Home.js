@@ -3,6 +3,7 @@ import BannerBackground from '../Assets/blackgroundLogo.png';
 import BannerImage from '../Assets/VanLogosinfondo.png';
 import { FiArrowRight } from 'react-icons/fi';
 import '../Css/Home.css';
+import '../Css/App.css';
 
 const Home = () => {
   return (

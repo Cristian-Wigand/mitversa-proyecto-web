@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../Css/FormularioEnvio.css'; // Añadir estilos específicos
+import '../Css/App.css';
 
 // Componente principal del formulario de creación de envíos
 const FormularioEnvio = () => {

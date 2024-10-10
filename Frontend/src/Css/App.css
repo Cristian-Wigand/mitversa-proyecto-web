@@ -11,6 +11,13 @@ body {
   overflow-y: scroll;
   overflow-x: hidden;
   background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Estilos para el contenedor principal */
@@ -21,5 +28,121 @@ body {
 @media (max-width: 800px) {
   .App {
     max-width: 95vw;
+  }
+}
+
+/* Estilos generales para formularios */
+.contact-form-container {
+  background-color: #efe4b0;
+  max-width: 800px;
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  border-radius: 50px;
+}
+
+.form-container {
+  background-color: #fff4cc;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  flex-basis: 45%;
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #5e4e34;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #d4a961;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #d4a961;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #a68140;
+}
+
+/* Títulos */
+h1,
+.primary-heading {
+  max-width: 900px;
+  color: #4c4c4c;
+  text-align: center;
+}
+
+.secondary-heading {
+  font-size: 42px;
+  color: #4c4c4c;
+  max-width: 600px;
+  text-align: center;
+}
+
+.tertiary-heading {
+  font-size: 36px;
+  color: #4c4c4c;
+  max-width: 600px;
+}
+
+/* Botones */
+.primary-button,
+.secondary-button {
+  padding: 1rem 2.5rem;
+  background-color: #000000;
+  outline: none;
+  border: none;
+  border-radius: 5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primary-button {
+  background-color: #fff;
+  color: #000;
+}
+
+.primary-button:hover,
+.secondary-button:hover {
+  background-color: rgb(253, 219, 68);
+}
+
+/* Otros estilos */
+.icono-profile {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+  .contact-form-container {
+    padding: 1rem;
   }
 }
