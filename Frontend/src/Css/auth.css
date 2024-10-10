@@ -1,3 +1,5 @@
+/* AuthPage.css */
+
 .auth-container {
   display: flex;
   justify-content: space-between;
@@ -6,8 +8,22 @@
   margin-top: 80px; /* Añadir margen superior para compensar el NavBar */
 }
 
+.auth-form {
+  width: 45%;
+  background-color: #efe4b0; /* Fondo negro */
+  color: #fff; /* Texto blanco */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Sombra para dar efecto de cuadro */
+}
+
 .login-form {
   margin-right: 140px; /* Aumenta el espacio entre login y register */
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 form div {
@@ -17,4 +33,32 @@ form div {
 label {
   display: block;
   margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #cfbebe;
+  border-radius: 5px;
+  background: #fff;
+  color: #fff;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: rgb(253, 219, 68);
+}
+
+p {
+  text-align: center;
 }
