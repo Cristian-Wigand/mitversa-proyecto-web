@@ -6,64 +6,6 @@
   margin: 6rem 0rem;
 }
 
-.contact-page-wrapper h1 {
-  max-width: 900px !important;
-}
-
-.primary-heading {
-  font-size: 42px; /* Tamaño base (equivalente a 2rem) */
-  max-width: 600px; /* Ancho máximo */
-  color: #4c4c4c;
-}
-
-.contact-form-container {
-  background-color: #efe4b0;
-  max-width: 800px;
-  width: 100%;
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column; /* Cambiado a columna para incluir el textarea */
-  padding: 2rem;
-  border-radius: 50px;
-}
-
 .contact-form-container input {
-  flex: 1;
-  height: 100%;
-  border: none;
-  outline: none;
-  font-size: 1.3rem;
-  padding: 0.5rem 1rem;
-  margin-bottom: 1rem; /* Agregado para separar el input del textarea */
-}
-
-.contact-form-container textarea {
-  flex: 1;
-  border: none;
-  outline: none;
-  font-size: 1.3rem;
-  padding: 0.5rem 1rem;
-  margin-bottom: 1rem; /* Espacio entre el textarea y el botón */
-  border-radius: 0.5rem; /* Esquinas redondeadas */
-  resize: none; /* Previene el redimensionamiento */
-}
-
-.secondary-button {
-  padding: 1rem 2.5rem;
-  background-color: #ffffff;
-  outline: none;
-  border: none;
-  border-radius: 5rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-  font-weight: 600;
-  color: rgb(0, 0, 0);
-  transition: 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.secondary-button:hover {
-  background-color: rgb(253, 219, 68);
+  margin-bottom: 1rem; /* Espacio entre el input y el textarea */
 }

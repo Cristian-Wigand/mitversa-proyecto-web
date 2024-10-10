@@ -2,6 +2,7 @@ import React from 'react';
 import Logo from '../Assets/Mitversalogo2_pe.png';
 import { Link } from 'react-router-dom';
 import '../Css/NavBar.css';
+import '../Css/App.css';
 import iconoprofile from '../Assets/default-profile.jpg';
 
 const NavBar = () => {

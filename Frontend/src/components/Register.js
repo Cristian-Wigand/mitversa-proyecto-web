@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import '../Css/App.css';
 
 const Register = () => {
   const [email, setEmail] = useState('');

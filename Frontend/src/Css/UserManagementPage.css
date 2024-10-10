@@ -10,10 +10,11 @@
 
 h1,
 h2 {
-  color: white;
+  color: white; /* Variante de color para títulos */
   margin-bottom: 20px;
 }
 
+/* Específico de formularios de esta página */
 .form {
   background-color: #efe4b0; /* Fondo oscuro */
   padding: 20px;
