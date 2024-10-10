@@ -11,6 +11,7 @@ import AuthPage from './components/AuthPage';
 import GestionEnv from './components/GestionEnv';
 import UserManagementPage from './components/UserManagementPage';
 import GestionVeh from './components/GestionVeh';
+import ReportsPage from './components/ReportsPage';
 
 import './Css/App.css'; // Importa los estilos
 
@@ -40,6 +41,7 @@ const App = () => {
           <Route path="/GestionEnv" element={<GestionEnv />} />
           <Route path="/GestionUser" element={<UserManagementPage />} />
           <Route path="/GestionVeh" element={<GestionVeh />} />
+          <Route path="/ReportsPage" element={<ReportsPage />} />
         </Routes>
       </div>
     </Router>
