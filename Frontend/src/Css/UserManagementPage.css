@@ -4,7 +4,8 @@
   top: 150px; /* Inicialmente a 150px desde la parte superior */
   left: 20px; /* Espacio desde el lado izquierdo */
   width: 200px; /* Ancho del menú */
-  height: 200px; /* Alto del menú */
+  max-height: calc(100vh - 150px); /* Máxima altura basada en la ventana, evitando overflow */
+  overflow-y: auto; /* Permitir scroll si el contenido excede el tamaño */
   background-color: #333;
   padding: 20px;
   box-sizing: border-box;

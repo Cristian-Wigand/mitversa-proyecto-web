@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import '../Css/GestionarVehiculos.css';
+import React, { useState, useEffect } from 'react';
+import { throttle } from 'lodash';
+import '../Css/UserManagementPage.css';
 import '../Css/App.css';
 
 const GestionVeh = () => {
@@ -13,7 +14,7 @@ const GestionVeh = () => {
     idRepartidor: '',
     idVehicle: '',
     kilometrajeInicial: '',
-    Motivo: '',
+    motivo: '', // Cambié "Motivo" a "motivo"
   });
 
   const [searchHistory, setSearchHistory] = useState({
@@ -32,6 +33,18 @@ const GestionVeh = () => {
   const [deleteVehicle, setDeleteVehicle] = useState({
     idVehicle: '',
   });
+
+  const [menuTop, setMenuTop] = useState(150);
+
+  const handleScroll = throttle(() => {
+    const scrollY = window.scrollY;
+    setMenuTop(scrollY <= 150 ? 150 : scrollY);
+  }, 100);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleCreateVehicle = (e) => {
     setCreateVehicle({ ...createVehicle, [e.target.name]: e.target.value });
@@ -58,6 +71,14 @@ const GestionVeh = () => {
 
   const handleSubmitCreateVehicle = (e) => {
     e.preventDefault();
+    if (
+      !createVehicle.matricula ||
+      !createVehicle.marca ||
+      !createVehicle.modelo
+    ) {
+      alert('Por favor, completa todos los campos.');
+      return;
+    }
     console.log('Create Vehicle:', createVehicle);
     // Aquí va la lógica para Create Vehicle
   };
@@ -87,143 +108,184 @@ const GestionVeh = () => {
   };
 
   return (
-    <div className="user-management-page">
-      <h1>Gestión de Vehiculos</h1>
+    <div>
+      <div className="menu-nav" style={{ top: `${menuTop}px` }}>
+        <ul>
+          <li>
+            <a href="#crear_vehiculo">Crear vehiculo</a>
+          </li>
+          <li>
+            <a href="#Asignar_vehiculo">Asignar vehiculo</a>
+          </li>
+          <li>
+            <a href="#Buscar_historial">Buscar historial</a>
+          </li>
+          <li>
+            <a href="#Buscar_vehiculo">Buscar vehiculo</a>
+          </li>
+          <li>
+            <a href="#Eliminar_vehiculo">Eliminar vehiculo </a>
+          </li>
+        </ul>
+      </div>
+      <div className="user-management-page">
+        <h1>Gestión de Vehiculos</h1>
 
-      {/* Crear Vehiculo */}
-      <form className="form" onSubmit={handleSubmitCreateVehicle}>
-        <h2>Crear Vehiculo</h2>
-        <input
-          type="text"
-          name="matricula"
-          placeholder="matricula"
-          value={createVehicle.matricula}
-          onChange={handleCreateVehicle}
-        />
-        <input
-          type="text"
-          name="marca"
-          placeholder="marca"
-          value={createVehicle.marca}
-          onChange={handleCreateVehicle}
-        />
-        <input
-          type="text"
-          name="modelo"
-          placeholder="modelo"
-          value={createVehicle.modelo}
-          onChange={handleCreateVehicle}
-        />
-        <button type="submit">Crear Vehiculo</button>
-      </form>
+        {/* Crear Vehiculo */}
+        <form
+          className="form"
+          onSubmit={handleSubmitCreateVehicle}
+          id="crear_vehiculo"
+        >
+          <h2>Crear Vehiculo</h2>
+          <input
+            type="text"
+            name="matricula"
+            placeholder="matricula"
+            value={createVehicle.matricula}
+            onChange={handleCreateVehicle}
+          />
+          <input
+            type="text"
+            name="marca"
+            placeholder="marca"
+            value={createVehicle.marca}
+            onChange={handleCreateVehicle}
+          />
+          <input
+            type="text"
+            name="modelo"
+            placeholder="modelo"
+            value={createVehicle.modelo}
+            onChange={handleCreateVehicle}
+          />
+          <button type="submit">Crear Vehiculo</button>
+        </form>
 
-      {/* Asignacion de vehiculo */}
-      <form className="form" onSubmit={handleSubmitAssignmentVehicle}>
-        <h2>Asignacion de vehiculo</h2>
-        <input
-          type="text"
-          name="idRepartidor"
-          placeholder="id Repartidor"
-          value={assignmentVehicle.idRepartidor}
-          onChange={handleAssignmentVehicle}
-        />
-        <input
-          type="text"
-          name="idVehicle"
-          placeholder="id Vehicle"
-          value={assignmentVehicle.idVehicle}
-          onChange={handleAssignmentVehicle}
-        />
-        <input
-          type="text"
-          name="kilometrajeInicial"
-          placeholder="kilometraje Inicial"
-          value={assignmentVehicle.kilometrajeInicial}
-          onChange={handleAssignmentVehicle}
-        />
-        <input
-          type="text"
-          name="Motivo"
-          placeholder="Motivo"
-          value={assignmentVehicle.Motivo}
-          onChange={handleAssignmentVehicle}
-        />
-        <button type="submit">Asignar Vehiculo</button>
-      </form>
+        {/* Asignacion de vehiculo */}
+        <form
+          className="form"
+          onSubmit={handleSubmitAssignmentVehicle}
+          id="Asignar_vehiculo"
+        >
+          <h2>Asignacion de vehiculo</h2>
+          <input
+            type="text"
+            name="idRepartidor"
+            placeholder="id Repartidor"
+            value={assignmentVehicle.idRepartidor}
+            onChange={handleAssignmentVehicle}
+          />
+          <input
+            type="text"
+            name="idVehicle"
+            placeholder="id Vehicle"
+            value={assignmentVehicle.idVehicle}
+            onChange={handleAssignmentVehicle}
+          />
+          <input
+            type="text"
+            name="kilometrajeInicial"
+            placeholder="kilometraje Inicial"
+            value={assignmentVehicle.kilometrajeInicial}
+            onChange={handleAssignmentVehicle}
+          />
+          <input
+            type="text"
+            name="motivo" // Cambié "Motivo" a "motivo"
+            placeholder="Motivo"
+            value={assignmentVehicle.motivo}
+            onChange={handleAssignmentVehicle}
+          />
+          <button type="submit">Asignar Vehiculo</button>
+        </form>
 
-      {/* Buscar Historial */}
-      <form className="form" onSubmit={handleSubmitSearchHistory}>
-        <h2>Buscar Historial </h2>
-        <input
-          type="text"
-          name="idVehicle"
-          placeholder="id Vehicle"
-          value={searchHistory.idVehicle}
-          onChange={handleSearchHistory}
-        />
-        <input
-          type="text"
-          name="idRepartidor"
-          placeholder="id Repartidor"
-          value={searchHistory.idRepartidor}
-          onChange={handleSearchHistory}
-        />
-        <button type="submit">Buscar Historial</button>
-      </form>
+        {/* Buscar Historial */}
+        <form
+          className="form"
+          onSubmit={handleSubmitSearchHistory}
+          id="Buscar_historial"
+        >
+          <h2>Buscar Historial </h2>
+          <input
+            type="text"
+            name="idVehicle"
+            placeholder="id Vehicle"
+            value={searchHistory.idVehicle}
+            onChange={handleSearchHistory}
+          />
+          <input
+            type="text"
+            name="idRepartidor"
+            placeholder="id Repartidor"
+            value={searchHistory.idRepartidor}
+            onChange={handleSearchHistory}
+          />
+          <button type="submit">Buscar Historial</button>
+        </form>
 
-      {/* Buscar Vehiculo */}
-      <form className="form" onSubmit={handleSubmitSearchVehicle}>
-        <h2>Buscar Vehiculo </h2>
-        <input
-          type="text"
-          name="idVehicle"
-          placeholder="id Vehiculo"
-          value={searchVehicle.idVehicle}
-          onChange={handleSearchVehicle}
-        />
-        <input
-          type="text"
-          name="matricula"
-          placeholder="matricula"
-          value={searchVehicle.matricula}
-          onChange={handleSearchVehicle}
-        />
-        <input
-          type="text"
-          name="marca"
-          placeholder="marca"
-          value={searchVehicle.marca}
-          onChange={handleSearchVehicle}
-        />
-        <input
-          type="text"
-          name="modelo"
-          placeholder="modelo"
-          value={searchVehicle.modelo}
-          onChange={handleSearchVehicle}
-        />
-        <input
-          type="datetime-local"
-          name="fecha"
-          placeholder="fecha"
-          value={searchVehicle.fecha}
-          onChange={handleSearchVehicle}
-        />
-        <button type="submit">Buscar Vehiculo</button>
-      </form>
+        {/* Buscar Vehiculo */}
+        <form
+          className="form"
+          onSubmit={handleSubmitSearchVehicle}
+          id="Buscar_vehiculo"
+        >
+          <h2>Buscar Vehiculo </h2>
+          <input
+            type="text"
+            name="idVehicle"
+            placeholder="id Vehiculo"
+            value={searchVehicle.idVehicle}
+            onChange={handleSearchVehicle}
+          />
+          <input
+            type="text"
+            name="matricula"
+            placeholder="matricula"
+            value={searchVehicle.matricula}
+            onChange={handleSearchVehicle}
+          />
+          <input
+            type="text"
+            name="marca"
+            placeholder="marca"
+            value={searchVehicle.marca}
+            onChange={handleSearchVehicle}
+          />
+          <input
+            type="text"
+            name="modelo"
+            placeholder="modelo"
+            value={searchVehicle.modelo}
+            onChange={handleSearchVehicle}
+          />
+          <input
+            type="datetime-local"
+            name="fecha"
+            placeholder="fecha"
+            value={searchVehicle.fecha}
+            onChange={handleSearchVehicle}
+          />
+          <button type="submit">Buscar Vehiculo</button>
+        </form>
 
-      {/* Eliminar Vehiculo */}
-      <form className="form" onSubmit={handleSubmitDeleteVehicle}>
-        <h2>Eliminar Vehiculo </h2>
-        <input
-          type="text"
-          name="idVehicle"
-          placeholder="id Vehiculo"
-          value={deleteVehicle.idVehicle}
-          onChange={handleDeleteVehicle}
-        />
-        <button type="submit">Eliminar Vehiculo</button>
-      </form>
+        {/* Eliminar Vehiculo */}
+        <form
+          className="form"
+          onSubmit={handleSubmitDeleteVehicle}
+          id="Eliminar_vehiculo"
+        >
+          <h2>Eliminar Vehiculo </h2>
+          <input
+            type="text"
+            name="idVehicle"
+            placeholder="id Vehiculo"
+            value={deleteVehicle.idVehicle}
+            onChange={handleDeleteVehicle}
+          />
+          <button type="submit">Eliminar Vehiculo</button>
+        </form>
+      </div>
     </div>
   );
 };
