@@ -37,6 +37,7 @@ const NavBar = () => {
             <Link to="/GestionVeh">Gestionar vehiculos</Link>
             <Link to="/VisualizarPaquete">VisualizarPaquete</Link>
             <Link to="/EstadoPaquete">EstadoPaquete</Link>
+            <Link to="/ReportsPage">Informes</Link>
             <Link to="/Register">Cerrar sesión</Link>
           </div>
         </div>
