@@ -68,69 +68,42 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
-      <h2>Regístrate</h2>
-      <form onSubmit={handleRegister}>
-        <div>
-          <label>Nombre:</label>
-          <input
-            type="text"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Apellido:</label>
-          <input
-            type="text"
-            value={apellido}
-            onChange={(e) => setApellido(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Confirmar Password:</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Tipo de Usuario:</label>
-          <select
-            value={tipoUsuario}
-            onChange={(e) => setTipoUsuario(e.target.value)}
-          >
-            <option value="cliente">Cliente</option>
-            <option value="gerente">Administrador</option>
-            <option value="repartidor">Repartidor</option>
-          </select>
-        </div>
-        <button className="auth-button" type="submit">
-          Registrarse
-        </button>
-      </form>
+    <div className="register-form">
+      <div className="register-container">
+        <h2>Regístrate</h2>
+        <form onSubmit={handleRegister}>
+          <div>
+            <label>Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Confirmar Password:</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button className="auth-button" type="submit">
+            Registrarse
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
