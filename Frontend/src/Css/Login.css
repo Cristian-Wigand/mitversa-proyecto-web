@@ -1,13 +1,17 @@
-/* src/Login.css */
+/* Login.css */
 
 .login-container {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-form {
+  width: 45%;
+  background-color: #efe4b0;
+  color: #fff;
   padding: 20px;
-  background-color: #000; /* Fondo negro */
-  color: #fff; /* Texto blanco */
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
@@ -17,51 +21,38 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* Estilos de los campos del formulario de Login */
-.login-container form div {
+form div {
   margin-bottom: 15px;
 }
 
-.login-container label {
+label {
   display: block;
   margin-bottom: 5px;
-}
-
-.login-container input {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  border: 1px solid #333;
-  border-radius: 5px;
-  background: #222;
   color: #fff;
 }
 
-.login-container button {
+input {
   width: 100%;
   padding: 10px;
-  background-color: #007bff; /* Color azul para el botón de iniciar sesión */
-  color: white;
+  border: 1px solid #cfbebe;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #fff;
+  color: #000;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.login-container button:hover {
-  background-color: #0056b3;
+.auth-button:hover {
+  background-color: rgb(253, 219, 68);
 }
 
-.login-container p {
+p {
   text-align: center;
-  margin-top: 10px;
-}
-
-/* Estilo para el enlace de registro en la página de login */
-.login-container p a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.login-container p a:hover {
-  text-decoration: underline;
 }

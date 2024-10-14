@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../Css/App.css';
+import '../Css/Register.css';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -18,40 +18,42 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
-      <h2>Regístrate</h2>
-      <form onSubmit={handleRegister}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Confirmar Password:</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button className="auth-button" type="submit">
-          Registrarse
-        </button>
-      </form>
+    <div className="register-form">
+      <div className="register-container">
+        <h2>Regístrate</h2>
+        <form onSubmit={handleRegister}>
+          <div>
+            <label>Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Confirmar Password:</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button className="auth-button" type="submit">
+            Registrarse
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
