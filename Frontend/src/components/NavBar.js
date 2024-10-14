@@ -17,7 +17,7 @@ const NavBar = () => {
         <Link to="/">Home</Link>
         <Link to="/about">Sobre nosotros</Link>
         <Link to="/contact">Contáctanos</Link>
-        <Link to="/auth">
+        <Link to="/Login">
           <button className="primary-button">Inicia sesión</button>
         </Link>
 
@@ -35,7 +35,7 @@ const NavBar = () => {
             <Link to="/GestionEnv">Gestionar envios</Link>
             <Link to="/GestionUser">Gestionar usuarios</Link>
             <Link to="/GestionVeh">Gestionar vehiculos</Link>
-            <Link to="/logout">Cerrar sesión</Link>
+            <Link to="/Register">Cerrar sesión</Link>
           </div>
         </div>
       </div>
