@@ -15,6 +15,8 @@ import ReportsPage from './components/ReportsPage';
 import Register from './components/Register';
 
 import './Css/App.css'; // Importa los estilos
+import VisualizarPaquete from './components/VisualizarPaquete';
+import EstadoPaquete from './components/EstadoPaquete';
 
 const App = () => {
   return (
@@ -44,6 +46,8 @@ const App = () => {
           <Route path="/GestionVeh" element={<GestionVeh />} />
           <Route path="/ReportsPage" element={<ReportsPage />} />
           <Route path="/Register" element={<Register />} />
+          <Route path="/VisualizarPaquete" element={<VisualizarPaquete />} />
+          <Route path="/EstadoPaquete" element={<EstadoPaquete />} />
         </Routes>
       </div>
     </Router>

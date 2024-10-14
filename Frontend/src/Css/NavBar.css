@@ -19,22 +19,25 @@
 
 /* Lado derecho */
 .navbar-right {
-  width: 61.5%;
+  flex: 1; /* Permite que el contenedor crezca y ocupe el espacio disponible */
   background-color: #efe4b0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding-right: 20px;
   padding-left: 20px;
+  min-width: 200px; /* Establece un ancho mínimo para mantener la visibilidad de los elementos */
+  overflow: visible; /* Permite que los elementos se muestren fuera del contenedor */
 }
 
 /* Enlaces y botón dentro del lado derecho del NavBar */
 .navbar-right a {
-  margin-right: 3rem;
+  margin-right: 4.70rem;
   text-decoration: none;
   color: black;
   font-size: 1.1rem;
   font-weight: 600;
+  white-space: nowrap; /* Evita el salto de línea en los enlaces */
 }
 
 .navbar-right a:last-child {
@@ -62,7 +65,7 @@
   background-color: #ffffff;
   min-width: 160px;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1;
+  z-index: 1000; /* Asegúrate de que el menú esté por encima de otros elementos */
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
@@ -82,5 +85,27 @@
 }
 
 .dropdown:hover .dropdown-content {
-  display: block;
+  display: block; /* Muestra el menú desplegable cuando se pasa el mouse */
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  .navbar-left, .navbar-right {
+    width: 100%; /* Cambia el ancho de los lados a 100% en pantallas pequeñas */
+    justify-content: center; /* Centra los elementos en pantallas pequeñas */
+  }
+
+  .navbar-right {
+    flex-wrap: wrap; /* Permite que los enlaces se ajusten en múltiples líneas */
+    justify-content: flex-start; /* Cambia la justificación para que se alineen al inicio */
+  }
+
+  .navbar-right a {
+    margin-right: 1rem; /* Ajusta el margen para que quepan más elementos */
+  }
+
+  /* Estilo específico para el dropdown en pantallas pequeñas */
+  .dropdown-content {
+    position: relative; /* Cambia a posición relativa para evitar problemas de corte */
+  }
 }
