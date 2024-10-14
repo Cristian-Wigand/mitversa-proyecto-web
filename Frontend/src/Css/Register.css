@@ -1,5 +1,12 @@
 /* Register.css */
 
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .register-form {
   width: 45%;
   background-color: #efe4b0;
@@ -9,31 +16,33 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
-.register-container h2 {
+h2 {
   text-align: center;
   margin-bottom: 20px;
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
   color: #fff;
 }
 
-.register-container label {
-  color: #fff;
-}
-
-.register-container input {
+input {
   width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
   border: 1px solid #cfbebe;
   border-radius: 5px;
-  box-sizing: border-box;
-  background-color: #fff;
-  color: #000;
+  background: #fff;
 }
 
 .auth-button {
   width: 100%;
   padding: 10px;
-  background-color: #ffffff;
+  background-color: #fff;
   color: #000;
   border: none;
   border-radius: 5px;
@@ -46,5 +55,4 @@
 
 p {
   text-align: center;
-  color: #fff;
 }

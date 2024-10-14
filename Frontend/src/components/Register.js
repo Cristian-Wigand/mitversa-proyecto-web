@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import '../Css/Register.css';
 
 const Register = () => {
@@ -18,8 +17,8 @@ const Register = () => {
   };
 
   return (
-    <div className="register-form">
-      <div className="register-container">
+    <div className="register-container">
+      <div className="register-form">
         <h2>Regístrate</h2>
         <form onSubmit={handleRegister}>
           <div>

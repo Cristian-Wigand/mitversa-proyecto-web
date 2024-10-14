@@ -35,6 +35,7 @@ const NavBar = () => {
             <Link to="/GestionEnv">Gestionar envios</Link>
             <Link to="/GestionUser">Gestionar usuarios</Link>
             <Link to="/GestionVeh">Gestionar vehiculos</Link>
+            <Link to="/ReportsPage">Informes</Link>
             <Link to="/Register">Cerrar sesión</Link>
           </div>
         </div>
