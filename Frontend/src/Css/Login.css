@@ -4,56 +4,61 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Altura completa para centrar el contenedor */
+  height: 100vh;
 }
 
 .login-form {
-  width: 45%; /* Ancho del formulario */
-  background-color: #efe4b0; /* Color de fondo del formulario */
-  color: #fff; /* Color del texto */
-  padding: 20px; /* Espaciado interno */
-  border-radius: 10px; /* Bordes redondeados */
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Sombra suave */
+  width: 45%;
+  background-color: #efe4b0;
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 h2 {
-  text-align: center; /* Centrar el título */
-  margin-bottom: 20px; /* Margen inferior */
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 form div {
-  margin-bottom: 15px; /* Espacio entre los campos del formulario */
+  margin-bottom: 15px;
 }
 
 label {
-  display: block; /* Bloque para que el label ocupe toda la línea */
-  margin-bottom: 5px; /* Margen inferior */
-  color: #fff; /* Color del texto de la etiqueta */
+  display: block;
+  margin-bottom: 5px;
+  color: #fff;
 }
 
-input {
-  width: 100%; /* Ancho completo para los inputs */
-  padding: 10px; /* Espaciado interno de los inputs */
-  border: 1px solid #cfbebe; /* Borde gris claro */
-  border-radius: 5px; /* Bordes redondeados para los inputs */
-  background: #fff; /* Fondo blanco para los inputs */
+input[type='text'],
+input[type='email'],
+input[type='password'],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #cfbebe;
+  border-radius: 5px;
+  background: #fff;
+  color: #000 !important; /* Asegúrate de que el texto sea negro */
 }
 
 .auth-button {
-  width: 100%; /* Ancho completo para el botón */
-  padding: 10px; /* Espaciado interno del botón */
-  background-color: #fff; /* Color de fondo del botón */
-  color: #000; /* Color del texto del botón */
-  border: none; /* Sin borde */
-  border-radius: 5px; /* Bordes redondeados para el botón */
-  cursor: pointer; /* Cursor de mano al pasar sobre el botón */
+  width: 100%;
+  padding: 10px;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .auth-button:hover {
-  background-color: rgb(253, 219, 68); /* Color de fondo del botón al pasar el mouse */
+  background-color: rgb(253, 219, 68);
 }
 
 p {
-  text-align: center; /* Centrar texto */
-  color: #fff; /* Color del texto del párrafo */
+  text-align: center;
+  color: #fff;
 }

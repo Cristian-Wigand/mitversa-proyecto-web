@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../Css/Register.css';
 
 const Register = () => {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [tipoUsuario, setTipoUsuario] = useState('cliente'); // Valor por defecto
+  const [contraseña, setContraseña] = useState('');
+  const [confirmcontraseña, setConfirmcontraseña] = useState('');
+  const [tipoUsuario, setTipoUsuario] = useState('cliente');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Verifica si el usuario ya ha iniciado sesión
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'true') {
+      // Si hay una sesión iniciada, redirige a la página principal
+      navigate('/');
+    }
+  }, [navigate]);
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      alert('Las contraseñas no coinciden');
+
+    // Validar que las contraseñas coinciden
+    if (contraseña !== confirmcontraseña) {
+      setErrorMessage('Las contraseñas no coinciden');
       return;
     }
 
@@ -20,50 +34,39 @@ const Register = () => {
       nombre,
       apellido,
       email,
-      password,
-      tipo_usuario: tipoUsuario,
+      contraseña,
     };
 
     try {
+      // Llamada a la API para registrar al usuario
       const response = await fetch(
-        'http://localhost/mitversa-proyecto-web/Backendphp/usuario.php',
+        'https://mit.christianferrer.me/api/usuarios/', // Cambiar por la URL correcta de la API
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(userData),
+          body: JSON.stringify(userData), // Datos del usuario
         },
       );
 
-      const text = await response.text();
-      console.log('Respuesta del servidor:', text); // Revisa si el texto está vacío
+      const data = await response.json();
 
-      if (text) {
-        try {
-          const result = JSON.parse(text); // Intenta parsear la respuesta si no está vacía
-          if (result.message) {
-            alert(result.message);
-          } else {
-            alert('Registro completado correctamente.');
-            // Vaciar campos después de registro exitoso
-            setNombre('');
-            setApellido('');
-            setEmail('');
-            setPassword('');
-            setConfirmPassword('');
-            setTipoUsuario('cliente'); // Restablece a valor por defecto
-          }
-        } catch (error) {
-          console.error('Respuesta no es JSON válido:', error, text);
-          alert('Hubo un problema al procesar la respuesta del servidor.');
-        }
+      if (response.ok) {
+        alert('Registro completado correctamente.');
+        // Limpiar los campos después del registro exitoso
+        setNombre('');
+        setApellido('');
+        setEmail('');
+        setContraseña('');
+        setConfirmcontraseña('');
+        setTipoUsuario('cliente');
       } else {
-        alert('El servidor no devolvió una respuesta válida.');
+        setErrorMessage(data.message || 'Error al registrar el usuario.');
       }
     } catch (error) {
-      console.error('Hubo un problema con la solicitud fetch:', error);
-      alert('Error en la conexión con el servidor.');
+      console.error('Hubo un problema con la solicitud:', error);
+      setErrorMessage('Error en la conexión con el servidor.');
     }
   };
 
@@ -71,7 +74,26 @@ const Register = () => {
     <div className="register-container">
       <div className="register-form">
         <h2>Regístrate</h2>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <form onSubmit={handleRegister}>
+          <div>
+            <label>Nombre:</label>
+            <input
+              type="text"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Apellido:</label>
+            <input
+              type="text"
+              value={apellido}
+              onChange={(e) => setApellido(e.target.value)}
+              required
+            />
+          </div>
           <div>
             <label>Email:</label>
             <input
@@ -82,20 +104,20 @@ const Register = () => {
             />
           </div>
           <div>
-            <label>Password:</label>
+            <label>Contraseña:</label>
             <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type="password" // Cambiado de 'contraseña' a 'password'
+              value={contraseña}
+              onChange={(e) => setContraseña(e.target.value)}
               required
             />
           </div>
           <div>
-            <label>Confirmar Password:</label>
+            <label>Confirmar contraseña:</label>
             <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              type="password" // Cambiado de 'contraseña' a 'password'
+              value={confirmcontraseña}
+              onChange={(e) => setConfirmcontraseña(e.target.value)}
               required
             />
           </div>

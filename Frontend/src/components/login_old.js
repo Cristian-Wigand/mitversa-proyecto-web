@@ -1,37 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../Css/Login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
-  const [contraseña, setContraseña] = useState('');
+  const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Verifica si el usuario ya ha iniciado sesión
-    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-    if (isLoggedIn === 'true') {
-      // Si hay una sesión iniciada, redirige a la página principal
-      navigate('/');
-    }
-  }, [navigate]);
-
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setErrorMessage('');
+    //Define una función asíncrona llamada handleLogin que se ejecutará cuando el formulario de inicio de sesión sea enviado. Esta función usa async para poder manejar promesas con await.
+    e.preventDefault(); // Evita que el formulario se envíe y recargue la página automáticamente.
+    setErrorMessage(''); // Resetea el mensaje de error antes de realizar el intento de inicio de sesión.
 
-    const loginData = { email, contraseña };
+    // Datos de inicio de sesión
+    const loginData = { email, password };
 
     try {
+      // Realizamos la solicitud a la API proporcionada
       const response = await fetch(
-        'https://mit.christianferrer.me/api/login', // URL de la API de login
+        'https://mit.christianferrer.me/api/login', // URL de la api
         {
-          method: 'POST',
+          method: 'POST', // Usamos el método POST para enviar los datos de login
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json', // Indicamos que estamos enviando datos en formato JSON
           },
-          body: JSON.stringify(loginData),
+          body: JSON.stringify(loginData), // Enviamos los datos de login en formato JSON
         },
       );
 
@@ -40,13 +34,19 @@ const Login = () => {
       if (response.ok) {
         console.log('Inicio de sesión exitoso:', data);
 
+        // Verificamos si el servidor devolvió un ID de usuario válido
         if (data.id_usuario || data.id_repartidor || data.id_gerente) {
+          // Guarda que el usuario ha iniciado sesión en el sessionStorage
           sessionStorage.setItem('isLoggedIn', 'true');
         } else {
+          // Si no hay un ID válido, marcamos como no logueado
           sessionStorage.setItem('isLoggedIn', 'false');
         }
 
+        // Navegamos a la página principal después de iniciar sesión
         navigate('/');
+
+        // Recargamos la página para reflejar los cambios en el estado del usuario
         window.location.reload();
       } else {
         setErrorMessage(data.error || 'Error al iniciar sesión');
@@ -73,11 +73,11 @@ const Login = () => {
             />
           </div>
           <div>
-            <label>Contraseña:</label>
+            <label>Password:</label>
             <input
-              type="password" // Corrige el tipo a 'password'
-              value={contraseña}
-              onChange={(e) => setContraseña(e.target.value)}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
