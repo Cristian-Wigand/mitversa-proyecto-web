@@ -1,59 +1,119 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../Css/UserManagementPage.css';
 import '../Css/App.css';
 
 const UserManagementPage = () => {
+  const [users, setUsers] = useState([]);
+  const [searchEmail, setSearchEmail] = useState('');
+  const [searchResult, setSearchResult] = useState(null);
   const [createUserData, setCreateUserData] = useState({
     nombre: '',
     apellido: '',
     email: '',
-    tipoUsuario: '',
+    contraseña: '',
   });
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const [searchUserData, setSearchUserData] = useState({
-    id: '',
-    nombre: '',
-    apellido: '',
-    email: '',
-  });
+  useEffect(() => {
+    fetchUsers(); // Cargar la lista de usuarios al iniciar la página
+  }, []);
 
-  const [deleteUserData, setDeleteUserData] = useState({
-    id: '',
-  });
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch('https://mit.christianferrer.me/api/usuarios/');
+      const data = await response.json();
+      if (response.ok) {
+        setUsers(data);
+      } else {
+        setErrorMessage('Error al cargar los usuarios.');
+      }
+    } catch (error) {
+      setErrorMessage('Error de conexión con el servidor.');
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchEmail(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const user = users.find((user) => user.email === searchEmail);
+    if (user) {
+      setSearchResult(user);
+      setErrorMessage(''); // Limpiar mensaje de error si se encuentra el usuario
+    } else {
+      setSearchResult(null);
+      setErrorMessage('Usuario no encontrado.');
+    }
+  };
 
   const handleCreateUserChange = (e) => {
     setCreateUserData({ ...createUserData, [e.target.name]: e.target.value });
   };
 
-  const handleSearchUserChange = (e) => {
-    setSearchUserData({ ...searchUserData, [e.target.name]: e.target.value });
-  };
-
-  const handleDeleteUserChange = (e) => {
-    setDeleteUserData({ ...deleteUserData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmitCreateUser = (e) => {
+  const handleSubmitCreateUser = async (e) => {
     e.preventDefault();
-    console.log('Crear Usuario:', createUserData);
-    // Aquí va la lógica para crear el usuario
-  };
+    const userData = {
+      nombre: createUserData.nombre,
+      apellido: createUserData.apellido,
+      email: createUserData.email,
+    };
 
-  const handleSubmitSearchUser = (e) => {
-    e.preventDefault();
-    console.log('Buscar Usuario:', searchUserData);
-    // Aquí va la lógica para buscar el usuario
-  };
+    try {
+      const response = await fetch('https://mit.christianferrer.me/api/usuarios/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
 
-  const handleSubmitDeleteUser = (e) => {
-    e.preventDefault();
-    console.log('Eliminar Usuario:', deleteUserData);
-    // Aquí va la lógica para eliminar el usuario
+      if (response.ok) {
+        alert('Usuario creado exitosamente');
+        fetchUsers(); // Volver a cargar la lista de usuarios
+        setCreateUserData({
+          nombre: '',
+          apellido: '',
+          email: '',
+          contraseña: '',
+        });
+      } else {
+        const data = await response.json();
+        setErrorMessage(data.message || 'Error al crear el usuario.');
+      }
+    } catch (error) {
+      setErrorMessage('Error de conexión con el servidor.');
+    }
   };
 
   return (
     <div className="user-management-page">
       <h1>Gestión de Usuarios</h1>
+
+      {/* Buscador de usuario */}
+      <form className="form" onSubmit={handleSearchSubmit}>
+        <h2>Buscar Usuario por Email</h2>
+        <input
+          type="email"
+          placeholder="Correo Electrónico"
+          value={searchEmail}
+          onChange={handleSearchChange}
+          required
+        />
+        <button type="submit">Buscar</button>
+      </form>
+
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+      {searchResult && (
+        <div className="search-result">
+          <h2>Resultados de la Búsqueda:</h2>
+          <p><strong>Nombre:</strong> {searchResult.nombre}</p>
+          <p><strong>Apellido:</strong> {searchResult.apellido}</p>
+          <p><strong>Email:</strong> {searchResult.email}</p>
+        </div>
+      )}
 
       {/* Crear Usuario */}
       <form className="form" onSubmit={handleSubmitCreateUser}>
@@ -64,6 +124,7 @@ const UserManagementPage = () => {
           placeholder="Nombre"
           value={createUserData.nombre}
           onChange={handleCreateUserChange}
+          required
         />
         <input
           type="text"
@@ -71,6 +132,7 @@ const UserManagementPage = () => {
           placeholder="Apellido"
           value={createUserData.apellido}
           onChange={handleCreateUserChange}
+          required
         />
         <input
           type="email"
@@ -78,62 +140,17 @@ const UserManagementPage = () => {
           placeholder="Email"
           value={createUserData.email}
           onChange={handleCreateUserChange}
+          required
         />
         <input
-          type="text"
-          name="tipoUsuario"
-          placeholder="Tipo de Usuario"
-          value={createUserData.tipoUsuario}
+          type="password"
+          name="contraseña"
+          placeholder="Contraseña"
+          value={createUserData.contraseña}
           onChange={handleCreateUserChange}
+          required
         />
         <button type="submit">Crear Usuario</button>
-      </form>
-
-      {/* Buscar Usuario */}
-      <form className="form" onSubmit={handleSubmitSearchUser}>
-        <h2>Buscar Usuario</h2>
-        <input
-          type="text"
-          name="id"
-          placeholder="ID Usuario"
-          value={searchUserData.id}
-          onChange={handleSearchUserChange}
-        />
-        <input
-          type="text"
-          name="nombre"
-          placeholder="Nombre"
-          value={searchUserData.nombre}
-          onChange={handleSearchUserChange}
-        />
-        <input
-          type="text"
-          name="apellido"
-          placeholder="Apellido"
-          value={searchUserData.apellido}
-          onChange={handleSearchUserChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={searchUserData.email}
-          onChange={handleSearchUserChange}
-        />
-        <button type="submit">Buscar Usuario</button>
-      </form>
-
-      {/* Eliminar Usuario */}
-      <form className="form" onSubmit={handleSubmitDeleteUser}>
-        <h2>Eliminar Usuario</h2>
-        <input
-          type="text"
-          name="id"
-          placeholder="ID Usuario"
-          value={deleteUserData.id}
-          onChange={handleDeleteUserChange}
-        />
-        <button type="submit">Eliminar Usuario</button>
       </form>
     </div>
   );

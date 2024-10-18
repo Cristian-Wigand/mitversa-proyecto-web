@@ -8,6 +8,10 @@
   padding-top: 50px; /* Espacio para el NavBar */
 }
 
+input{
+  color: #000000;
+}
+
 h1,
 h2 {
   color: white; /* Variante de color para títulos */
@@ -21,6 +25,7 @@ h2 {
   border-radius: 30px;
   margin-bottom: 30px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  margin-top: 30px;
 }
 
 .form input {
@@ -44,4 +49,29 @@ h2 {
 
 .form button:hover {
   background-color: rgb(253, 219, 68);
+}
+
+.search-result {
+  background-color: #efe4b0; /* Color de fondo suave */
+  border: 1px solid #d1d1d1; /* Borde gris claro */
+
+  padding: 20px; /* Espaciado interno */
+  margin-top: 20px; /* Margen superior */
+
+  border-radius: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.search-result h2 {
+  color: #ffffff; /* Color del título */
+  margin-bottom: 15px; /* Margen inferior */
+}
+
+.search-result p {
+  color: #000000; /* Color de los textos */
+  margin: 5px 0; /* Margen vertical entre párrafos */
+}
+
+.search-result strong {
+  color: #ffffff; /* Color del texto en negrita */
 }
