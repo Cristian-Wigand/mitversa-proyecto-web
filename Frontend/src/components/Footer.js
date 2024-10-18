@@ -2,13 +2,12 @@ import React from 'react';
 import Logo from '../Assets/Mitversalogo2.png';
 import { FaInstagram } from 'react-icons/fa'; // Importar el ícono de Instagram
 
-import '../Css/Footer.css';
-import '../Css/App.css';
+import '../App.css';
 
 const Footer = () => {
   return (
     <div className="footer-wrapper">
-      <div className="footer-section-one">
+      <div className="footer-sectioan-one">
         <div className="footer-logo-container">
           <img src={Logo} alt="Logo de la empresa" />
         </div>

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../Assets/Mitversalogo2_pe.png';
 import iconoprofile from '../Assets/default-profile.jpg';
-import '../Css/NavBar.css';
-import '../Css/App.css';
+import '../App.css';
 
 const NavBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

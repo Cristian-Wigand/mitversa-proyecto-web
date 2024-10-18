@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'; // Importa useState y useRef
-import '../Css/Contactanos.css'; // Asegúrate de que no haya espacios innecesarios
-import '../Css/App.css';
+import '../App.css';
 import { init, sendForm } from 'emailjs-com'; // Importa EmailJS
 
 const Contactanos = () => {
@@ -44,32 +43,32 @@ const Contactanos = () => {
   };
 
   return (
-    <div className="contact-page-wrapper">
-      <h1 className="primary-heading">Contáctanos</h1>
-      <h1 className="primary-heading">Te ofreceremos la ayuda necesaria</h1>
-      <form
-        className="contact-form-container"
-        onSubmit={manejarEnvio}
-        ref={formRef}
-      >
-        <input
-          type="text"
-          name="from_name" // Nombre del campo para EmailJS
-          placeholder="ingresatu@gmail.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)} // Actualiza el estado
-        />
-        <textarea
-          name="message" // Nombre del campo para EmailJS
-          placeholder="Escribe tu mensaje aquí..."
-          value={mensaje}
-          onChange={(e) => setMensaje(e.target.value)} // Actualiza el estado del mensaje
-          rows="4" // Puedes ajustar el tamaño
-        />
-        <button className="secondary-button" type="submit" disabled={enviando}>
-          {enviando ? 'Enviando...' : 'Enviar'}
-        </button>
-      </form>
+    <div className="register-container">
+      <h1 className="h1_black">
+        Contáctanos Te ofreceremos la ayuda necesaria
+      </h1>
+      <div className="register-form">
+        <h1>Formulario de Contacto</h1>
+        <form onSubmit={manejarEnvio} ref={formRef}>
+          <input
+            type="text"
+            name="from_name"
+            placeholder="ingresatu@gmail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <textarea
+            name="message"
+            placeholder="Escribe tu mensaje aquí..."
+            value={mensaje}
+            onChange={(e) => setMensaje(e.target.value)}
+            rows="4"
+          />
+          <button className="auth-button" type="submit" disabled={enviando}>
+            {enviando ? 'Enviando...' : 'Enviar'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

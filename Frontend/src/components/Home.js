@@ -2,8 +2,7 @@ import React from 'react';
 import BannerBackground from '../Assets/blackgroundLogo.png';
 import BannerImage from '../Assets/VanLogosinfondo.png';
 import { FiArrowRight } from 'react-icons/fi';
-import '../Css/Home.css';
-import '../Css/App.css';
+import '../App.css';
 
 const Home = () => {
   return (

@@ -1,7 +1,6 @@
 // src/components/PackageCard.js
 import React from 'react';
-import '../Css/VisualizarPaquete.css'; // Asegúrate que la carpeta se llama 'Css' con "C" mayúscula
-import '../Css/App.css'; // También verifica que 'App.css' está en la carpeta 'Css'
+import '../App.css';
 
 const PackageCard = () => {
   return (

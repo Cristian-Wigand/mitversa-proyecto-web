@@ -1,5 +1,4 @@
-import '../Css/Home_principal.css';
-import '../Css/App.css';
+import '../App.css';
 import Home from './Home';
 import About from './About';
 import Footer from './Footer';

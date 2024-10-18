@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Para redirigir al usuario si no es gerente
 import { throttle } from 'lodash';
 import '../App.css';
 
@@ -34,6 +35,7 @@ const GestionVeh = () => {
   });
 
   const [menuTop, setMenuTop] = useState(150);
+  const navigate = useNavigate();
 
   const handleScroll = throttle(() => {
     const scrollY = window.scrollY;
@@ -44,6 +46,16 @@ const GestionVeh = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Verificación del tipo de usuario al cargar el componente
+  useEffect(() => {
+    const userRole = sessionStorage.getItem('userRole');
+
+    // Si el rol no es gerente, redirigimos al usuario fuera de esta página
+    if (userRole !== 'gerente') {
+      navigate('/'); // Redirige a la página de inicio u otra página
+    }
+  }, [navigate]);
 
   const handleCreateVehicle = (e) => {
     setCreateVehicle({ ...createVehicle, [e.target.name]: e.target.value });

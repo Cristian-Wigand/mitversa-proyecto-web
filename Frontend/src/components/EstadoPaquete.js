@@ -1,6 +1,6 @@
 // src/components/EstadoPaquete.js
 import React from 'react';
-import '../Css/EstadoPaquete.css';
+import '../App.css';
 
 const EstadoPaquete = () => {
   return (

@@ -1,0 +1,1085 @@
+/* Estilos globales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Reem Kufi', sans-serif !important;
+}
+
+body {
+  max-width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Estilos para el contenedor principal */
+.App {
+  max-width: 95vw;
+}
+
+@media (max-width: 800px) {
+  .App {
+    max-width: 95vw;
+  }
+}
+
+/* Estilos generales para formularios */
+.contact-form-container {
+  background-color: #efe4b0;
+  max-width: 800px;
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  border-radius: 50px;
+}
+
+.form-container {
+  background-color: #fff4cc;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  flex-basis: 45%;
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #5e4e34;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #d4a961;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #d4a961;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #a68140;
+}
+
+/* Títulos */
+h1,
+.primary-heading {
+  max-width: 900px;
+  color: #4c4c4c;
+  text-align: center;
+}
+
+.secondary-heading {
+  font-size: 42px;
+  color: #4c4c4c;
+  max-width: 600px;
+  text-align: center;
+}
+
+.tertiary-heading {
+  font-size: 36px;
+  color: #4c4c4c;
+  max-width: 600px;
+}
+
+/* Botones */
+.primary-button,
+.secondary-button {
+  padding: 1rem 2.5rem;
+  background-color: #000000;
+  outline: none;
+  border: none;
+  border-radius: 5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primary-button {
+  background-color: #fff;
+  color: #000;
+}
+
+.primary-button:hover,
+.secondary-button:hover {
+  background-color: rgb(253, 219, 68);
+}
+
+/* Otros estilos */
+.icono-profile {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+  .contact-form-container {
+    padding: 1rem;
+  }
+}
+
+.about-container {
+  margin-top: 20rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.about-background-image-container {
+  position: absolute;
+  left: -150px;
+  z-index: -2;
+}
+
+.about-section-image-container {
+  flex: 0.9;
+  margin-right: 1rem;
+}
+
+.about-section-text-container {
+  flex: 1;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.primary-subheading {
+  color: #000000;
+}
+
+.primary-heading {
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: #000000;
+  max-width: 600px;
+}
+
+.primary-text {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  max-width: 500px;
+  color: rgb(124, 124, 124);
+  margin: 1.5rem 0rem;
+}
+
+.contact-page-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 6rem 0rem;
+}
+
+.contact-form-container input {
+  margin-bottom: 1rem; /* Espacio entre el input y el textarea */
+}
+
+/* src/Css/EstadoPaquete.css */
+.estado-paquete-container {
+  background-color: #d3d3d3; /* Color de fondo general */
+  padding: 1rem;
+  border-radius: 5px;
+  max-width: 800px; /* Ancho máximo */
+  margin: 7rem auto 0; /* Agregado margen superior de 1rem, centrado horizontalmente */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Agregar sombra para darle profundidad */
+}
+
+.estado-ruta {
+  font-size: 1rem; /* Tamaño de la fuente */
+  margin-bottom: 1rem;
+}
+
+.contenido-paquete,
+.estado-envio {
+  background-color: white; /* Fondo blanco para los bloques de contenido */
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem; /* Espaciado entre bloques */
+}
+
+h2 {
+  margin: 0 0 0.5rem 0; /* Margen para los encabezados */
+  font-size: 1.5rem; /* Tamaño de la fuente por defecto */
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+  .estado-paquete-container {
+    padding: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.2rem; /* Tamaño de la fuente para pantallas pequeñas */
+  }
+
+  .contenido-paquete,
+  .estado-envio {
+    padding: 0.75rem; /* Reducir padding en pantallas pequeñas */
+  }
+}
+
+@media (max-width: 400px) {
+  .estado-paquete-container {
+    padding: 0.25rem; /* Menos padding para pantallas muy pequeñas */
+  }
+
+  h2 {
+    font-size: 1rem; /* Tamaño de la fuente más pequeño */
+  }
+
+  .estado-ruta {
+    font-size: 0.9rem; /* Tamaño de la fuente más pequeño para la ruta */
+  }
+
+  .contenido-paquete,
+  .estado-envio {
+    padding: 0.5rem; /* Menos padding en pantallas muy pequeñas */
+    font-size: 0.9rem; /* Tamaño de la fuente más pequeño */
+  }
+}
+
+/*-------------------- FOOOTER------------------ */
+.footer-wrapper {
+  margin: 6rem 0rem;
+  display: flex;
+  margin-top: 10rem;
+}
+.footer-logo-container {
+  max-width: 110px;
+}
+.footer-icons {
+  margin-top: 2.5rem;
+}
+.footer-icons svg {
+  font-size: 1.5rem;
+  margin-right: 1.25rem;
+  color: #000000;
+}
+.footer-section-two {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+.footer-section-columns {
+  display: flex;
+  flex-direction: column;
+  min-width: 190px;
+}
+.footer-section-columns span {
+  margin: 0.25rem 0rem;
+  font-weight: 600;
+  color: #000000;
+  cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 800px) {
+  .footer-wrapper {
+    flex-direction: column;
+  }
+  .footer-section-two {
+    flex-direction: column;
+    margin-top: 2rem;
+  }
+  .footer-section-columns {
+    margin: 1rem 0rem;
+  }
+}
+
+/* Estilos para la página principal */
+.Home_principal {
+  min-height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la pantalla */
+  width: 85vw; /* Ancho del contenedor */
+  max-width: 1900px; /* Ancho máximo para pantallas grandes */
+  margin: 0rem auto; /* Centrado horizontal */
+}
+
+/* src/components/Home.css */
+
+.home-container {
+  position: relative;
+}
+
+.home-banner-container {
+  position: relative;
+  display: flex;
+  padding-top: 3rem;
+}
+
+.home-bannerImage-container {
+  position: absolute;
+  top: -100px;
+  right: -170px;
+  z-index: -2;
+  max-width: 7000px;
+}
+
+.home-text-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.primary-heading {
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: #000000;
+  max-width: 600px;
+}
+
+.primary-text {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  max-width: 500px;
+  color: rgb(124, 124, 124);
+  margin: 1.5rem 0rem;
+}
+
+.home-image-section {
+  max-width: 600px;
+  flex: 1;
+}
+
+/* Estilos responsivos */
+@media (max-width: 1000px) {
+  .home-bannerImage-container {
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 800px) {
+  .home-banner-container {
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-bannerImage-container {
+    max-width: 450px;
+  }
+
+  .home-image-section {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .primary-heading {
+    text-align: center;
+    max-width: 90%;
+  }
+
+  .primary-text {
+    text-align: center;
+    max-width: 80%;
+  }
+
+  .home-text-section {
+    justify-content: center;
+    align-items: center;
+    margin-top: 4rem;
+  }
+
+  .secondary-button {
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-bannerImage-container {
+    display: none;
+  }
+}
+
+/*Index -----------------*/
+@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi&display=swap');
+
+body {
+  margin: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Login.css */
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-form {
+  width: 45%;
+  background-color: #efe4b0;
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #fff;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #cfbebe;
+  border-radius: 5px;
+  background: #fff;
+  color: #000 !important; /* Asegúrate de que el texto sea negro */
+}
+
+.auth-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.auth-button:hover {
+  background-color: rgb(253, 219, 68);
+}
+
+p {
+  text-align: center;
+  color: #fff;
+}
+
+/* Contenedor principal del NavBar */
+.navbar-container {
+  display: flex;
+  align-items: stretch; /* Cambiado de center a stretch */
+  justify-content: space-between;
+  min-height: 110px;
+  width: 100%;
+  position: relative;
+}
+
+/* Lado izquierdo */
+.navbar-left {
+  width: 38.5%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+/* Lado derecho */
+.navbar-right {
+  flex: 1; /* Permite que el contenedor crezca y ocupe el espacio disponible */
+  background-color: #efe4b0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 20px;
+  padding-left: 20px;
+  min-width: 200px; /* Establece un ancho mínimo para mantener la visibilidad de los elementos */
+  overflow: visible; /* Permite que los elementos se muestren fuera del contenedor */
+}
+
+/* Enlaces y botón dentro del lado derecho del NavBar */
+.navbar-right a {
+  margin-right: 4.7rem;
+  text-decoration: none;
+  color: black;
+  font-size: 1.1rem;
+  font-weight: 600;
+  white-space: nowrap; /* Evita el salto de línea en los enlaces */
+}
+
+.navbar-right a:last-child {
+  margin-right: 0;
+}
+
+/* Dropdown Menu */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  margin-right: 3rem;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000; /* Asegúrate de que el menú esté por encima de otros elementos */
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0px;
+  border-radius: 10px;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #efe4b0;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block; /* Muestra el menú desplegable cuando se pasa el mouse */
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  .navbar-left,
+  .navbar-right {
+    width: 100%; /* Cambia el ancho de los lados a 100% en pantallas pequeñas */
+    justify-content: center; /* Centra los elementos en pantallas pequeñas */
+  }
+
+  .navbar-right {
+    flex-wrap: wrap; /* Permite que los enlaces se ajusten en múltiples líneas */
+    justify-content: flex-start; /* Cambia la justificación para que se alineen al inicio */
+  }
+
+  .navbar-right a {
+    margin-right: 1rem; /* Ajusta el margen para que quepan más elementos */
+  }
+
+  /* Estilo específico para el dropdown en pantallas pequeñas */
+  .dropdown-content {
+    position: relative; /* Cambia a posición relativa para evitar problemas de corte */
+  }
+}
+
+.profile-page {
+  padding-top: 150px; /* Espacio para el NavBar */
+  text-align: center;
+}
+
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-box {
+  background-color: #efe4b0;
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.profile-pic-name {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-pic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-size: 20px;
+}
+
+.update-option {
+  text-align: left;
+  margin-top: 10px;
+}
+
+.update-button {
+  padding: 8px 12px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.update-button:hover {
+  background-color: rgb(253, 219, 68);
+}
+
+.profile-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.profile-detail p {
+  margin: 0;
+}
+
+.update-form {
+  background-color: #333;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 300px;
+  position: absolute;
+  right: 5%;
+  top: 20%;
+  transform: translateY(50px);
+  z-index: 10;
+}
+
+.update-form input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #555;
+  border-radius: 5px;
+}
+
+.submit-button {
+  padding: 5px 10px;
+  background-color: #ffffff;
+  color: #000; /* Cambié el color del texto a negro */
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: rgb(253, 219, 68);
+}
+
+.perfil-background-container {
+  position: absolute;
+  bottom: 0px;
+  right: -170px;
+  z-index: -2;
+  max-width: 700px;
+  opacity: 50%;
+}
+
+/* Register.css */
+
+.register-container {
+  display: flex; /* Flex para centrar el contenido */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  height: 80vh; /* Altura completa para centrar el contenedor */
+  margin-top: 200px; /* Ajusta este valor para bajar el formulario */
+}
+
+.register-form {
+  max-width: 400px; /* Ancho máximo del formulario */
+  width: 90%; /* Ancho del formulario en porcentaje */
+  background-color: #efe4b0; /* Color de fondo del formulario */
+  color: #fff; /* Color del texto */
+  padding: 20px; /* Espaciado interno */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Sombra suave */
+}
+
+.register-container h2 {
+  text-align: center; /* Centrar el título */
+  margin-bottom: 20px; /* Margen inferior */
+  color: #fff; /* Color del título */
+}
+
+form div {
+  margin-bottom: 15px; /* Espacio entre los campos del formulario */
+}
+
+label {
+  display: block; /* Bloque para que el label ocupe toda la línea */
+  margin-bottom: 5px; /* Margen inferior */
+  color: #fff; /* Color del texto de la etiqueta */
+}
+
+input {
+  width: 100%; /* Ancho completo para los inputs */
+  padding: 10px; /* Espaciado interno de los inputs */
+  border: 1px solid #cfbebe; /* Borde gris claro */
+  border-radius: 5px; /* Bordes redondeados para los inputs */
+  background: #fff; /* Fondo blanco para los inputs */
+  color: #000 !important; /* Asegúrate de que el texto sea negro */
+}
+
+.auth-button {
+  width: 100%; /* Ancho completo para el botón */
+  padding: 10px; /* Espaciado interno del botón */
+  background-color: #fff; /* Color de fondo del botón */
+  color: #000; /* Color del texto del botón */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados para el botón */
+  cursor: pointer; /* Cursor de mano al pasar sobre el botón */
+}
+
+.auth-button:hover {
+  background-color: rgb(
+    253,
+    219,
+    68
+  ); /* Color de fondo del botón al pasar el mouse */
+}
+
+p {
+  text-align: center; /* Centrar texto */
+  color: #fff; /* Color del texto del párrafo */
+}
+
+.reports-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #efe4b0; /* Fondo claro */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  padding-top: 150px; /* Espacio para el NavBar */
+}
+
+h1,
+h2 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.statistics-box,
+.charts-box {
+  background-color: #333; /* Fondo oscuro */
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.statistics-content,
+.charts-content {
+  color: white;
+}
+
+.statistics-content p,
+.charts-content p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.sobre-nosotros-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 3rem;
+  position: relative;
+}
+
+.sobre-nosotros-section {
+  background-color: #fff6db;
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 800px;
+  width: 100%;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  transition: transform 0.3s ease;
+}
+
+.sobre-nosotros-section:hover {
+  transform: translateY(-5px);
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.description {
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.team-list {
+  list-style-type: none;
+  padding: 0;
+  font-size: clamp(1rem, 3vw, 1.25rem);
+}
+
+.team-list li {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.team-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #ffc107;
+  font-size: 1.5rem;
+}
+
+/* Botón secundario */
+.secondary-button {
+  margin-top: 1rem;
+}
+
+/* Estilos responsivos */
+@media (max-width: 1000px) {
+  .sobre-nosotros-section {
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 800px) {
+  .sobre-nosotros-container {
+    padding-top: 2rem;
+  }
+
+  .sobre-nosotros-section {
+    max-width: 90%;
+    text-align: center;
+  }
+
+  .title,
+  .description,
+  .team-list {
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .sobre-nosotros-section {
+    max-width: 100%;
+  }
+}
+
+/* Menú de navegación cuadrado */
+.menu-nav {
+  position: absolute; /* Posición ajustable que se fijará con scroll */
+  top: 150px; /* Inicialmente a 150px desde la parte superior */
+  left: 20px; /* Espacio desde el lado izquierdo */
+  width: 200px; /* Ancho del menú */
+  max-height: calc(
+    100vh - 150px
+  ); /* Máxima altura basada en la ventana, evitando overflow */
+  overflow-y: auto; /* Permitir scroll si el contenido excede el tamaño */
+  background-color: #333;
+  padding: 20px;
+  box-sizing: border-box;
+  transition: top 0.3s; /* Transición suave al cambiar la posición */
+  border-radius: 10px; /* Esquinas redondeadas */
+}
+
+.menu-nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-nav ul li {
+  margin-bottom: 10px;
+}
+
+.menu-nav ul li a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 10px 15px;
+  background-color: #555;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.menu-nav ul li a:hover {
+  background-color: rgb(253, 219, 68);
+}
+
+/* Estilos del contenido principal */
+.user-management-page {
+  margin-left: 240px; /* Ajustar margen para evitar que el menú se superponga */
+  max-width: calc(100% - 240px);
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  text-align: center;
+  padding-top: 50px;
+}
+
+h1,
+h2 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.form {
+  background-color: #efe4b0;
+  padding: 20px;
+  border-radius: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.form button {
+  padding: 10px 15px;
+  background-color: #ffffff;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.form button:hover {
+  background-color: rgb(253, 219, 68);
+}
+/*css */
+
+.package-card {
+  background-color: #d3d3d3; /* Color de fondo de las tarjetas */
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  padding: 1rem;
+  margin: 10rem auto; /* Margen automático para centrar horizontalmente */
+  max-width: 800px;
+  width: 100%; /* Asegura que la tarjeta ocupe el ancho máximo permitido */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Agrega sombra para mejorar la apariencia */
+  /* Centrar la tarjeta */
+  display: flex;
+  flex-direction: column; /* Asegúrate de que el contenido se apile verticalmente */
+  align-items: center; /* Centra horizontalmente el contenido dentro de la tarjeta */
+}
+
+.package-header {
+  font-weight: bold;
+  padding: 0.5rem;
+  background-color: #eee; /* Color del encabezado */
+  border-bottom: 1px solid #ccc;
+  width: 100%; /* Asegura que el encabezado ocupe todo el ancho */
+  text-align: center; /* Centrar el texto del encabezado */
+}
+
+.package-content {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  width: 100%; /* Asegura que el contenido ocupe todo el ancho */
+}
+
+.package-id {
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.package-description {
+  flex: 1;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.status-button {
+  background-color: #b89c68; /* Color del botón */
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 1rem; /* Agrega un margen superior para espaciarlo del contenido */
+}
+
+.status-button:hover {
+  background-color: #a88b5f;
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+  .package-card {
+    padding: 0.5rem; /* Reduce el padding en pantallas pequeñas */
+  }
+
+  .package-header {
+    font-size: 1.2rem; /* Tamaño de fuente más pequeño en pantallas pequeñas */
+  }
+
+  .package-description {
+    font-size: 0.8rem; /* Tamaño de fuente más pequeño en pantallas pequeñas */
+  }
+
+  .status-button {
+    padding: 0.4rem 0.8rem; /* Reduce el padding del botón en pantallas pequeñas */
+    font-size: 0.9rem; /* Tamaño de fuente más pequeño en pantallas pequeñas */
+  }
+}

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import '../Css/ProfilePage.css';
-import '../Css/App.css';
+import '../App.css';
 import perfildefault from '../Assets/default-profile.jpg';
 import backgroundperfil from '../Assets/backgroundperfil.png';
 
