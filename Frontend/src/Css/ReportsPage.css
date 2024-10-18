@@ -34,3 +34,37 @@ h2 {
   margin: 10px 0;
   font-size: 1.1rem;
 }
+
+.table-box {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #efe4b0;
+  color: white;
+}
+
+.chart {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.charts-box {
+  margin-top: 20px;
+}
