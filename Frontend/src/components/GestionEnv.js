@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { throttle } from 'lodash';
-import '../Css/UserManagementPage.css';
-import '../Css/App.css';
+import '../Css/Login.css';
+import '../App.css';
 
 const GestionEnv = () => {
   const [createDireccion, setCreateDireccion] = useState({

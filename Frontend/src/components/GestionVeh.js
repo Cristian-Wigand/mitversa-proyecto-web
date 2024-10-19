@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Para redirigir al usuario si no es gerente
 import { throttle } from 'lodash';
-import '../Css/UserManagementPage.css';
-import '../Css/App.css';
+import '../Css/Login.css';
+import '../App.css';
 
 const GestionVeh = () => {
   const [createVehicle, setCreateVehicle] = useState({

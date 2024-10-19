@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'; // Importa useState y useRef
-import '../Css/Contactanos.css'; // Asegúrate de que no haya espacios innecesarios
-import '../Css/App.css';
+import '../App.css';
 import { init, sendForm } from 'emailjs-com'; // Importa EmailJS
 
 const Contactanos = () => {
@@ -45,8 +44,9 @@ const Contactanos = () => {
 
   return (
     <div className="contact-page-wrapper">
-      <h1 className="primary-heading">Contáctanos</h1>
-      <h1 className="primary-heading">Te ofreceremos la ayuda necesaria</h1>
+      <h1 className="primary-heading">
+        Contáctanos te ofreceremos la ayuda necesaria{' '}
+      </h1>
       <form
         className="contact-form-container"
         onSubmit={manejarEnvio}

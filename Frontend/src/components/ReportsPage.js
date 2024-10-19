@@ -1,5 +1,6 @@
 import React from 'react';
 import '../Css/ReportsPage.css';
+import '../App.css';
 
 const ReportsPage = () => {
   return (

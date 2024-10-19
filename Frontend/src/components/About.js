@@ -1,7 +1,7 @@
 import React from 'react';
 import AboutBackground from '../Assets/about-background.png';
 import AboutBackgroundImage from '../Assets/IMGPresent.png';
-import '../Css/About.css';
+import '../App.css';
 
 const About = () => {
   return (

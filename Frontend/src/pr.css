@@ -20,7 +20,7 @@ img {
   height: auto;
 }
 
-/* Estilos para el contenedor principal */
+/* Contenedor principal */
 .App {
   max-width: 95vw;
 }
@@ -31,7 +31,75 @@ img {
   }
 }
 
+/* Estilos para "about" */
+.about-container {
+  margin-top: 20rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.about-background-image-container {
+  position: absolute;
+  left: -150px;
+  z-index: -2;
+}
+
+.about-section-image-container {
+  flex: 0.9;
+  margin-right: 1rem;
+}
+
+.about-section-text-container {
+  flex: 1;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Títulos */
+h1,
+.primary-heading {
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: #000000;
+  max-width: 600px;
+  text-align: center;
+}
+
+.secondary-heading {
+  font-size: 42px;
+  color: #4c4c4c;
+  max-width: 600px;
+  text-align: center;
+}
+
+.tertiary-heading {
+  font-size: 36px;
+  color: #4c4c4c;
+  max-width: 600px;
+}
+
+.primary-subheading {
+  color: #000000;
+}
+
+.primary-text {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  max-width: 500px;
+  color: rgb(124, 124, 124);
+  margin: 1.5rem 0rem;
+}
+
 /* Estilos generales para formularios */
+.contact-page-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 6rem 0rem;
+}
+
 .contact-form-container {
   background-color: #efe4b0;
   max-width: 800px;
@@ -41,6 +109,14 @@ img {
   flex-direction: column;
   padding: 2rem;
   border-radius: 50px;
+}
+
+.contact-form-container input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #d4a961;
+  margin-bottom: 1rem; /* Espacio entre el input y el textarea */
 }
 
 .form-container {
@@ -63,63 +139,24 @@ label {
   color: #5e4e34;
 }
 
-input {
-  width: 100%;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #d4a961;
-}
-
-button {
+/* Botones */
+button,
+.primary-button,
+.secondary-button {
   padding: 10px 20px;
-  background-color: #d4a961;
-  border: none;
   border-radius: 5px;
-  color: white;
+  border: none;
   font-weight: bold;
   cursor: pointer;
 }
 
+button {
+  background-color: #d4a961;
+  color: white;
+}
+
 button:hover {
   background-color: #a68140;
-}
-
-/* Títulos */
-h1,
-.primary-heading {
-  max-width: 900px;
-  color: #4c4c4c;
-  text-align: center;
-}
-
-.secondary-heading {
-  font-size: 42px;
-  color: #4c4c4c;
-  max-width: 600px;
-  text-align: center;
-}
-
-.tertiary-heading {
-  font-size: 36px;
-  color: #4c4c4c;
-  max-width: 600px;
-}
-
-/* Botones */
-.primary-button,
-.secondary-button {
-  padding: 1rem 2.5rem;
-  background-color: #000000;
-  outline: none;
-  border: none;
-  border-radius: 5rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .primary-button {
