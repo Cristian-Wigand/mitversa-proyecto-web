@@ -1,20 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import '../Css/Login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [contraseña, setContraseña] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  useEffect(() => {
+    // Verifica si el usuario ya ha iniciado sesión
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'true') {
+      // Si hay una sesión iniciada, redirige a la página principal
+      navigate('/');
+    }
+  }, [navigate]);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para manejar el login
-    console.log('Logging in with', email, password);
+    setErrorMessage('');
+
+    const loginData = { email, contraseña };
+
+    try {
+      const response = await fetch(
+        'https://mit.christianferrer.me/api/login', // URL de la API de login
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(loginData),
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Inicio de sesión exitoso:', data);
+
+        if (data.id_usuario || data.id_repartidor || data.id_gerente) {
+          sessionStorage.setItem('isLoggedIn', 'true');
+        } else {
+          sessionStorage.setItem('isLoggedIn', 'false');
+        }
+
+        navigate('/');
+        window.location.reload();
+      } else {
+        setErrorMessage(data.error || 'Error al iniciar sesión');
+      }
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      setErrorMessage('Error al comunicarse con el servidor');
+    }
   };
 
   return (
     <div className="login-container">
       <div className="login-form">
         <h2>Inicia sesión</h2>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <form onSubmit={handleLogin}>
           <div>
             <label>Email:</label>
@@ -26,11 +73,11 @@ const Login = () => {
             />
           </div>
           <div>
-            <label>Password:</label>
+            <label>Contraseña:</label>
             <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type="password" // Corrige el tipo a 'password'
+              value={contraseña}
+              onChange={(e) => setContraseña(e.target.value)}
               required
             />
           </div>
@@ -38,6 +85,9 @@ const Login = () => {
             Iniciar sesión
           </button>
         </form>
+        <p>
+          ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
+        </p>
       </div>
     </div>
   );

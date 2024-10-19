@@ -7,14 +7,15 @@ import FormularioEnvio from './components/FormularioEnvio'; // Importa el formul
 import Login from './components/Login'; // Importa el componente de Login
 import Contactanos from './components/Contactanos'; // Importa el componente Contactanos
 import ProfilePage from './components/ProfilePage';
-import AuthPage from './components/AuthPage';
 import GestionEnv from './components/GestionEnv';
 import UserManagementPage from './components/UserManagementPage';
 import GestionVeh from './components/GestionVeh';
 import ReportsPage from './components/ReportsPage';
 import Register from './components/Register';
 
-import './Css/App.css'; // Importa los estilos
+import './App.css';
+import VisualizarPaquete from './components/VisualizarPaquete';
+import EstadoPaquete from './components/EstadoPaquete';
 
 const App = () => {
   return (
@@ -35,7 +36,6 @@ const App = () => {
           <Route path="/login" Component={Login} />
           {/* Ruta para el formulario de envíos */}
           <Route path="/envio" Component={FormularioEnvio} />
-          <Route path="/auth" element={<AuthPage />} />{' '}
           {/* Ruta específica para login y registro */}
           <Route path="/profilepage" element={<ProfilePage />} />
           {/* Otras rutas pueden agregarse aquí si es necesario */}
@@ -44,6 +44,8 @@ const App = () => {
           <Route path="/GestionVeh" element={<GestionVeh />} />
           <Route path="/ReportsPage" element={<ReportsPage />} />
           <Route path="/Register" element={<Register />} />
+          <Route path="/VisualizarPaquete" element={<VisualizarPaquete />} />
+          <Route path="/EstadoPaquete" element={<EstadoPaquete />} />
         </Routes>
       </div>
     </Router>

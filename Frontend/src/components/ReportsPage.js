@@ -10,6 +10,7 @@ import {
   LinearScale,
 } from 'chart.js'; // Agrega las importaciones necesarias
 import '../Css/ReportsPage.css';
+import '../App.css';
 
 // Registra los elementos
 ChartJS.register(

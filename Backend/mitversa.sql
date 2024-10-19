@@ -60,14 +60,15 @@ CREATE TABLE `envio` (
   `direccion_destino` int unsigned NOT NULL,
   `costo_total` int unsigned NOT NULL,
   PRIMARY KEY (`id_envio`),
-  KEY `id_repartidor` (`id_repartidor`),
-  KEY `id_cliente` (`id_cliente`),
-  KEY `direccion_origen` (`direccion_origen`),
-  KEY `direccion_destino` (`direccion_destino`),
+  KEY `idx_id_repartidor` (`id_repartidor`),
+  KEY `idx_id_cliente` (`id_cliente`),
+  KEY `idx_direccion_origen` (`direccion_origen`),
+  KEY `idx_direccion_destino` (`direccion_destino`),
   CONSTRAINT `envio_ibfk_1` FOREIGN KEY (`id_repartidor`) REFERENCES `usuario` (`id_usuario`),
   CONSTRAINT `envio_ibfk_2` FOREIGN KEY (`id_cliente`) REFERENCES `usuario` (`id_usuario`),
   CONSTRAINT `envio_ibfk_3` FOREIGN KEY (`direccion_origen`) REFERENCES `direccion` (`id_direccion`),
   CONSTRAINT `envio_ibfk_4` FOREIGN KEY (`direccion_destino`) REFERENCES `direccion` (`id_direccion`),
+  CONSTRAINT `chk_costo_total` CHECK ((`costo_total` > 0)),
   CONSTRAINT `envio_chk_1` CHECK ((`fecha_pedido_fin` > `fecha_pedido_inicio`)),
   CONSTRAINT `envio_chk_2` CHECK ((`direccion_origen` <> `direccion_destino`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -99,8 +100,8 @@ CREATE TABLE `historial_asignacion` (
   `kilometraje_final` decimal(10,2) DEFAULT NULL,
   `motivo` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id_historial`),
-  KEY `id_repartidor` (`id_repartidor`),
-  KEY `id_vehiculo` (`id_vehiculo`),
+  KEY `idx_id_repartidor` (`id_repartidor`),
+  KEY `idx_id_vehiculo` (`id_vehiculo`),
   CONSTRAINT `historial_asignacion_ibfk_1` FOREIGN KEY (`id_repartidor`) REFERENCES `usuario` (`id_usuario`),
   CONSTRAINT `historial_asignacion_ibfk_2` FOREIGN KEY (`id_vehiculo`) REFERENCES `vehiculo` (`id_vehiculo`),
   CONSTRAINT `historial_asignacion_chk_1` CHECK (((`fecha_devolucion` is null) or (`fecha_devolucion` > `fecha_asignacion`))),
@@ -131,8 +132,8 @@ CREATE TABLE `historial_envio` (
   `detalles` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `direccion` int unsigned NOT NULL,
   PRIMARY KEY (`id_historial`),
-  KEY `id_envio` (`id_envio`),
-  KEY `direccion` (`direccion`),
+  KEY `idx_id_envio` (`id_envio`),
+  KEY `idx_direccion` (`direccion`),
   CONSTRAINT `historial_envio_ibfk_1` FOREIGN KEY (`id_envio`) REFERENCES `envio` (`id_envio`),
   CONSTRAINT `historial_envio_ibfk_2` FOREIGN KEY (`direccion`) REFERENCES `direccion` (`id_direccion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -161,7 +162,7 @@ CREATE TABLE `incidencia` (
   `tipo_incidencia` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `descripcion` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id_incidencia`),
-  KEY `id_envio` (`id_envio`),
+  KEY `idx_id_envio` (`id_envio`),
   CONSTRAINT `incidencia_ibfk_1` FOREIGN KEY (`id_envio`) REFERENCES `envio` (`id_envio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -189,8 +190,8 @@ CREATE TABLE `notificacion` (
   `id_envio` int unsigned NOT NULL,
   `fecha` datetime NOT NULL,
   PRIMARY KEY (`id_notificacion`),
-  KEY `id_cliente` (`id_cliente`),
-  KEY `id_envio` (`id_envio`),
+  KEY `idx_id_cliente` (`id_cliente`),
+  KEY `idx_id_envio` (`id_envio`),
   CONSTRAINT `notificacion_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `usuario` (`id_usuario`),
   CONSTRAINT `notificacion_ibfk_2` FOREIGN KEY (`id_envio`) REFERENCES `envio` (`id_envio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -221,8 +222,9 @@ CREATE TABLE `paquete` (
   `alto` int unsigned NOT NULL,
   `descripcion` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id_paquete`),
-  KEY `id_envio` (`id_envio`),
-  CONSTRAINT `paquete_ibfk_1` FOREIGN KEY (`id_envio`) REFERENCES `envio` (`id_envio`)
+  KEY `idx_id_envio` (`id_envio`),
+  CONSTRAINT `paquete_ibfk_1` FOREIGN KEY (`id_envio`) REFERENCES `envio` (`id_envio`),
+  CONSTRAINT `chk_dimensiones` CHECK (((`peso` > 0) and (`largo` > 0) and (`ancho` > 0) and (`alto` > 0)))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -304,4 +306,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-21  2:17:00
+-- Dump completed on 2024-09-29 20:45:29

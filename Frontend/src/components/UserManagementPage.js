@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../Css/UserManagementPage.css';
-import '../Css/App.css';
+import '../App.css';
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState([]);

@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",    # Para poder comunicarnos con otro backend
     "rest_framework", # Crear apis
-    "tasks",
+    "api",
 ]
 
 MIDDLEWARE = [

@@ -1,58 +1,67 @@
 /* Register.css */
 
 .register-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  display: flex; /* Flex para centrar el contenido */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  height: 80vh; /* Altura completa para centrar el contenedor */
+  margin-top: 200px; /* Ajusta este valor para bajar el formulario */
 }
 
 .register-form {
-  width: 45%;
-  background-color: #efe4b0;
-  color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  max-width: 400px; /* Ancho máximo del formulario */
+  width: 90%; /* Ancho del formulario en porcentaje */
+  background-color: #efe4b0; /* Color de fondo del formulario */
+  color: #fff; /* Color del texto */
+  padding: 20px; /* Espaciado interno */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Sombra suave */
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
+.register-container h2 {
+  text-align: center; /* Centrar el título */
+  margin-bottom: 20px; /* Margen inferior */
+  color: #fff; /* Color del título */
 }
 
 form div {
-  margin-bottom: 15px;
+  margin-bottom: 15px; /* Espacio entre los campos del formulario */
 }
 
 label {
-  display: block;
-  margin-bottom: 5px;
-  color: #fff;
+  display: block; /* Bloque para que el label ocupe toda la línea */
+  margin-bottom: 5px; /* Margen inferior */
+  color: #fff; /* Color del texto de la etiqueta */
 }
 
 input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #cfbebe;
-  border-radius: 5px;
-  background: #fff;
+  width: 100%; /* Ancho completo para los inputs */
+  padding: 10px; /* Espaciado interno de los inputs */
+  border: 1px solid #cfbebe; /* Borde gris claro */
+  border-radius: 5px; /* Bordes redondeados para los inputs */
+  background: #fff; /* Fondo blanco para los inputs */
+  color: #000 !important; /* Asegúrate de que el texto sea negro */
 }
 
 .auth-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #fff;
-  color: #000;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  width: 100%; /* Ancho completo para el botón */
+  padding: 10px; /* Espaciado interno del botón */
+  background-color: #fff; /* Color de fondo del botón */
+  color: #000; /* Color del texto del botón */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados para el botón */
+  cursor: pointer; /* Cursor de mano al pasar sobre el botón */
 }
 
 .auth-button:hover {
-  background-color: rgb(253, 219, 68);
+  background-color: rgb(
+    253,
+    219,
+    68
+  ); /* Color de fondo del botón al pasar el mouse */
 }
 
 p {
-  text-align: center;
+  text-align: center; /* Centrar texto */
+  color: #fff; /* Color del texto del párrafo */
 }
