@@ -6,19 +6,62 @@ import '../App.css';
 
 const NavBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [nombreUsuario, setNombreUsuario] = useState('');
   const navigate = useNavigate();
 
   // Revisamos el sessionStorage al cargar el componente
   useEffect(() => {
     const loggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
     setIsLoggedIn(loggedIn);
+
+    // Obtener el nombre del usuario desde sessionStorage
+    const nombre = sessionStorage.getItem('nombreUsuario');
+    if (nombre) {
+      setNombreUsuario(nombre);
+    }
   }, []);
 
   const handleLogout = () => {
     // Elimina la sesión de sessionStorage y actualiza el estado
     sessionStorage.removeItem('isLoggedIn');
+    sessionStorage.removeItem('nombreUsuario');
     setIsLoggedIn(false);
     navigate('/'); // Redirige a la página principal tras cerrar sesión
+  };
+
+  const renderDropdown = () => {
+    if (nombreUsuario === 'Cristian') {
+      return (
+        <div className="dropdown-content">
+          <Link to="/profilepage">Ver perfil</Link>
+          <Link to="/GestionEnv">Gestionar envíos</Link>
+          <Link to="/GestionUser">Gestionar Usuarios</Link>
+          <Link to="/GestionVeh">Gestionar Vehiculos</Link>
+          <Link to="/ReportsPage">Informes</Link>
+        </div>
+      );
+    } else if (nombreUsuario === 'Javier') {
+      return (
+        <div className="dropdown-content">
+          <Link to="/profilepage">Ver perfil</Link>
+          <Link to="/VisualizarPaquete">Mis Paquetes</Link>
+        </div>
+      );
+    } else if (nombreUsuario === 'Sebastian') {
+      return (
+        <div className="dropdown-content">
+          <Link to="/profilepage">Ver perfil</Link>
+          <Link to="/EstadoPaquete">Historial envios</Link>
+        </div>
+      );
+    } else {
+      return (
+        <div className="dropdown-content">
+          <Link to="/profilepage">Ver perfil</Link>
+          <Link to="/ReportsPage">Informes</Link>
+        </div>
+      );
+    }
   };
 
   return (
@@ -43,24 +86,18 @@ const NavBar = () => {
         )}
 
         {/* Dropdown para ProfilePage */}
-        <div className="dropdown">
-          <Link to="/profilepage" className="dropbtn">
-            <img
-              src={iconoprofile}
-              alt="iconoprofile"
-              className="icono-profile"
-            />
-          </Link>
-          <div className="dropdown-content">
-            <Link to="/profilepage">Ver perfil</Link>
-            <Link to="/GestionEnv">Gestionar envíos</Link>
-            <Link to="/GestionUser">Gestionar usuarios</Link>
-            <Link to="/GestionVeh">Gestionar vehículos</Link>
-            <Link to="/VisualizarPaquete">Visualizar Paquete</Link>
-            <Link to="/EstadoPaquete">Estado Paquete</Link>
-            <Link to="/ReportsPage">Informes</Link>
+        {isLoggedIn && (
+          <div className="dropdown">
+            <Link to="/profilepage" className="dropbtn">
+              <img
+                src={iconoprofile}
+                alt="iconoprofile"
+                className="icono-profile"
+              />
+            </Link>
+            {renderDropdown()}
           </div>
-        </div>
+        )}
       </div>
     </nav>
   );

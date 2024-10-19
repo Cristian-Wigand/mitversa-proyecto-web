@@ -20,7 +20,9 @@ const UserManagementPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('https://mit.christianferrer.me/api/usuarios/');
+      const response = await fetch(
+        'https://mit.christianferrer.me/api/usuarios/',
+      );
       const data = await response.json();
       if (response.ok) {
         setUsers(data);
@@ -61,13 +63,16 @@ const UserManagementPage = () => {
     };
 
     try {
-      const response = await fetch('https://mit.christianferrer.me/api/usuarios/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'https://mit.christianferrer.me/api/usuarios/',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
         },
-        body: JSON.stringify(userData),
-      });
+      );
 
       if (response.ok) {
         alert('Usuario creado exitosamente');
@@ -109,9 +114,15 @@ const UserManagementPage = () => {
       {searchResult && (
         <div className="search-result">
           <h2>Resultados de la Búsqueda:</h2>
-          <p><strong>Nombre:</strong> {searchResult.nombre}</p>
-          <p><strong>Apellido:</strong> {searchResult.apellido}</p>
-          <p><strong>Email:</strong> {searchResult.email}</p>
+          <p>
+            <strong>Nombre:</strong> {searchResult.nombre}
+          </p>
+          <p>
+            <strong>Apellido:</strong> {searchResult.apellido}
+          </p>
+          <p>
+            <strong>Email:</strong> {searchResult.email}
+          </p>
         </div>
       )}
 

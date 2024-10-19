@@ -40,14 +40,18 @@ const Login = () => {
       if (response.ok) {
         console.log('Inicio de sesión exitoso:', data);
 
+        // Verifica que los datos del usuario existen en la respuesta
         if (data.id_usuario || data.id_repartidor || data.id_gerente) {
           sessionStorage.setItem('isLoggedIn', 'true');
+
+          // Almacena el nombre del usuario en sessionStorage
+          sessionStorage.setItem('nombreUsuario', data.nombre);
+
+          navigate('/');
+          window.location.reload();
         } else {
           sessionStorage.setItem('isLoggedIn', 'false');
         }
-
-        navigate('/');
-        window.location.reload();
       } else {
         setErrorMessage(data.error || 'Error al iniciar sesión');
       }
