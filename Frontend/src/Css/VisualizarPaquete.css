@@ -1,6 +1,6 @@
 .package-card {
   background-color: #d3d3d3; /* Color de fondo de las tarjetas */
-  border: 1px solid #ccc;
+  border: 1px solid #ffffff; /* Borde Container*/
   border-radius: 2px;
   padding: 1rem;
   margin: 10rem auto; /* Margen automático para centrar horizontalmente */
@@ -14,6 +14,7 @@
 }
 
 .package-header {
+  /*Cuadro TITULO  */
   font-weight: bold;
   padding: 0.5rem;
   background-color: #eee; /* Color del encabezado */
@@ -26,7 +27,7 @@
   display: flex;
   align-items: center;
   padding: 1rem 0;
-  width: 100%; /* Asegura que el contenido ocupe todo el ancho */
+  width: 70%; /* Asegura que el contenido ocupe todo el ancho */
 }
 
 .package-id {
@@ -45,10 +46,14 @@
   color: #fff;
   border: none;
   border-radius: 20px;
-  padding: 0.5rem 1rem;
+  padding: 0.7rem 0.9rem;
   cursor: pointer;
   font-weight: bold;
   margin-top: 1rem; /* Agrega un margen superior para espaciarlo del contenido */
+}
+
+.package-details {
+  padding: 0.1rem 4rem;
 }
 
 .status-button:hover {
