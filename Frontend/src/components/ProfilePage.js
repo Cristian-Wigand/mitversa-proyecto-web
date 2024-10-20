@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
 import perfildefault from '../Assets/default-profile.jpg';
 import backgroundperfil from '../Assets/backgroundperfil.png';
@@ -6,14 +6,27 @@ import backgroundperfil from '../Assets/backgroundperfil.png';
 const ProfilePage = () => {
   const [activeForm, setActiveForm] = useState(null);
 
-  const [name, setName] = useState('Nombre del Cliente');
-  const [email, setEmail] = useState('cliente@correo.com');
+  // Inicializa los estados con valores vacíos
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [apellido, setApellido] = useState('');
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
+  // Carga los datos del usuario del sessionStorage al montar el componente
+  useEffect(() => {
+    const storedName = sessionStorage.getItem('nombreUsuario');
+    const storedEmail = sessionStorage.getItem('emailUsuario');
+    const storedApellido = sessionStorage.getItem('apellidoUsuario');
+    if (storedName) setName(storedName);
+    if (storedEmail) setEmail(storedEmail);
+    if (storedApellido) setApellido(storedApellido);
+
+  }, []);
 
   const handleUpdateName = (e) => {
     e.preventDefault();
@@ -57,7 +70,7 @@ const ProfilePage = () => {
         <div className="profile-box">
           <div className="profile-pic-name">
             <img src={perfildefault} alt="Profile" className="profile-pic" />
-            <h2 className="profile-name">{name}</h2>
+            <h2 className="profile-name">{name} {apellido}</h2>
           </div>
           <div className="update-option">
             <button
