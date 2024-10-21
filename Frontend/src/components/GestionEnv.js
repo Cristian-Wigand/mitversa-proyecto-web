@@ -4,18 +4,13 @@ import '../Css/Login.css';
 import '../App.css';
 
 const GestionEnv = () => {
-  const [createComuna, setCreateComuna] = useState({
-    nombre: '',
-    id_ciudad: '',
-  });
-  const [createCiudad, setCreateCiudad] = useState({ nombre: '' });
   const [createDireccion, setCreateDireccion] = useState({
     id_comuna: '',
+    id_ciudad: '',
     calle: '',
     numero: '',
   });
   const [createEnvio, setCreateEnvio] = useState({
-    id_envio: '',
     id_estado_envio: '',
     id_repartidor: '',
     id_cliente: '',
@@ -26,7 +21,6 @@ const GestionEnv = () => {
     costo_total: '',
   });
   const [createPaquete, setCreatePaquete] = useState({
-    id_paquete: '',
     id_envio: '',
     peso: '',
     largo: '',
@@ -35,7 +29,13 @@ const GestionEnv = () => {
     descripcion: '',
   });
 
+  const [comunas, setComunas] = useState([]);
+  const [ciudades, setCiudades] = useState([]);
+  const [estadosEnvio, setEstadosEnvio] = useState([]); // Nuevo estado para almacenar los estados de envío
+  const [selectedComuna, setSelectedComuna] = useState('');
+  const [filteredCiudades, setFilteredCiudades] = useState([]);
   const [menuTop, setMenuTop] = useState(150);
+  const [allComunas, setAllComunas] = useState([]);
 
   const handleScroll = throttle(() => {
     const scrollY = window.scrollY;
@@ -47,12 +47,83 @@ const GestionEnv = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleCreateComuna = (e) => {
-    setCreateComuna({ ...createComuna, [e.target.name]: e.target.value });
+  useEffect(() => {
+    // Fetch comunas y ciudades desde la API
+    fetch('https://mitversa.christianferrer.me/api/comunas/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const uniqueComunas = Array.from(
+          new Set(data.map((comuna) => comuna.nombre)),
+        ).map((nombre) => data.find((comuna) => comuna.nombre === nombre));
+        setComunas(uniqueComunas);
+        setAllComunas(data);
+      })
+      .catch((error) => console.error('Error al obtener comunas:', error));
+
+    fetch('https://mitversa.christianferrer.me/api/ciudades/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCiudades(data);
+      })
+      .catch((error) => console.error('Error al obtener ciudades:', error));
+
+    // Fetch estados de envío desde la API
+    fetch('https://mitversa.christianferrer.me/api/estados-envio/', {
+      // Cambia esta URL a la correcta para obtener los estados de envío
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setEstadosEnvio(data); // Guardar los estados de envío en el nuevo estado
+        console.log(data);
+      })
+      .catch((error) =>
+        console.error('Error al obtener estados de envío:', error),
+      );
+  }, []);
+
+  const handleComunaChange = (e) => {
+    const selectedNombreComuna = e.target.value;
+    setSelectedComuna(selectedNombreComuna);
+
+    const filteredComunas = allComunas.filter(
+      (comuna) => comuna.nombre === selectedNombreComuna,
+    );
+    const idsCiudades = filteredComunas.map((comuna) => comuna.id_ciudad);
+
+    const ciudadesFiltradas = ciudades.filter((ciudad) =>
+      idsCiudades.includes(ciudad.id_ciudad),
+    );
+
+    setFilteredCiudades(ciudadesFiltradas);
+
+    setCreateDireccion({
+      ...createDireccion,
+      id_comuna: filteredComunas.length > 0 ? filteredComunas[0].id_comuna : '',
+    });
   };
 
-  const handleCreateCiudad = (e) => {
-    setCreateCiudad({ ...createCiudad, [e.target.name]: e.target.value });
+  const handleCiudadChange = (e) => {
+    setCreateDireccion({
+      ...createDireccion,
+      id_ciudad: e.target.value,
+    });
   };
 
   const handleCreateDireccion = (e) => {
@@ -65,70 +136,6 @@ const GestionEnv = () => {
 
   const handleCreatePaquete = (e) => {
     setCreatePaquete({ ...createPaquete, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmitCreateCiudad = (e) => {
-    e.preventDefault();
-    if (!createCiudad.nombre) {
-      alert('El nombre de la ciudad es obligatorio');
-      return;
-    }
-
-    fetch('https://mitversa.christianferrer.me/api/ciudades/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
-      },
-      body: JSON.stringify(createCiudad),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Ciudad creada:', data);
-        alert('Ciudad creada exitosamente');
-        setCreateCiudad({ nombre: '' }); // Reset form
-      })
-      .catch((error) => {
-        console.error('Error al crear la ciudad:', error);
-        alert(error.message || 'Error al crear la ciudad');
-      });
-  };
-
-  const handleSubmitCreateComuna = (e) => {
-    e.preventDefault();
-    if (!createComuna.id_ciudad) {
-      alert('El ID de ciudad es obligatorio');
-      return;
-    }
-
-    fetch(
-      `https://mitversa.christianferrer.me/api/ciudades/${createComuna.id_ciudad}`,
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Ciudad no existe');
-        }
-        return response.json();
-      })
-      .then(() => {
-        return fetch('https://mitversa.christianferrer.me/api/comunas/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
-          },
-          body: JSON.stringify(createComuna),
-        });
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Comuna creada:', data);
-        alert('Comuna creada exitosamente');
-      })
-      .catch((error) => {
-        console.error('Error al crear la comuna:', error);
-        alert(error.message || 'Error al crear la comuna');
-      });
   };
 
   const handleSubmitCreateDireccion = (e) => {
@@ -154,7 +161,6 @@ const GestionEnv = () => {
 
   const handleSubmitCreateEnvio = (e) => {
     e.preventDefault();
-    console.log('Datos del envío:', createEnvio); // Debugging
     fetch('https://mitversa.christianferrer.me/api/envios/', {
       method: 'POST',
       headers: {
@@ -163,21 +169,9 @@ const GestionEnv = () => {
       },
       body: JSON.stringify(createEnvio),
     })
-      .then((response) => {
-        console.log('Código de respuesta:', response.status); // Debugging
-        return response
-          .json()
-          .then((data) => ({ data, status: response.status }));
-      })
-      .then(({ data, status }) => {
-        console.log('Datos del envío creado:', data);
-        if (status === 200 || status === 201) {
-          alert('Envío creado exitosamente');
-        } else {
-          alert(
-            'Error al crear el envío: ' + (data.message || 'Error desconocido'),
-          );
-        }
+      .then((response) => response.json())
+      .then((data) => {
+        alert('Envío creado exitosamente');
       })
       .catch((error) => {
         console.error('Error al crear el envío:', error);
@@ -197,7 +191,6 @@ const GestionEnv = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Paquete creado:', data);
         alert('Paquete creado exitosamente');
       })
       .catch((error) => {
@@ -211,9 +204,6 @@ const GestionEnv = () => {
       <div className="menu-nav" style={{ top: `${menuTop}px` }}>
         <ul>
           <li>
-            <a href="#comuna">Comuna</a>
-          </li>
-          <li>
             <a href="#direccion">Dirección</a>
           </li>
           <li>
@@ -222,51 +212,11 @@ const GestionEnv = () => {
           <li>
             <a href="#paquete">Paquete</a>
           </li>
-          <li>
-            <a href="#ciudad">Ciudad</a>
-          </li>
         </ul>
       </div>
 
       <div className="user-management-page">
         <h1>Gestionar Envío</h1>
-
-        {/* Formulario para crear ciudad */}
-        <form className="form" onSubmit={handleSubmitCreateCiudad} id="ciudad">
-          <h2>Crear Ciudad</h2>
-          <input
-            type="text"
-            name="nombre"
-            placeholder="Nombre Ciudad"
-            value={createCiudad.nombre}
-            onChange={handleCreateCiudad}
-            required
-          />
-          <button type="submit">Crear Ciudad</button>
-        </form>
-
-        {/* Formulario para crear comuna */}
-        <form className="form" onSubmit={handleSubmitCreateComuna} id="comuna">
-          <h2>Crear Comuna</h2>
-          <input
-            type="text"
-            name="nombre"
-            placeholder="Nombre Comuna"
-            value={createComuna.nombre}
-            onChange={handleCreateComuna}
-          />
-          <input
-            type="number"
-            name="id_ciudad"
-            placeholder="ID Ciudad"
-            value={createComuna.id_ciudad}
-            onChange={handleCreateComuna}
-            min="1"
-            step="1"
-            required
-          />
-          <button type="submit">Crear Comuna</button>
-        </form>
 
         {/* Formulario para crear dirección */}
         <form
@@ -275,15 +225,27 @@ const GestionEnv = () => {
           id="direccion"
         >
           <h2>Crear Dirección</h2>
-          <input
-            type="number"
-            name="id_comuna"
-            placeholder="ID Comuna"
-            value={createDireccion.id_comuna}
-            onChange={handleCreateDireccion}
-            min="1"
-            step="1"
-          />
+          <select name="comuna" onChange={handleComunaChange}>
+            <option value="">Seleccione una comuna</option>
+            {comunas.map((comuna) => (
+              <option key={comuna.id_comuna} value={comuna.nombre}>
+                {comuna.nombre}
+              </option>
+            ))}
+          </select>
+          {/* Mostrar la ciudad asociada */}
+          <select
+            name="ciudad"
+            onChange={handleCiudadChange}
+            value={createDireccion.id_ciudad}
+          >
+            <option value="">Seleccione una ciudad</option>
+            {filteredCiudades.map((ciudad) => (
+              <option key={ciudad.id_ciudad} value={ciudad.id_ciudad}>
+                {ciudad.nombre}
+              </option>
+            ))}
+          </select>
           <input
             type="text"
             name="calle"
@@ -306,22 +268,22 @@ const GestionEnv = () => {
         {/* Formulario para crear envío */}
         <form className="form" onSubmit={handleSubmitCreateEnvio} id="envio">
           <h2>Crear Envío</h2>
-          <input
-            type="number"
-            name="id_envio"
-            placeholder="ID Envío"
-            value={createEnvio.id_envio}
-            onChange={handleCreateEnvio}
-            min="1"
-            step="1"
-          />
-          <input
-            type="text"
+          <select
             name="id_estado_envio"
-            placeholder="ID Estado Envío"
-            value={createEnvio.id_estado_envio}
             onChange={handleCreateEnvio}
-          />
+            value={createEnvio.id_estado_envio}
+          >
+            <option value="">Seleccione un estado de envío</option>
+            {estadosEnvio.map((estado) => (
+              <option
+                key={estado.id_estado_envio}
+                value={estado.id_estado_envio}
+              >
+                {estado.nombre}{' '}
+                {/* Asegúrate de que la propiedad que quieres mostrar es 'descripcion' */}
+              </option>
+            ))}
+          </select>
           <input
             type="number"
             name="id_repartidor"
@@ -329,7 +291,6 @@ const GestionEnv = () => {
             value={createEnvio.id_repartidor}
             onChange={handleCreateEnvio}
             min="1"
-            step="1"
           />
           <input
             type="number"
@@ -338,7 +299,6 @@ const GestionEnv = () => {
             value={createEnvio.id_cliente}
             onChange={handleCreateEnvio}
             min="1"
-            step="1"
           />
           <input
             type="datetime-local"
@@ -372,8 +332,7 @@ const GestionEnv = () => {
             placeholder="Costo Total"
             value={createEnvio.costo_total}
             onChange={handleCreateEnvio}
-            min="1"
-            step="0.01"
+            min="0"
           />
           <button type="submit">Crear Envío</button>
         </form>
@@ -387,57 +346,43 @@ const GestionEnv = () => {
           <h2>Crear Paquete</h2>
           <input
             type="number"
-            name="id_paquete"
-            placeholder="ID Paquete"
-            value={createPaquete.id_paquete}
-            onChange={handleCreatePaquete}
-            min="1"
-            step="1"
-          />
-          <input
-            type="number"
             name="id_envio"
             placeholder="ID Envío"
             value={createPaquete.id_envio}
             onChange={handleCreatePaquete}
             min="1"
-            step="1"
           />
           <input
             type="number"
             name="peso"
-            placeholder="Peso (kg)"
+            placeholder="Peso"
             value={createPaquete.peso}
             onChange={handleCreatePaquete}
             min="0"
-            step="0.01"
           />
           <input
             type="number"
             name="largo"
-            placeholder="Largo (cm)"
+            placeholder="Largo"
             value={createPaquete.largo}
             onChange={handleCreatePaquete}
             min="0"
-            step="0.01"
           />
           <input
             type="number"
             name="ancho"
-            placeholder="Ancho (cm)"
+            placeholder="Ancho"
             value={createPaquete.ancho}
             onChange={handleCreatePaquete}
             min="0"
-            step="0.01"
           />
           <input
             type="number"
             name="alto"
-            placeholder="Alto (cm)"
+            placeholder="Alto"
             value={createPaquete.alto}
             onChange={handleCreatePaquete}
             min="0"
-            step="0.01"
           />
           <input
             type="text"
