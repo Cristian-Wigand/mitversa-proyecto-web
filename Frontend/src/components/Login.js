@@ -47,13 +47,11 @@ const Login = () => {
           // Almacena el nombre del usuario en sessionStorage
           sessionStorage.setItem('nombreUsuario', data.nombre);
 
-          sessionStorage.setItem('apellidoUsuario', data.apellido)
-          
+          sessionStorage.setItem('apellidoUsuario', data.apellido);
+
           sessionStorage.setItem('emailUsuario', data.email); // Asegúrate de que 'data.email' exista en la respuesta
 
-          sessionStorage.setItem('tipoUsuario', data.tipo_usuario)
-
-          
+          sessionStorage.setItem('tipoUsuario', data.tipo_usuario);
 
           navigate('/');
           window.location.reload();

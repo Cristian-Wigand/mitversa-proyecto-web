@@ -10,8 +10,10 @@ const UserManagementPage = () => {
     nombre: '',
     apellido: '',
     email: '',
-    contraseña: '',
+    password: '',
+    confirmpassword: '', // Añadir confirmación de contraseña
   });
+  const [tipoUsuario, setTipoUsuario] = useState('cliente'); // Estado para el tipo de usuario
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const UserManagementPage = () => {
   const fetchUsers = async () => {
     try {
       const response = await fetch(
-        'https://mit.christianferrer.me/api/usuarios/',
+        'https://mitversa.christianferrer.me/api/usuarios/'
       );
       const data = await response.json();
       if (response.ok) {
@@ -56,41 +58,75 @@ const UserManagementPage = () => {
 
   const handleSubmitCreateUser = async (e) => {
     e.preventDefault();
+
+    // Validar que las contraseñas coinciden
+    if (createUserData.password !== createUserData.confirmpassword) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
+
     const userData = {
       nombre: createUserData.nombre,
       apellido: createUserData.apellido,
       email: createUserData.email,
+      password: createUserData.password,
+      tipo_usuario: tipoUsuario,
+      usuario_creado_el: new Date().toISOString(),
+      usuario_actualizado_el: null, // Establecer como null al crear el usuario
     };
 
     try {
-      const response = await fetch(
-        'https://mit.christianferrer.me/api/usuarios/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData),
+      const response = await fetch('https://mitversa.christianferrer.me/api/usuarios/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify(userData),
+      });
 
       if (response.ok) {
         alert('Usuario creado exitosamente');
         fetchUsers(); // Volver a cargar la lista de usuarios
-        setCreateUserData({
-          nombre: '',
-          apellido: '',
-          email: '',
-          contraseña: '',
-        });
+        setCreateUserData({ nombre: '', apellido: '', email: '', password: '', confirmpassword: '' }); // Limpiar campos
+        setTipoUsuario('cliente'); // Restablecer el tipo de usuario
       } else {
         const data = await response.json();
+        console.error(data); // Imprimir detalles del error
         setErrorMessage(data.message || 'Error al crear el usuario.');
       }
     } catch (error) {
       setErrorMessage('Error de conexión con el servidor.');
     }
   };
+
+  const token = localStorage.getItem('token'); // O la forma que uses para almacenar tu token
+
+  
+  const handleDeleteUser = async (userId) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+      try {
+        const response = await fetch(`https://mitversa.christianferrer.me/api/usuarios/${userId}/`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // Si estás usando autenticación
+          },
+        });
+
+        if (response.ok) {
+          alert("Usuario eliminado exitosamente.");
+          setUsers((prevUsers) => prevUsers.filter(user => user.id_usuario !== userId)); // Actualiza la lista de usuarios
+          setSearchResult(null); // Limpiar el resultado de búsqueda
+        } else {
+          const errorData = await response.json();
+          alert(`Error: ${errorData.detail || 'No se pudo eliminar el usuario.'}`);
+        }
+      } catch (error) {
+        alert(`Error: ${error.message}`);
+      }
+    }
+  };
+
 
   return (
     <div className="user-management-page">
@@ -123,6 +159,12 @@ const UserManagementPage = () => {
           <p>
             <strong>Email:</strong> {searchResult.email}
           </p>
+          <p>
+            <strong>Tipo de usuario:</strong> {searchResult.tipo_usuario}
+          </p>
+          <button onClick={() => handleDeleteUser(searchResult.id_usuario)}>
+            Eliminar Usuario
+          </button>
         </div>
       )}
 
@@ -155,12 +197,31 @@ const UserManagementPage = () => {
         />
         <input
           type="password"
-          name="contraseña"
+          name="password"
           placeholder="Contraseña"
-          value={createUserData.contraseña}
+          value={createUserData.password}
           onChange={handleCreateUserChange}
           required
         />
+        <input
+          type="password"
+          name="confirmpassword"
+          placeholder="Confirmar Contraseña"
+          value={createUserData.confirmpassword}
+          onChange={handleCreateUserChange}
+          required
+        />
+        <div>
+          <label>Tipo de Usuario:</label>
+          <select
+            value={tipoUsuario}
+            onChange={(e) => setTipoUsuario(e.target.value)}
+          >
+            <option value="cliente">Cliente</option>
+            <option value="gerente">Gerente</option>
+            <option value="repartidor">Repartidor</option>
+          </select>
+        </div>
         <button type="submit">Crear Usuario</button>
       </form>
     </div>

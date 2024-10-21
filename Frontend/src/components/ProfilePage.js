@@ -25,7 +25,6 @@ const ProfilePage = () => {
     if (storedName) setName(storedName);
     if (storedEmail) setEmail(storedEmail);
     if (storedApellido) setApellido(storedApellido);
-
   }, []);
 
   const handleUpdateName = (e) => {
@@ -70,7 +69,9 @@ const ProfilePage = () => {
         <div className="profile-box">
           <div className="profile-pic-name">
             <img src={perfildefault} alt="Profile" className="profile-pic" />
-            <h2 className="profile-name">{name} {apellido}</h2>
+            <h2 className="profile-name">
+              {name} {apellido}
+            </h2>
           </div>
           <div className="update-option">
             <button
