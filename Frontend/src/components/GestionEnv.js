@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { throttle } from 'lodash';
-import '../Css/Login.css';
 import '../App.css';
 
 const GestionEnv = () => {
@@ -204,13 +203,13 @@ const GestionEnv = () => {
       <div className="menu-nav" style={{ top: `${menuTop}px` }}>
         <ul>
           <li>
-            <a href="#direccion">Dirección</a>
+            <a href="#direccion">Crear Dirección</a>
           </li>
           <li>
-            <a href="#envio">Envío</a>
+            <a href="#envio">Crear Envío</a>
           </li>
           <li>
-            <a href="#paquete">Paquete</a>
+            <a href="#paquete">Crear Paquete</a>
           </li>
         </ul>
       </div>

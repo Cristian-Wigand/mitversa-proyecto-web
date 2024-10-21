@@ -1,5 +1,6 @@
 import React from 'react';
 import { Bar, Pie } from 'react-chartjs-2';
+import '../App.css';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -9,7 +10,6 @@ import {
   CategoryScale,
   LinearScale,
 } from 'chart.js'; // Agrega las importaciones necesarias
-import '../Css/ReportsPage.css';
 import '../App.css';
 
 // Registra los elementos

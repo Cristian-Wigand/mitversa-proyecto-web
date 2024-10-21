@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../Css/UserManagementPage.css';
 import '../App.css';
+import { throttle } from 'lodash';
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState([]);
@@ -11,20 +12,26 @@ const UserManagementPage = () => {
     apellido: '',
     email: '',
     password: '',
-    confirmpassword: '', // Añadir confirmación de contraseña
+    confirmpassword: '',
   });
-  const [tipoUsuario, setTipoUsuario] = useState('cliente'); // Estado para el tipo de usuario
+  const [tipoUsuario, setTipoUsuario] = useState('cliente');
   const [errorMessage, setErrorMessage] = useState('');
+  const [menuTop, setMenuTop] = useState(150);
 
   useEffect(() => {
-    fetchUsers(); // Cargar la lista de usuarios al iniciar la página
+    fetchUsers();
+    const handleScroll = throttle(() => {
+      const scrollY = window.scrollY;
+      setMenuTop(scrollY <= 150 ? 150 : scrollY);
+    }, 100);
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(
-        'https://mitversa.christianferrer.me/api/usuarios/'
-      );
+      const response = await fetch('https://mitversa.christianferrer.me/api/usuarios/');
       const data = await response.json();
       if (response.ok) {
         setUsers(data);
@@ -45,7 +52,7 @@ const UserManagementPage = () => {
     const user = users.find((user) => user.email === searchEmail);
     if (user) {
       setSearchResult(user);
-      setErrorMessage(''); // Limpiar mensaje de error si se encuentra el usuario
+      setErrorMessage('');
     } else {
       setSearchResult(null);
       setErrorMessage('Usuario no encontrado.');
@@ -58,13 +65,10 @@ const UserManagementPage = () => {
 
   const handleSubmitCreateUser = async (e) => {
     e.preventDefault();
-
-    // Validar que las contraseñas coinciden
     if (createUserData.password !== createUserData.confirmpassword) {
       alert('Las contraseñas no coinciden');
       return;
     }
-
     const userData = {
       nombre: createUserData.nombre,
       apellido: createUserData.apellido,
@@ -72,7 +76,7 @@ const UserManagementPage = () => {
       password: createUserData.password,
       tipo_usuario: tipoUsuario,
       usuario_creado_el: new Date().toISOString(),
-      usuario_actualizado_el: null, // Establecer como null al crear el usuario
+      usuario_actualizado_el: null,
     };
 
     try {
@@ -86,12 +90,18 @@ const UserManagementPage = () => {
 
       if (response.ok) {
         alert('Usuario creado exitosamente');
-        fetchUsers(); // Volver a cargar la lista de usuarios
-        setCreateUserData({ nombre: '', apellido: '', email: '', password: '', confirmpassword: '' }); // Limpiar campos
-        setTipoUsuario('cliente'); // Restablecer el tipo de usuario
+        fetchUsers();
+        setCreateUserData({
+          nombre: '',
+          apellido: '',
+          email: '',
+          password: '',
+          confirmpassword: '',
+        });
+        setTipoUsuario('cliente');
       } else {
         const data = await response.json();
-        console.error(data); // Imprimir detalles del error
+        console.error(data);
         setErrorMessage(data.message || 'Error al crear el usuario.');
       }
     } catch (error) {
@@ -99,24 +109,20 @@ const UserManagementPage = () => {
     }
   };
 
-  const token = localStorage.getItem('token'); // O la forma que uses para almacenar tu token
-
-  
   const handleDeleteUser = async (userId) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+    if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
       try {
         const response = await fetch(`https://mitversa.christianferrer.me/api/usuarios/${userId}/`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Si estás usando autenticación
           },
         });
 
         if (response.ok) {
-          alert("Usuario eliminado exitosamente.");
-          setUsers((prevUsers) => prevUsers.filter(user => user.id_usuario !== userId)); // Actualiza la lista de usuarios
-          setSearchResult(null); // Limpiar el resultado de búsqueda
+          alert('Usuario eliminado exitosamente.');
+          setUsers((prevUsers) => prevUsers.filter((user) => user.id_usuario !== userId));
+          setSearchResult(null);
         } else {
           const errorData = await response.json();
           alert(`Error: ${errorData.detail || 'No se pudo eliminar el usuario.'}`);
@@ -127,13 +133,22 @@ const UserManagementPage = () => {
     }
   };
 
-
   return (
     <div className="user-management-page">
+      <div className="menu-nav" style={{ top: `${menuTop}px` }}>
+        <ul>
+          <li>
+            <a href="#buscar_usuario">Buscar Usuario</a>
+          </li>
+          <li>
+            <a href="#crear_usuario">Crear Usuario</a>
+          </li>
+        </ul>
+      </div>
       <h1>Gestión de Usuarios</h1>
 
       {/* Buscador de usuario */}
-      <form className="form" onSubmit={handleSearchSubmit}>
+      <form className="form" onSubmit={handleSearchSubmit} id="buscar_usuario">
         <h2>Buscar Usuario por Email</h2>
         <input
           type="email"
@@ -169,7 +184,7 @@ const UserManagementPage = () => {
       )}
 
       {/* Crear Usuario */}
-      <form className="form" onSubmit={handleSubmitCreateUser}>
+      <form className="form" onSubmit={handleSubmitCreateUser} id="crear_usuario">
         <h2>Crear Usuario</h2>
         <input
           type="text"
