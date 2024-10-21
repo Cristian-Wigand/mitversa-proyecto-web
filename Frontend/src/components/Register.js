@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../Css/Login.css';
 import '../App.css';
 
@@ -7,17 +7,14 @@ const Register = () => {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [email, setEmail] = useState('');
-  const [contraseña, setContraseña] = useState('');
-  const [confirmcontraseña, setConfirmcontraseña] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmpassword, setConfirmpassword] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('cliente');
-  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Verifica si el usuario ya ha iniciado sesión
     const isLoggedIn = sessionStorage.getItem('isLoggedIn');
     if (isLoggedIn === 'true') {
-      // Si hay una sesión iniciada, redirige a la página principal
       navigate('/');
     }
   }, [navigate]);
@@ -26,8 +23,8 @@ const Register = () => {
     e.preventDefault();
 
     // Validar que las contraseñas coinciden
-    if (contraseña !== confirmcontraseña) {
-      setErrorMessage('Las contraseñas no coinciden');
+    if (password !== confirmpassword) {
+      alert('Las contraseñas no coinciden');
       return;
     }
 
@@ -35,19 +32,21 @@ const Register = () => {
       nombre,
       apellido,
       email,
-      contraseña,
+      password,
+      tipo_usuario: tipoUsuario,
+      usuario_creado_el: new Date().toISOString(),
+      usuario_actualizado_el: null, // Establecer como null al crear el usuario
     };
 
     try {
-      // Llamada a la API para registrar al usuario
       const response = await fetch(
-        'https://mit.christianferrer.me/api/usuarios/', // Cambiar por la URL correcta de la API
+        'https://mitversa.christianferrer.me/api/usuarios/', // Cambia por la URL correcta de la API
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(userData), // Datos del usuario
+          body: JSON.stringify(userData),
         },
       );
 
@@ -59,15 +58,15 @@ const Register = () => {
         setNombre('');
         setApellido('');
         setEmail('');
-        setContraseña('');
-        setConfirmcontraseña('');
+        setPassword('');
+        setConfirmpassword('');
         setTipoUsuario('cliente');
       } else {
-        setErrorMessage(data.message || 'Error al registrar el usuario.');
+        alert(data.message || 'Error al registrar el usuario.');
       }
     } catch (error) {
       console.error('Hubo un problema con la solicitud:', error);
-      setErrorMessage('Error en la conexión con el servidor.');
+      alert('Error en la conexión con el servidor.');
     }
   };
 
@@ -75,7 +74,6 @@ const Register = () => {
     <div className="register-container">
       <div className="register-form">
         <h2>Regístrate</h2>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <form onSubmit={handleRegister}>
           <div>
             <label>Nombre:</label>
@@ -107,25 +105,39 @@ const Register = () => {
           <div>
             <label>Contraseña:</label>
             <input
-              type="password" // Cambiado de 'contraseña' a 'password'
-              value={contraseña}
-              onChange={(e) => setContraseña(e.target.value)}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
           <div>
             <label>Confirmar contraseña:</label>
             <input
-              type="password" // Cambiado de 'contraseña' a 'password'
-              value={confirmcontraseña}
-              onChange={(e) => setConfirmcontraseña(e.target.value)}
+              type="password"
+              value={confirmpassword}
+              onChange={(e) => setConfirmpassword(e.target.value)}
               required
             />
+          </div>
+          <div>
+            <label>Tipo de Usuario:</label>
+            <select
+              value={tipoUsuario}
+              onChange={(e) => setTipoUsuario(e.target.value)}
+            >
+              <option value="cliente">Cliente</option>
+              <option value="gerente">Gerente</option>
+              <option value="repartidor">Repartidor</option>
+            </select>
           </div>
           <button className="auth-button" type="submit">
             Registrarse
           </button>
         </form>
+        <p>
+          ¿Ya tienes una cuenta? <Link to="/login">Inicia sesion aquí</Link>
+        </p>
       </div>
     </div>
   );

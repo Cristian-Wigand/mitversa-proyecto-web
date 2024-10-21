@@ -4,7 +4,7 @@ import '../Css/Login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
-  const [contraseña, setContraseña] = useState('');
+  const [password, setpassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
@@ -21,11 +21,11 @@ const Login = () => {
     e.preventDefault();
     setErrorMessage('');
 
-    const loginData = { email, contraseña };
+    const loginData = { email, password };
 
     try {
       const response = await fetch(
-        'https://mit.christianferrer.me/api/login', // URL de la API de login
+        'https://mitversa.christianferrer.me/api/login', // URL de la API de login
         {
           method: 'POST',
           headers: {
@@ -83,11 +83,11 @@ const Login = () => {
             />
           </div>
           <div>
-            <label>Contraseña:</label>
+            <label>password:</label>
             <input
               type="password" // Corrige el tipo a 'password'
-              value={contraseña}
-              onChange={(e) => setContraseña(e.target.value)}
+              value={password}
+              onChange={(e) => setpassword(e.target.value)}
               required
             />
           </div>
