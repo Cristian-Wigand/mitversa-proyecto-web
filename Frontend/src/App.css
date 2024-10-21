@@ -508,7 +508,7 @@ h2 {
   width: 300px;
   position: absolute;
   right: 5%;
-  top: 20%;
+  top: 50%;
   transform: translateY(-50%);
   z-index: 10;
 }
