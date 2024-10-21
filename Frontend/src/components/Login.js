@@ -53,6 +53,10 @@ const Login = () => {
 
           sessionStorage.setItem('tipoUsuario', data.tipo_usuario);
 
+          sessionStorage.setItem('userId', data.id_usuario);
+
+          sessionStorage.setItem('FechaCreacion', data.usuario_creado_el || '');
+
           navigate('/');
           window.location.reload();
         } else {
