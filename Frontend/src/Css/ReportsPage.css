@@ -1,5 +1,5 @@
 .reports-page {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   background-color: #efe4b0; /* Fondo claro */
@@ -7,7 +7,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   text-align: center;
   padding-top: 80px; /* Espacio para el NavBar */
-  margin-top: 80px;
+  margin-top: 60px;
 }
 
 h1,

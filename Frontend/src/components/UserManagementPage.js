@@ -23,7 +23,7 @@ const UserManagementPage = () => {
   const fetchUsers = async () => {
     try {
       const response = await fetch(
-        'https://mitversa.christianferrer.me/api/usuarios/'
+        'https://mitversa.christianferrer.me/api/usuarios/',
       );
       const data = await response.json();
       if (response.ok) {
@@ -76,18 +76,27 @@ const UserManagementPage = () => {
     };
 
     try {
-      const response = await fetch('https://mitversa.christianferrer.me/api/usuarios/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'https://mitversa.christianferrer.me/api/usuarios/',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
         },
-        body: JSON.stringify(userData),
-      });
+      );
 
       if (response.ok) {
         alert('Usuario creado exitosamente');
         fetchUsers(); // Volver a cargar la lista de usuarios
-        setCreateUserData({ nombre: '', apellido: '', email: '', password: '', confirmpassword: '' }); // Limpiar campos
+        setCreateUserData({
+          nombre: '',
+          apellido: '',
+          email: '',
+          password: '',
+          confirmpassword: '',
+        }); // Limpiar campos
         setTipoUsuario('cliente'); // Restablecer el tipo de usuario
       } else {
         const data = await response.json();
@@ -101,32 +110,37 @@ const UserManagementPage = () => {
 
   const token = localStorage.getItem('token'); // O la forma que uses para almacenar tu token
 
-  
   const handleDeleteUser = async (userId) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+    if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
       try {
-        const response = await fetch(`https://mitversa.christianferrer.me/api/usuarios/${userId}/`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Si estás usando autenticación
+        const response = await fetch(
+          `https://mitversa.christianferrer.me/api/usuarios/${userId}/`,
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`, // Si estás usando autenticación
+            },
           },
-        });
+        );
 
         if (response.ok) {
-          alert("Usuario eliminado exitosamente.");
-          setUsers((prevUsers) => prevUsers.filter(user => user.id_usuario !== userId)); // Actualiza la lista de usuarios
+          alert('Usuario eliminado exitosamente.');
+          setUsers((prevUsers) =>
+            prevUsers.filter((user) => user.id_usuario !== userId),
+          ); // Actualiza la lista de usuarios
           setSearchResult(null); // Limpiar el resultado de búsqueda
         } else {
           const errorData = await response.json();
-          alert(`Error: ${errorData.detail || 'No se pudo eliminar el usuario.'}`);
+          alert(
+            `Error: ${errorData.detail || 'No se pudo eliminar el usuario.'}`,
+          );
         }
       } catch (error) {
         alert(`Error: ${error.message}`);
       }
     }
   };
-
 
   return (
     <div className="user-management-page">
