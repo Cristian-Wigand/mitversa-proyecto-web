@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../Css/Login.css';
 import '../App.css';
 
@@ -10,7 +10,6 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmpassword, setConfirmpassword] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('cliente');
-  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,9 +22,9 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Validar que las passwords coinciden
+    // Validar que las contraseñas coinciden
     if (password !== confirmpassword) {
-      setErrorMessage('Las contraseñas no coinciden');
+      alert('Las contraseñas no coinciden');
       return;
     }
 
@@ -36,7 +35,7 @@ const Register = () => {
       password,
       tipo_usuario: tipoUsuario,
       usuario_creado_el: new Date().toISOString(),
-      usuario_actualizado_el: new Date().toISOString(),
+      usuario_actualizado_el: null, // Establecer como null al crear el usuario
     };
 
     try {
@@ -63,11 +62,11 @@ const Register = () => {
         setConfirmpassword('');
         setTipoUsuario('cliente');
       } else {
-        setErrorMessage(data.message || 'Error al registrar el usuario.');
+        alert(data.message || 'Error al registrar el usuario.');
       }
     } catch (error) {
       console.error('Hubo un problema con la solicitud:', error);
-      setErrorMessage('Error en la conexión con el servidor.');
+      alert('Error en la conexión con el servidor.');
     }
   };
 
@@ -75,7 +74,6 @@ const Register = () => {
     <div className="register-container">
       <div className="register-form">
         <h2>Regístrate</h2>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <form onSubmit={handleRegister}>
           <div>
             <label>Nombre:</label>
@@ -137,6 +135,9 @@ const Register = () => {
             Registrarse
           </button>
         </form>
+        <p>
+          ¿Ya tienes una cuenta? <Link to="/login">Inicia sesion aquí</Link>
+        </p>
       </div>
     </div>
   );

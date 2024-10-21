@@ -4,7 +4,10 @@ import '../Css/Login.css';
 import '../App.css';
 
 const GestionEnv = () => {
-  const [createComuna, setCreateComuna] = useState({ nombre: '', id_ciudad: '' });
+  const [createComuna, setCreateComuna] = useState({
+    nombre: '',
+    id_ciudad: '',
+  });
   const [createCiudad, setCreateCiudad] = useState({ nombre: '' });
   const [createDireccion, setCreateDireccion] = useState({
     id_comuna: '',
@@ -75,7 +78,7 @@ const GestionEnv = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
+        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
       },
       body: JSON.stringify(createCiudad),
     })
@@ -98,8 +101,10 @@ const GestionEnv = () => {
       return;
     }
 
-    fetch(`https://mitversa.christianferrer.me/api/ciudades/${createComuna.id_ciudad}`)
-      .then(response => {
+    fetch(
+      `https://mitversa.christianferrer.me/api/ciudades/${createComuna.id_ciudad}`,
+    )
+      .then((response) => {
         if (!response.ok) {
           throw new Error('Ciudad no existe');
         }
@@ -110,7 +115,7 @@ const GestionEnv = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
+            Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
           },
           body: JSON.stringify(createComuna),
         });
@@ -132,7 +137,7 @@ const GestionEnv = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
+        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
       },
       body: JSON.stringify(createDireccion),
     })
@@ -154,20 +159,24 @@ const GestionEnv = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
+        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
       },
       body: JSON.stringify(createEnvio),
     })
       .then((response) => {
         console.log('Código de respuesta:', response.status); // Debugging
-        return response.json().then(data => ({ data, status: response.status }));
+        return response
+          .json()
+          .then((data) => ({ data, status: response.status }));
       })
       .then(({ data, status }) => {
         console.log('Datos del envío creado:', data);
         if (status === 200 || status === 201) {
           alert('Envío creado exitosamente');
         } else {
-          alert('Error al crear el envío: ' + (data.message || 'Error desconocido'));
+          alert(
+            'Error al crear el envío: ' + (data.message || 'Error desconocido'),
+          );
         }
       })
       .catch((error) => {
@@ -182,7 +191,7 @@ const GestionEnv = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
+        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
       },
       body: JSON.stringify(createPaquete),
     })
@@ -201,11 +210,21 @@ const GestionEnv = () => {
     <div>
       <div className="menu-nav" style={{ top: `${menuTop}px` }}>
         <ul>
-          <li><a href="#comuna">Comuna</a></li>
-          <li><a href="#direccion">Dirección</a></li>
-          <li><a href="#envio">Envío</a></li>
-          <li><a href="#paquete">Paquete</a></li>
-          <li><a href="#ciudad">Ciudad</a></li>
+          <li>
+            <a href="#comuna">Comuna</a>
+          </li>
+          <li>
+            <a href="#direccion">Dirección</a>
+          </li>
+          <li>
+            <a href="#envio">Envío</a>
+          </li>
+          <li>
+            <a href="#paquete">Paquete</a>
+          </li>
+          <li>
+            <a href="#ciudad">Ciudad</a>
+          </li>
         </ul>
       </div>
 
@@ -250,7 +269,11 @@ const GestionEnv = () => {
         </form>
 
         {/* Formulario para crear dirección */}
-        <form className="form" onSubmit={handleSubmitCreateDireccion} id="direccion">
+        <form
+          className="form"
+          onSubmit={handleSubmitCreateDireccion}
+          id="direccion"
+        >
           <h2>Crear Dirección</h2>
           <input
             type="number"
@@ -356,7 +379,11 @@ const GestionEnv = () => {
         </form>
 
         {/* Formulario para crear paquete */}
-        <form className="form" onSubmit={handleSubmitCreatePaquete} id="paquete">
+        <form
+          className="form"
+          onSubmit={handleSubmitCreatePaquete}
+          id="paquete"
+        >
           <h2>Crear Paquete</h2>
           <input
             type="number"
