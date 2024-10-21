@@ -6,7 +6,7 @@ import '../App.css';
 
 const NavBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [nombreUsuario, setNombreUsuario] = useState('');
+  const [tipoUsuario, setTipoUsuario] = useState('');
   const navigate = useNavigate();
 
   // Revisamos el sessionStorage al cargar el componente
@@ -14,53 +14,48 @@ const NavBar = () => {
     const loggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
     setIsLoggedIn(loggedIn);
 
-    // Obtener el nombre del usuario desde sessionStorage
-    const nombre = sessionStorage.getItem('nombreUsuario');
-    if (nombre) {
-      setNombreUsuario(nombre);
+    // Obtener el tipo de usuario desde sessionStorage
+    const tipo = sessionStorage.getItem('tipoUsuario');
+    if (tipo) {
+      setTipoUsuario(tipo);
     }
   }, []);
 
   const handleLogout = () => {
     // Elimina la sesión de sessionStorage y actualiza el estado
     sessionStorage.removeItem('isLoggedIn');
-    sessionStorage.removeItem('nombreUsuario');
+    sessionStorage.removeItem('tipoUsuario');
     setIsLoggedIn(false);
     navigate('/'); // Redirige a la página principal tras cerrar sesión
   };
 
   const renderDropdown = () => {
-    if (nombreUsuario === 'Cristian') {
+    if (tipoUsuario === 'gerente') {
       return (
         <div className="dropdown-content">
           <Link to="/profilepage">Ver perfil</Link>
           <Link to="/GestionEnv">Gestionar envíos</Link>
           <Link to="/GestionUser">Gestionar Usuarios</Link>
-          <Link to="/GestionVeh">Gestionar Vehiculos</Link>
+          <Link to="/GestionVeh">Gestionar Vehículos</Link>
           <Link to="/ReportsPage">Informes</Link>
         </div>
       );
-    } else if (nombreUsuario === 'Javier') {
+    } else if (tipoUsuario === 'repartidor') {
       return (
         <div className="dropdown-content">
           <Link to="/profilepage">Ver perfil</Link>
           <Link to="/VisualizarPaquete">Mis Paquetes</Link>
         </div>
       );
-    } else if (nombreUsuario === 'Sebastian') {
+    } else if (tipoUsuario === 'cliente') {
       return (
         <div className="dropdown-content">
           <Link to="/profilepage">Ver perfil</Link>
-          <Link to="/EstadoPaquete">Historial envios</Link>
+          <Link to="/EstadoPaquete">Historial envíos</Link>
         </div>
       );
     } else {
-      return (
-        <div className="dropdown-content">
-          <Link to="/profilepage">Ver perfil</Link>
-          <Link to="/ReportsPage">Informes</Link>
-        </div>
-      );
+      return null; // Si no hay tipo de usuario definido, no mostrar nada
     }
   };
 

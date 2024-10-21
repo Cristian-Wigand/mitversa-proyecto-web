@@ -51,6 +51,8 @@ const Login = () => {
           
           sessionStorage.setItem('emailUsuario', data.email); // Asegúrate de que 'data.email' exista en la respuesta
 
+          sessionStorage.setItem('tipoUsuario', data.tipo_usuario)
+
           
 
           navigate('/');
