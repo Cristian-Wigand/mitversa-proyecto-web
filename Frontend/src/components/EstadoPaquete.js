@@ -1,7 +1,3 @@
-// src/components/EstadoPaquete.js
-import React from 'react';
-import '../App.css';
-
 const EstadoPaquete = () => {
   return (
     <div className="estado-paquete-container">
