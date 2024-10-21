@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Bar, Pie } from 'react-chartjs-2';
+import '../App.css';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -8,8 +9,7 @@ import {
   BarElement,
   CategoryScale,
   LinearScale,
-} from 'chart.js';
-import '../Css/ReportsPage.css';
+} from 'chart.js'; // Agrega las importaciones necesarias
 import '../App.css';
 
 // Registra los elementos

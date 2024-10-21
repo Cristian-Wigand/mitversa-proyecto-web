@@ -1,3 +1,6 @@
+import React from 'react'; // Importa useState y useRef
+import '../App.css';
+
 const EstadoPaquete = () => {
   return (
     <div className="estado-paquete-container">

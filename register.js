@@ -1,28 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import '../App.css';
+import React, { useState } from 'react';
+import '../Css/Register.css'
 
 const Register = () => {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmpassword, setConfirmpassword] = useState('');
-  const [tipoUsuario, setTipoUsuario] = useState('cliente');
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-    if (isLoggedIn === 'true') {
-      navigate('/');
-    }
-  }, [navigate]);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [tipoUsuario, setTipoUsuario] = useState('cliente'); // Valor por defecto
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
-    // Validar que las contraseñas coinciden
-    if (password !== confirmpassword) {
+    if (password !== confirmPassword) {
       alert('Las contraseñas no coinciden');
       return;
     }
@@ -33,13 +22,11 @@ const Register = () => {
       email,
       password,
       tipo_usuario: tipoUsuario,
-      usuario_creado_el: new Date().toISOString(),
-      usuario_actualizado_el: null, // Establecer como null al crear el usuario
     };
 
     try {
       const response = await fetch(
-        'https://mitversa.christianferrer.me/api/usuarios/', // Cambia por la URL correcta de la API
+        'http://localhost/mitversa-proyecto-web/Backendphp/usuario.php',
         {
           method: 'POST',
           headers: {
@@ -49,29 +36,40 @@ const Register = () => {
         },
       );
 
-      const data = await response.json();
+      const text = await response.text();
+      console.log('Respuesta del servidor:', text); // Revisa si el texto está vacío
 
-      if (response.ok) {
-        alert('Registro completado correctamente.');
-        // Limpiar los campos después del registro exitoso
-        setNombre('');
-        setApellido('');
-        setEmail('');
-        setPassword('');
-        setConfirmpassword('');
-        setTipoUsuario('cliente');
+      if (text) {
+        try {
+          const result = JSON.parse(text); // Intenta parsear la respuesta si no está vacía
+          if (result.message) {
+            alert(result.message);
+          } else {
+            alert('Registro completado correctamente.');
+            // Vaciar campos después de registro exitoso
+            setNombre('');
+            setApellido('');
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
+            setTipoUsuario('cliente'); // Restablece a valor por defecto
+          }
+        } catch (error) {
+          console.error('Respuesta no es JSON válido:', error, text);
+          alert('Hubo un problema al procesar la respuesta del servidor.');
+        }
       } else {
-        alert(data.message || 'Error al registrar el usuario.');
+        alert('El servidor no devolvió una respuesta válida.');
       }
     } catch (error) {
-      console.error('Hubo un problema con la solicitud:', error);
+      console.error('Hubo un problema con la solicitud fetch:', error);
       alert('Error en la conexión con el servidor.');
     }
   };
 
   return (
-    <div className="register-container">
-      <div className="register-form">
+    <div className="register-form">
+      <div className="register-container">
         <h2>Regístrate</h2>
         <form onSubmit={handleRegister}>
           <div>
@@ -102,7 +100,7 @@ const Register = () => {
             />
           </div>
           <div>
-            <label>Contraseña:</label>
+            <label>Password:</label>
             <input
               type="password"
               value={password}
@@ -111,11 +109,11 @@ const Register = () => {
             />
           </div>
           <div>
-            <label>Confirmar contraseña:</label>
+            <label>Confirmar Password:</label>
             <input
               type="password"
-              value={confirmpassword}
-              onChange={(e) => setConfirmpassword(e.target.value)}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </div>
@@ -126,7 +124,7 @@ const Register = () => {
               onChange={(e) => setTipoUsuario(e.target.value)}
             >
               <option value="cliente">Cliente</option>
-              <option value="gerente">Gerente</option>
+              <option value="gerente">Administrador</option>
               <option value="repartidor">Repartidor</option>
             </select>
           </div>
@@ -134,9 +132,6 @@ const Register = () => {
             Registrarse
           </button>
         </form>
-        <p>
-          ¿Ya tienes una cuenta? <Link to="/login">Inicia sesion aquí</Link>
-        </p>
       </div>
     </div>
   );
