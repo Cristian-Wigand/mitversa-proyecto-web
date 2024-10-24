@@ -1,5 +1,4 @@
-// src/components/EstadoPaquete.js
-import React from 'react';
+import React from 'react'; // Importa useState y useRef
 import '../App.css';
 
 const EstadoPaquete = () => {
