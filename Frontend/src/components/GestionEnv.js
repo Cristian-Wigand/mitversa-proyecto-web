@@ -30,7 +30,7 @@ const GestionEnv = () => {
 
   const [comunas, setComunas] = useState([]);
   const [ciudades, setCiudades] = useState([]);
-  const [estadosEnvio, setEstadosEnvio] = useState([]); // Nuevo estado para almacenar los estados de envío
+  const [estadosEnvio, setEstadosEnvio] = useState([]);
   const [selectedComuna, setSelectedComuna] = useState('');
   const [filteredCiudades, setFilteredCiudades] = useState([]);
   const [menuTop, setMenuTop] = useState(150);
@@ -47,54 +47,71 @@ const GestionEnv = () => {
   }, []);
 
   useEffect(() => {
-    // Fetch comunas y ciudades desde la API
-    fetch('https://mitversa.christianferrer.me/api/comunas/', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    // Fetch comunas, ciudades y estados de envío
+    const fetchComunas = async () => {
+      try {
+        const response = await fetch(
+          'https://mitversa.christianferrer.me/api/comunas/',
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
+            },
+          },
+        );
+        const data = await response.json();
         const uniqueComunas = Array.from(
           new Set(data.map((comuna) => comuna.nombre)),
         ).map((nombre) => data.find((comuna) => comuna.nombre === nombre));
         setComunas(uniqueComunas);
         setAllComunas(data);
-      })
-      .catch((error) => console.error('Error al obtener comunas:', error));
+      } catch (error) {
+        console.error('Error al obtener comunas:', error);
+      }
+    };
 
-    fetch('https://mitversa.christianferrer.me/api/ciudades/', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchCiudades = async () => {
+      try {
+        const response = await fetch(
+          'https://mitversa.christianferrer.me/api/ciudades/',
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
+            },
+          },
+        );
+        const data = await response.json();
         setCiudades(data);
-      })
-      .catch((error) => console.error('Error al obtener ciudades:', error));
+      } catch (error) {
+        console.error('Error al obtener ciudades:', error);
+      }
+    };
 
-    // Fetch estados de envío desde la API
-    fetch('https://mitversa.christianferrer.me/api/estados-envio/', {
-      // Cambia esta URL a la correcta para obtener los estados de envío
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setEstadosEnvio(data); // Guardar los estados de envío en el nuevo estado
-        console.log(data);
-      })
-      .catch((error) =>
-        console.error('Error al obtener estados de envío:', error),
-      );
+    const fetchEstadosEnvio = async () => {
+      try {
+        const response = await fetch(
+          'https://mitversa.christianferrer.me/api/estados-envio/',
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
+            },
+          },
+        );
+        const data = await response.json();
+        setEstadosEnvio(data);
+      } catch (error) {
+        console.error('Error al obtener estados de envío:', error);
+      }
+    };
+
+    fetchComunas();
+    fetchCiudades();
+    fetchEstadosEnvio();
   }, []);
 
   const handleComunaChange = (e) => {
@@ -111,7 +128,6 @@ const GestionEnv = () => {
     );
 
     setFilteredCiudades(ciudadesFiltradas);
-
     setCreateDireccion({
       ...createDireccion,
       id_comuna: filteredComunas.length > 0 ? filteredComunas[0].id_comuna : '',
@@ -137,6 +153,17 @@ const GestionEnv = () => {
     setCreatePaquete({ ...createPaquete, [e.target.name]: e.target.value });
   };
 
+  const handleResponse = (response, successMessage, errorMessage) => {
+    if (!response.ok) {
+      return Promise.reject('Error en la solicitud: ' + response.status);
+    }
+    return response.json().then((data) => {
+      alert(successMessage);
+      console.log(data);
+      return data; // Retorna los datos si los necesitas
+    });
+  };
+
   const handleSubmitCreateDireccion = (e) => {
     e.preventDefault();
     fetch('https://mitversa.christianferrer.me/api/direcciones/', {
@@ -147,14 +174,16 @@ const GestionEnv = () => {
       },
       body: JSON.stringify(createDireccion),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Dirección creada:', data);
-        alert('Dirección creada exitosamente');
-      })
+      .then((response) =>
+        handleResponse(
+          response,
+          'Dirección creada exitosamente',
+          'Error al crear la dirección',
+        ),
+      )
       .catch((error) => {
-        console.error('Error al crear la dirección:', error);
-        alert('Error al crear la dirección');
+        console.error('Error:', error);
+        alert('Error al crear la dirección: ' + error);
       });
   };
 
@@ -168,13 +197,16 @@ const GestionEnv = () => {
       },
       body: JSON.stringify(createEnvio),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        alert('Envío creado exitosamente');
-      })
+      .then((response) =>
+        handleResponse(
+          response,
+          'Envío creado exitosamente',
+          'Error al crear el envío',
+        ),
+      )
       .catch((error) => {
-        console.error('Error al crear el envío:', error);
-        alert('Error al crear el envío');
+        console.error('Error:', error);
+        alert('Error al crear el envío: ' + error);
       });
   };
 
@@ -188,13 +220,16 @@ const GestionEnv = () => {
       },
       body: JSON.stringify(createPaquete),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        alert('Paquete creado exitosamente');
-      })
+      .then((response) =>
+        handleResponse(
+          response,
+          'Paquete creado exitosamente',
+          'Error al crear el paquete',
+        ),
+      )
       .catch((error) => {
-        console.error('Error al crear el paquete:', error);
-        alert('Error al crear el paquete');
+        console.error('Error:', error);
+        alert('Error al crear el paquete: ' + error);
       });
   };
 
@@ -225,7 +260,7 @@ const GestionEnv = () => {
         >
           <h2>Crear Dirección</h2>
           <select name="comuna" onChange={handleComunaChange}>
-            <option value="">Seleccione una comuna</option>
+            <option value="">Seleccione una Region</option>
             {comunas.map((comuna) => (
               <option key={comuna.id_comuna} value={comuna.nombre}>
                 {comuna.nombre}
@@ -278,8 +313,7 @@ const GestionEnv = () => {
                 key={estado.id_estado_envio}
                 value={estado.id_estado_envio}
               >
-                {estado.nombre}{' '}
-                {/* Asegúrate de que la propiedad que quieres mostrar es 'descripcion' */}
+                {estado.nombre}
               </option>
             ))}
           </select>
