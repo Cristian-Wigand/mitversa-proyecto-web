@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Para redirigir al usuario si no es gerente
 import { filter, throttle } from 'lodash';
+import Conexiones from './conexiones';
 import '../App.css';
+const conexiones = Conexiones();
 
 const GestionVeh = () => {
   const [searchType, setSearchType] = useState('Vehiculo'); // Estado para el tipo de búsqueda
@@ -47,73 +49,91 @@ const GestionVeh = () => {
   });
 
   const [menuTop, setMenuTop] = useState(150);
-  const [errorMessage, setErrorMessage] = useState(''); // Estado para mensajes de error
   const navigate = useNavigate();
 
-  const handleScroll = throttle(() => {
+  const Scroll = throttle(() => {
     const scrollY = window.scrollY;
     setMenuTop(scrollY <= 150 ? 150 : scrollY);
   }, 100);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', Scroll);
+    return () => window.removeEventListener('scroll', Scroll);
   }, []);
 
   useEffect(() => {
     // Descomentar si necesitas validar el rol del usuario
-    /*
-    const userRole = sessionStorage.getItem('userRole');
-    if (userRole !== 'gerente') {
+    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    if (tipoUsuario !== 'gerente') {
       navigate('/');
     }
-    */
   }, [navigate]);
 
-  const handleSearchTypeChange = (e) => {
+  const SearchTypeChange = (e) => {
+    setsearchListV('');
+    setsearchListA('');
+    setSelectedOption('');
+    setSelectedOption2('');
     setSearchType(e.target.value);
   };
 
-  const handleSubmitSearch = async (e) => {
+  const SubmitSearch = async (e) => {
     e.preventDefault(); // Evita la recarga de la página
     if (searchType == 'Vehiculo') {
-      await fetchSearch({ [selectedOption2]: searchVehicle[selectedOption2] }, 0);
-      setSearchVehicle({matricula: '',
+      const resultado = await conexiones.fetchSearch('Vehiculo', {
+        [selectedOption2]: searchVehicle[selectedOption2],
+      });
+      if (resultado[0]) {
+        setsearchListV(resultado[1]);
+      }
+      setSearchVehicle({
+        matricula: '',
         marca: '',
         modelo: '',
         estado: 'disponible',
-        vehiculo_creado_el: '',})
+        vehiculo_creado_el: '',
+      });
       setSearchassignmentR({
-          id_repartidor: '',
-          id_vehiculo: '',
-          fecha_asignacion: '',
-          fecha_devolucion: '',
-          kilometraje_inicial: '',
-          kilometraje_final: '',
-          motivo: '',
-          })
+        id_repartidor: '',
+        id_vehiculo: '',
+        fecha_asignacion: '',
+        fecha_devolucion: '',
+        kilometraje_inicial: '',
+        kilometraje_final: '',
+        motivo: '',
+      });
+    } else if (searchType == 'Asignacion') {
+      const resultado2 = await conexiones.fetchSearch('Asignacion', {
+        [selectedOption]: searchassignmentR[selectedOption],
+      });
+      if (resultado2[0]) {
+        setsearchListA(resultado2[1]);
+      }
+      setSearchVehicle({
+        matricula: '',
+        marca: '',
+        modelo: '',
+        estado: 'disponible',
+        vehiculo_creado_el: '',
+      });
+      setSearchassignmentR({
+        id_repartidor: '',
+        id_vehiculo: '',
+        fecha_asignacion: '',
+        fecha_devolucion: '',
+        kilometraje_inicial: '',
+        kilometraje_final: '',
+        motivo: '',
+      });
     } else {
-      await fetchSearch({ [selectedOption]: searchassignmentR[selectedOption] }, 1);
-      setSearchVehicle({matricula: '',
-        marca: '',
-        modelo: '',
-        estado: 'disponible',
-        vehiculo_creado_el: '',})
-      setSearchassignmentR({
-          id_repartidor: '',
-          id_vehiculo: '',
-          fecha_asignacion: '',
-          fecha_devolucion: '',
-          kilometraje_inicial: '',
-          kilometraje_final: '',
-          motivo: '',
-          })
-  };}
+      alert('Problemas con searchType');
+    }
+  };
 
-  const handleCreateVehicle = (e) =>
+  const CreateVehicle = (e) =>
     setCreateVehicle({ ...createVehicle, [e.target.name]: e.target.value });
 
-  const handleAssignmentVehicle = (e) => {
+  const AssignmentVehicle = (e) => {
     const { name, value } = e.target;
 
     // Permite un valor vacío para el campo
@@ -139,256 +159,89 @@ const GestionVeh = () => {
       }));
     }
   };
-
-  const handleResponse = (response, successMessage, errorMessage) => {
-    if (!response.ok) {
-      return Promise.reject('Error en la solicitud: ' + response.status);
-    }
-    return response.json().then((data) => {
-      console.log(successMessage, data);
-      alert(successMessage);
-      return { success: true, data };
-    });
-  };
-
-  const fetchSearch = async (filters, verificador) => {
-    try {
-      let response;
-      let data;
-
-      if (verificador == 0 || verificador == 3) {
-        response = await fetch(
-          `https://mitversa.christianferrer.me/api/vehiculos/`,
-        );
-      } else if (verificador == 1) {
-        response = await fetch(
-          `https://mitversa.christianferrer.me/api/historiales-asignacion/`,
-        );
-      } else if (verificador == 2) {
-        response = await fetch(
-          `https://mitversa.christianferrer.me/api/usuarios/`,
-        );
-      }
-
-      // Verifica si la respuesta es exitosa antes de intentar obtener los datos
-      if (response.ok) {
-        data = await response.json();
-        console.log('data', data); // Verifica la estructura de los datos
-        // Filtrar los objetos según los filtros proporcionados
-        const filtrados = data.filter((objeto) => {
-          return Object.keys(filters).every((key) => {
-            if (
-              key === 'fecha_asignacion' ||
-              key === 'fecha_devolucion' ||
-              key === 'vehiculo_creado_el'
-            ) {
-              console.log('BD:', objeto[key]);
-              const [datePart, timePart] = objeto[key].split('T');
-              const [yearO, monthO, dayO] = datePart.split('-').map(Number);
-              const objetoFecha = new Date(yearO, monthO - 1, dayO);
-
-              const [year, month, day] = filters[key].split('-').map(Number);
-              const filtroFecha = new Date(year, month - 1, day);
-              console.log('Filtro:', filtroFecha);
-              console.log('BD:', objetoFecha);
-              return (
-                objetoFecha.getFullYear() === filtroFecha.getFullYear() &&
-                objetoFecha.getMonth() === filtroFecha.getMonth() &&
-                objetoFecha.getDate() === filtroFecha.getDate()
-              );
-            } else {
-              // Comparación estándar para otros valores
-              return objeto[key].toString() === filters[key];
-            }
-          });
-        });
-        console.log('filtrados', filtrados); // Verifica qué datos han sido filtrados
-        if (verificador == 0) {
-          setsearchListV(filtrados);
-        }else if (verificador == 1){
-          setsearchListA(filtrados);
-        } else if (verificador == 2) {
-          return filtrados;
-        } else if (verificador == 3) {
-          return filtrados;
-        }
-      } else {
-        if (verificador == 0 || verificador == 1) {
-          setErrorMessage('Error al cargar el Buscador.');
-          alert('Error al cargar el Buscador.');
-        } else {
-          setErrorMessage('Error al cargar repartidores(Asignar vehiculo).');
-          alert('Error al cargar repartidores(Asignar vehiculo).');
-        }
-      }
-    } catch (error) {
-      if (verificador == 0 || verificador == 1) {
-        setErrorMessage('Error de conexión con el servidor.(Buscador)');
-        alert('Error de conexión con el servidor, (Buscador)');
-      } else {
-        setErrorMessage('Error de conexión con el servidor.(Asignar vehiculo)');
-        alert('Error de conexión con el servidor, (Asignar vehiculo)');
-      }
-    }
-  };
-
-  const handleSubmitCreateVehicle = (e) => {
+  const SubmitCreateVehicle = async (e) => {
     e.preventDefault(); // Evita el comportamiento predeterminado del formulario
-
-    // Obtén la fecha de creación
-    const fechaCreacion = new Date().toLocaleString('sv-SE').slice(0, 16);
-
-    // Cambia el valor de createVehicle directamente
-    createVehicle.vehiculo_creado_el = fechaCreacion;
-
-    // Realiza la solicitud con el objeto actualizado
-    fetch('https://mitversa.christianferrer.me/api/vehiculos/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
-      },
-      body: JSON.stringify(createVehicle), // Usa el objeto actualizado aquí
-    })
-      .then((response) =>
-        handleResponse(
-          response,
-          'Vehículo creado exitosamente',
-          'Hubo un error al crear el vehículo',
-        ),
-      )
-      .then(({ success }) => {
-        if (success) {
-          // Solo se ejecuta si la respuesta fue exitosa
-          setCreateVehicle({
-            matricula: '',
-            marca: '',
-            modelo: '',
-            estado: 'disponible', // Valor por defecto
-            vehiculo_creado_el: '',
-            vehiculo_actualizado_el: null,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        alert('Hubo un error al crear el vehículo: ' + error);
+    const resultado = await conexiones.SubmitCreate('Vehiculo', createVehicle);
+    console.log('resultado', resultado);
+    if (resultado[0]) {
+      setCreateVehicle({
+        matricula: '',
+        marca: '',
+        modelo: '',
+        estado: 'disponible', // Valor por defecto
+        vehiculo_creado_el: '',
+        vehiculo_actualizado_el: null,
       });
-  };
-  const updateVehicleStatus = async (idVehiculo, nuevoEstado) => {
-    try {
-      console.log('id vehiculo', idVehiculo);
-      const response = await fetch(
-        `https://mitversa.christianferrer.me/api/vehiculos/${idVehiculo}/`,
-        {
-          method: 'PATCH', // Usualmente PATCH o PUT para actualizaciones
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
-          },
-          body: JSON.stringify({ estado: nuevoEstado }), // Cambia el estado del vehículo
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Error al actualizar el estado del vehículo');
-      }
-
-      const data = await response.json();
-      console.log('Estado del vehículo actualizado:', data);
-    } catch (error) {
-      console.error('Error al actualizar el estado del vehículo:', error);
     }
   };
 
-  const handleSubmitAssignmentVehicle = async (e) => {
+  const SubmitAssignmentVehicle = async (e) => {
     e.preventDefault();
 
-    // Esperar a que se complete fetchSearch
-    const repartidores = await fetchSearch({ tipo_usuario: 'repartidor' }, 2);
-    const vehiculos = await fetchSearch({ estado: 'disponible' }, 3);
-
-    const idBuscadoR = assignmentVehicle['id_repartidor'];
-    const existeRepartidor = repartidores.some(
-      (usuario) => usuario.id_usuario.toString() === idBuscadoR,
-    );
-
-    const idBuscadoV = assignmentVehicle['id_vehiculo'];
-    const existeVehiculo = vehiculos.some(
-      (vehiculo) => vehiculo.id_vehiculo.toString() === idBuscadoV,
-    );
-
+    // Esperar a que se complete conexiones.fetchSearch
+    const existeRepartidor = await conexiones.fetchSearch('Usuario', {
+      id_usuario: assignmentVehicle['id_repartidor'],
+      tipo_usuario: 'repartidor',
+    });
+    const existeVehiculo = await conexiones.fetchSearch('Vehiculo', {
+      id_vehiculo: assignmentVehicle['id_vehiculo'],
+      estado: 'disponible',
+    });
+    console.log('existeRepartidor:', existeRepartidor);
+    console.log('Usuario', {
+      id_usuario: assignmentVehicle['id_repartidor'],
+      tipo_usuario: 'repartidor',
+    });
     // Verifica si el repartidor existe antes de continuar
-    if (!existeRepartidor) {
-      alert('El repartidor no existe.');
+    if (!existeRepartidor[0]) {
+      alert('El repartidor no existe');
       return; // Detener la ejecución si no existe
     }
     // Verifica si el vehiculo existe antes de continuar
-    if (!existeVehiculo) {
+    if (!existeVehiculo[0]) {
       alert('El vehiculo no existe o no esta disponible');
       return; // Detener la ejecución si no existe
     }
 
-    // Obtén la fecha de creación
-    const fechaCreacion = new Date().toLocaleString('sv-SE').slice(0, 16);
-
-    // Cambia el valor de createVehicle directamente
-    assignmentVehicle.fecha_asignacion = fechaCreacion;
-
-    // Realizar la solicitud para crear la asignación
-    try {
-      const response = await fetch(
-        'https://mitversa.christianferrer.me/api/historiales-asignacion/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
-          },
-          body: JSON.stringify(assignmentVehicle),
-        },
-      );
-      const result = await handleResponse(
-        response,
-        'Asignación creada exitosamente',
-        'Hubo un error en la asignación',
-      );
-  
-      // Verificar si la respuesta fue exitosa
-      if (result.success) {
-        // Solo se ejecuta si la respuesta fue exitosa
-        setAssignmentVehicle({
-          id_repartidor: '',
-          id_vehiculo: '',
-          fecha_asignacion: '',
-          fecha_devolucion: null,
-          kilometraje_inicial: '',
-          kilometraje_final: null,
-          motivo: '',
-        });
-      }
-  
-      // Actualizar el estado del vehículo
-      await updateVehicleStatus(assignmentVehicle.id_vehiculo, 'no_disponible');
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Hubo un error en la asignación: ' + error);
+    const resultado = await conexiones.SubmitCreate(
+      'Asignacion',
+      assignmentVehicle,
+    );
+    // Verificar si la respuesta fue exitosa
+    if (resultado[0]) {
+      // Solo se ejecuta si la respuesta fue exitosa
+      setAssignmentVehicle({
+        id_repartidor: '',
+        id_vehiculo: '',
+        fecha_asignacion: '',
+        fecha_devolucion: null,
+        kilometraje_inicial: '',
+        kilometraje_final: null,
+        motivo: '',
+      });
     }
+    // Actualizar el estado del vehículo
+    const cambio = { estado: 'no_disponible', vehiculo_actualizado_el: '' };
+    await conexiones.updateObject(
+      'Vehiculo',
+      assignmentVehicle.id_vehiculo,
+      cambio,
+    );
   };
 
-  const handleSelectChange = (e) => {
+  const SelectChange = (e) => {
     setSelectedOption(e.target.value);
   };
 
-  const handleSelect2Change = (e) => {
+  const Select2Change = (e) => {
     setSelectedOption2(e.target.value);
   };
 
-  const handleSearchVehicle = (e) => {
+  const SearchVehicle = (e) => {
     setSearchVehicle({ ...searchVehicle, [e.target.name]: e.target.value });
   };
 
-  const handleSearchassignmentR = (e) => {
+  const SearchassignmentR = (e) => {
     const { name, value } = e.target;
 
     // Permite un valor vacío para el campo
@@ -415,65 +268,26 @@ const GestionVeh = () => {
     }
   };
 
-  const handleDeleteAssignment = async (userId) => {
-    if (
-      window.confirm('¿Estás seguro de que deseas eliminar esta asignacion?')
-    ) {
-      try {
-        const response = await fetch(
-          `https://mitversa.christianferrer.me/api/historiales-asignacion/${userId}/`,
-          {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
-            },
-          },
-        );
-
-        if (response.ok) {
-          alert('Asignacion eliminado exitosamente.');
-          fetchSearch(
-            { [selectedOption]: searchassignmentR[selectedOption] },
-            1,
-          );
-        } else {
-          const errorData = await response.json();
-          alert(
-            `Error: ${errorData.detail || 'No se pudo eliminar la asignacion.'}`,
-          );
-        }
-      } catch (error) {
-        alert(`Error: ${error.message}`);
+  const DeleteAssignment = async (userId) => {
+    const resultado = conexiones.Delete('Asignacion', userId);
+    if (resultado) {
+      const resultado2 = await conexiones.fetchSearch('Asignacion', {
+        [selectedOption]: searchassignmentR[selectedOption],
+      });
+      if (resultado2[0]) {
+        setsearchListA(resultado2[1]);
       }
     }
   };
 
-  const handleDeleteVehicle = async (userId) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar este vehiculo?')) {
-      try {
-        const response = await fetch(
-          `https://mitversa.christianferrer.me/api/vehiculos/${userId}/`,
-          {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: 'Basic ' + btoa('TI2:R1yJJtW9X31rxY'),
-            },
-          },
-        );
-
-        if (response.ok) {
-          alert('Vehiculo eliminado exitosamente.');
-          fetchSearch({ [selectedOption2]: searchVehicle[selectedOption2] }, 1);
-        } else {
-          const errorData = await response.json();
-          alert(
-            `Error: ${errorData.detail || 'No se pudo eliminar el Vehiculo.'}`,
-          );
-        }
-      } catch (error) {
-        alert(`Error: ${error.message}`);
+  const DeleteVehicle = async (userId) => {
+    const resultado = conexiones.Delete('Vehiculo', userId);
+    if (resultado) {
+      const resultado2 = await conexiones.fetchSearch('Vehiculo', {
+        [selectedOption2]: searchVehicle[selectedOption2],
+      });
+      if (resultado2[0]) {
+        setsearchListV(resultado2[1]);
       }
     }
   };
@@ -499,7 +313,7 @@ const GestionVeh = () => {
         {/* Crear Vehículo */}
         <form
           className="form"
-          onSubmit={handleSubmitCreateVehicle}
+          onSubmit={SubmitCreateVehicle}
           id="crear_vehiculo"
         >
           <h2>Crear Vehículo</h2>
@@ -508,7 +322,7 @@ const GestionVeh = () => {
             name="matricula"
             placeholder="Matrícula"
             value={createVehicle.matricula}
-            onChange={handleCreateVehicle}
+            onChange={CreateVehicle}
             required
           />
           <input
@@ -516,7 +330,7 @@ const GestionVeh = () => {
             name="marca"
             placeholder="Marca"
             value={createVehicle.marca}
-            onChange={handleCreateVehicle}
+            onChange={CreateVehicle}
             required
           />
           <input
@@ -524,7 +338,7 @@ const GestionVeh = () => {
             name="modelo"
             placeholder="Modelo"
             value={createVehicle.modelo}
-            onChange={handleCreateVehicle}
+            onChange={CreateVehicle}
             required
           />
           <button type="submit">Crear Vehículo</button>
@@ -533,7 +347,7 @@ const GestionVeh = () => {
         {/* Asignación de Vehículo */}
         <form
           className="form"
-          onSubmit={handleSubmitAssignmentVehicle}
+          onSubmit={SubmitAssignmentVehicle}
           id="Asignar_vehiculo"
         >
           <h2>Asignar Vehículo</h2>
@@ -542,7 +356,7 @@ const GestionVeh = () => {
             name="id_repartidor"
             placeholder="ID Repartidor"
             value={assignmentVehicle.id_repartidor}
-            onChange={handleAssignmentVehicle}
+            onChange={AssignmentVehicle}
             required
             min="1"
             step="1"
@@ -552,7 +366,7 @@ const GestionVeh = () => {
             name="id_vehiculo"
             placeholder="ID vehículo"
             value={assignmentVehicle.id_vehiculo}
-            onChange={handleAssignmentVehicle}
+            onChange={AssignmentVehicle}
             required
             min="1"
             step="1"
@@ -562,7 +376,7 @@ const GestionVeh = () => {
             name="kilometraje_inicial"
             placeholder="Kilometraje inicial"
             value={assignmentVehicle.kilometraje_inicial}
-            onChange={handleAssignmentVehicle}
+            onChange={AssignmentVehicle}
             required
             min="0"
             step="0.01"
@@ -572,16 +386,16 @@ const GestionVeh = () => {
             name="motivo"
             placeholder="Motivo"
             value={assignmentVehicle.motivo}
-            onChange={handleAssignmentVehicle}
+            onChange={AssignmentVehicle}
             required
           />
           <button type="submit">Asignar Vehículo</button>
         </form>
 
         {/* Buscar */}
-        <form className="form" onSubmit={handleSubmitSearch} id="Buscador">
+        <form className="form" onSubmit={SubmitSearch} id="Buscador">
           <h2>Buscador</h2>
-          <select value={searchType} onChange={handleSearchTypeChange}>
+          <select value={searchType} onChange={SearchTypeChange}>
             <option value="Vehiculo">Vehiculo</option>
             <option value="Asignacion">Asignacion</option>
           </select>
@@ -590,7 +404,7 @@ const GestionVeh = () => {
             <>
               <select
                 name="criterioBusqueda"
-                onChange={handleSelect2Change}
+                onChange={Select2Change}
                 value={selectedOption2}
               >
                 <option value="">Selecciona un criterio</option>
@@ -603,7 +417,7 @@ const GestionVeh = () => {
               {selectedOption2 === 'estado' ? (
                 <select
                   value={searchVehicle[selectedOption2] || ''}
-                  onChange={handleSearchVehicle}
+                  onChange={SearchVehicle}
                   disabled={!selectedOption2}
                   name={selectedOption2}
                 >
@@ -618,7 +432,7 @@ const GestionVeh = () => {
                   name={selectedOption2}
                   placeholder={`Ingresa ${selectedOption2}`}
                   value={searchVehicle[selectedOption2] || ''}
-                  onChange={handleSearchVehicle}
+                  onChange={SearchVehicle}
                   disabled={!selectedOption2}
                 />
               )}
@@ -627,7 +441,7 @@ const GestionVeh = () => {
             <>
               <select
                 name="criterioBusqueda"
-                onChange={handleSelectChange}
+                onChange={SelectChange}
                 value={selectedOption}
               >
                 <option value="">Selecciona un criterio</option>
@@ -648,13 +462,27 @@ const GestionVeh = () => {
                       ? 'text'
                       : 'number'
                 }
-                min={selectedOption === 'motivo' ? undefined : (selectedOption === 'id_repartidor' || selectedOption === 'id_vehiculo' ? '1' : '0')} // Permite solo números positivos
-                step={(selectedOption === 'kilometraje_inicial' || selectedOption === 'kilometraje_final')? '0.01' : (selectedOption === 'id_repartidor' || selectedOption === 'id_vehiculo' ? '1' : undefined)
+                min={
+                  selectedOption === 'motivo'
+                    ? undefined
+                    : selectedOption === 'id_repartidor' ||
+                        selectedOption === 'id_vehiculo'
+                      ? '1'
+                      : '0'
+                } // Permite solo números positivos
+                step={
+                  selectedOption === 'kilometraje_inicial' ||
+                  selectedOption === 'kilometraje_final'
+                    ? '0.01'
+                    : selectedOption === 'id_repartidor' ||
+                        selectedOption === 'id_vehiculo'
+                      ? '1'
+                      : undefined
                 } // Permite decimales si es kilometraje
                 name={selectedOption}
                 placeholder={`Ingresa ${selectedOption}`}
                 value={searchassignmentR[selectedOption] || ''}
-                onChange={handleSearchassignmentR}
+                onChange={SearchassignmentR}
                 disabled={!selectedOption}
               />
             </>
@@ -700,9 +528,7 @@ const GestionVeh = () => {
                         : 'null'}
                     </p>
                     <button
-                      onClick={() =>
-                        handleDeleteVehicle(asignacion.id_vehiculo)
-                      }
+                      onClick={() => DeleteVehicle(asignacion.id_vehiculo)}
                     >
                       Eliminar Vehiculo
                     </button>
@@ -760,9 +586,7 @@ const GestionVeh = () => {
                       {asignacion.motivo ? asignacion.motivo : 'null'}
                     </p>
                     <button
-                      onClick={() =>
-                        handleDeleteAssignment(asignacion.id_historial)
-                      }
+                      onClick={() => DeleteAssignment(asignacion.id_historial)}
                     >
                       Eliminar Asignacion
                     </button>
