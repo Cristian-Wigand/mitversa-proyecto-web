@@ -24,7 +24,7 @@ const UserManagementPage = () => {
       const scrollY = window.scrollY;
       setMenuTop(scrollY <= 150 ? 150 : scrollY);
     }, 100);
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -199,7 +199,11 @@ const UserManagementPage = () => {
       )}
 
       {/* Crear Usuario */}
-      <form className="form" onSubmit={handleSubmitCreateUser} id="crear_usuario">
+      <form
+        className="form"
+        onSubmit={handleSubmitCreateUser}
+        id="crear_usuario"
+      >
         <h2>Crear Usuario</h2>
         <input
           type="text"
