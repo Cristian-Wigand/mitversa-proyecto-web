@@ -12,6 +12,7 @@ import UserManagementPage from './components/UserManagementPage';
 import GestionVeh from './components/GestionVeh';
 import ReportsPage from './components/ReportsPage';
 import Register from './components/Register';
+import MapWithRoute from './components/MapWithRoute';
 
 import './App.css';
 import VisualizarPaquete from './components/VisualizarPaquete';
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="/Register" element={<Register />} />
           <Route path="/VisualizarPaquete" element={<VisualizarPaquete />} />
           <Route path="/EstadoPaquete" element={<EstadoPaquete />} />
+          <Route path="/map-route" element={<MapWithRoute />} />
         </Routes>
       </div>
     </Router>
