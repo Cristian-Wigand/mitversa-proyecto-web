@@ -106,7 +106,7 @@ const PackageCard = () => {
             id_estado_envio: envio.id_estado_envio,
           });
           return estado.length > 0 ? estado[0] : null;
-        })
+        }),
       );
       setEstadoEnvioData(data);
     };
@@ -125,7 +125,7 @@ const PackageCard = () => {
             id_usuario: envio.id_cliente,
           });
           return usuario.length > 0 ? usuario[0] : null;
-        })
+        }),
       );
       setUsuarioData(data);
     };
