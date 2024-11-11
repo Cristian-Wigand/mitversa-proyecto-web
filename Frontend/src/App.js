@@ -13,10 +13,13 @@ import GestionVeh from './components/GestionVeh';
 import ReportsPage from './components/ReportsPage';
 import Register from './components/Register';
 import MapWithRoute from './components/MapWithRoute';
+import MostrarEnvios from './components/TestEnvios';
 
 import './App.css';
 import VisualizarPaquete from './components/VisualizarPaquete';
 import EstadoPaquete from './components/EstadoPaquete';
+import MapPage from './components/MapPage'; // Asegúrate de importar MapPage
+import TestEnvios from './components/TestEnvios';
 
 const App = () => {
   return (
@@ -28,15 +31,15 @@ const App = () => {
       <div className="App">
         <Routes>
           {/* Ruta para la página Home */}
-          <Route path="/" Component={Home_principal} />
+          <Route path="/" element={<Home_principal />} />
           {/* Ruta para la página Sobre Nosotros */}
-          <Route path="/about" Component={SobreNosotros} />
+          <Route path="/about" element={<SobreNosotros />} />
           {/* Ruta para la página de Contacto */}
-          <Route path="/contact" Component={Contactanos} />
+          <Route path="/contact" element={<Contactanos />} />
           {/* Ruta para la página de inicio de sesión */}
-          <Route path="/login" Component={Login} />
+          <Route path="/login" element={<Login />} />
           {/* Ruta para el formulario de envíos */}
-          <Route path="/envio" Component={FormularioEnvio} />
+          <Route path="/envio" element={<FormularioEnvio />} />
           {/* Ruta específica para login y registro */}
           <Route path="/profilepage" element={<ProfilePage />} />
           {/* Otras rutas pueden agregarse aquí si es necesario */}
@@ -48,6 +51,12 @@ const App = () => {
           <Route path="/VisualizarPaquete" element={<VisualizarPaquete />} />
           <Route path="/EstadoPaquete" element={<EstadoPaquete />} />
           <Route path="/map-route" element={<MapWithRoute />} />
+          <Route path="/MostrarEnvios" element={<TestEnvios />} />
+          {/* Ruta para ver los envíos */}
+          <Route path="/envios" element={<TestEnvios />} />
+          {/* Ruta para mostrar el mapa de la ruta de un envío */}
+          <Route path="/mapa/:id_envio" element={<MapPage />} />
+          <Route path="/ruta/:id_envio" element={<MapPage />} />
         </Routes>
       </div>
     </Router>
