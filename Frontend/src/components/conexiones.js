@@ -69,13 +69,13 @@ const Conexiones = () => {
       return console.log('Error en diccionario');
     }
   };
-  const Response = async (response,nombre, successMessage) => {
+  const Response = async (response, nombre, successMessage) => {
     if (!response.ok) {
       return Promise.reject(`Error en la solicitud: ${response.status}`);
     }
     const data = await response.json();
     console.log(successMessage, data);
-    if (nombre!=='Direccion'){
+    if (nombre !== 'Direccion') {
       alert(`${nombre} ${successMessage}`);
     }
     return { success: true, data };
@@ -145,8 +145,8 @@ const Conexiones = () => {
           return objeto[key].toString() === filters[key];
         });
       });
-      if (filtrados.length == 0){
-        return [false]
+      if (filtrados.length == 0) {
+        return [false];
       }
       console.log('filtrados', filtrados); // Verifica qué datos han sido filtrados
       return [true, filtrados];
@@ -158,10 +158,10 @@ const Conexiones = () => {
 
   const SubmitCreate = async (nombre, create) => {
     let fechas;
-    if (nombre=='Envio'){
-      fechas=[]
-      console.log('Fechas: envio',fechas)
-    }else{
+    if (nombre == 'Envio') {
+      fechas = [];
+      console.log('Fechas: envio', fechas);
+    } else {
       fechas = diccionario(0, nombre);
     }
     const api = diccionario(2, nombre);
@@ -192,14 +192,11 @@ const Conexiones = () => {
         body: JSON.stringify(create), // Usa el objeto actualizado aquí
       });
 
-      const result = await Response(
-        response,nombre,
-        `creado exitosamente`,
-      );
+      const result = await Response(response, nombre, `creado exitosamente`);
       return [result.success, result.data]; // Devuelve el éxito de la operación
     } catch (error) {
       console.error('Error:', error);
-      if (nombre!=='Direccion'){
+      if (nombre !== 'Direccion') {
         alert(`Hubo un error al crear ${nombre}: ` + error);
       }
       return [false]; // Indica que hubo un error

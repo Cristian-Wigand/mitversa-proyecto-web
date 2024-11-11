@@ -139,7 +139,7 @@ const GestionEnv = () => {
 
   const obtenerNombreEstadoPorId = (id) => {
     const estado = estadosEnvio.find((estado) => estado.id_estado_envio === id);
-    return estado ? estado.nombre : null;  // Si no encuentra el estado, retorna null
+    return estado ? estado.nombre : null; // Si no encuentra el estado, retorna null
   };
 
   const ComunaChange = (e) => {
@@ -152,7 +152,12 @@ const GestionEnv = () => {
     const ciudadesFiltradas = ciudades.filter((ciudad) =>
       idsCiudades.includes(ciudad.id_ciudad),
     );
-    console.log('selectedNombreComuna',selectedNombreComuna,'ciudadesFiltradas',ciudadesFiltradas)
+    console.log(
+      'selectedNombreComuna',
+      selectedNombreComuna,
+      'ciudadesFiltradas',
+      ciudadesFiltradas,
+    );
     setSelectedComuna(selectedNombreComuna);
     setFilteredCiudades(ciudadesFiltradas);
     setCreateDireccionOrigen({
@@ -300,6 +305,19 @@ const GestionEnv = () => {
       });
       if (resultado[0]) {
         setsearchListE(resultado[1]);
+        setSelectedOption2('');
+        setSearchEnvio({
+          id_estado_envio: '',
+          id_repartidor: '',
+          id_cliente: '',
+          fecha_pedido_inicio: '',
+          fecha_pedido_fin: '',
+          direccion_origen: '',
+          direccion_destino: '',
+          costo_total: '',
+        });
+      } else {
+        setsearchListE([]);
       }
     } else if (searchType == 'paquete') {
       const resultado2 = await conexiones.fetchSearch('Paquete', {
@@ -307,28 +325,19 @@ const GestionEnv = () => {
       });
       if (resultado2[0]) {
         setsearchListP(resultado2[1]);
+        setSelectedOption('');
+        setSearchPaquete({
+          id_envio: '',
+          peso: '',
+          largo: '',
+          ancho: '',
+          alto: '',
+          descripcion: '',
+        });
+      } else {
+        setsearchListP([]);
       }
-    } 
-    setSelectedOption('')
-    setSelectedOption2('')
-    setSearchEnvio({
-      id_estado_envio: '',
-      id_repartidor: '',
-      id_cliente: '',
-      fecha_pedido_inicio: '',
-      fecha_pedido_fin: '',
-      direccion_origen: '',
-      direccion_destino: '',
-      costo_total: '',
-    });
-    setSearchPaquete({
-      id_envio: '',
-      peso: '',
-      largo: '',
-      ancho: '',
-      alto: '',
-      descripcion: '',
-    });
+    }
   };
 
   const SubmitCreateEnvio = async (e) => {
@@ -349,8 +358,8 @@ const GestionEnv = () => {
       console.log('Error en comuna destino');
       return alert('Error en comuna destino');
     }
-    console.log('id_comuna_origen',id_comuna_origen[1][0])
-    console.log('id_comuna_destino',id_comuna_destino)
+    console.log('id_comuna_origen', id_comuna_origen[1][0]);
+    console.log('id_comuna_destino', id_comuna_destino);
     const direc_origen = {
       id_comuna: id_comuna_origen[1][0].id_comuna,
       calle: createDireccion_origen.calle,
@@ -366,19 +375,16 @@ const GestionEnv = () => {
     let direccion_origen;
     let direccion_destino;
 
-    direccion_origen = await conexiones.SubmitCreate(
-      'Direccion',
-      direc_origen,
-    );
+    direccion_origen = await conexiones.SubmitCreate('Direccion', direc_origen);
     direccion_destino = await conexiones.SubmitCreate(
       'Direccion',
       direc_destino,
     );
     if (direccion_origen[0]) {
-      console.log('direccion_origen[1].id_direccion;')
-      console.log(direccion_origen[1])
+      console.log('direccion_origen[1].id_direccion;');
+      console.log(direccion_origen[1]);
       direccion_origen_id = direccion_origen[1].id_direccion;
-    }else{
+    } else {
       direccion_origen = await conexiones.fetchSearch(
         'Direccion',
         direc_origen,
@@ -386,12 +392,12 @@ const GestionEnv = () => {
       if (!direccion_origen[0]) {
         return alert('Error en direccion_origen');
       }
-      console.log('direccion_origen[1]',direccion_origen[1])
+      console.log('direccion_origen[1]', direccion_origen[1]);
       direccion_origen_id = direccion_origen[1][0].id_direccion; // Asignar sin 'const'
     }
     if (direccion_destino[0]) {
       direccion_destino_id = direccion_destino[1].id_direccion; // Asignar sin 'const'
-    }else{
+    } else {
       direccion_destino = await conexiones.fetchSearch(
         'Direccion',
         direc_destino,
@@ -400,16 +406,16 @@ const GestionEnv = () => {
         return alert('Error en direccion_destino');
       }
       direccion_destino_id = direccion_destino[1][0].id_direccion; // Asignar sin 'const'
-    }    
+    }
     createEnvio.direccion_origen = direccion_origen_id;
     createEnvio.direccion_destino = direccion_destino_id;
 
     const resultado = await conexiones.SubmitCreate('Envio', createEnvio);
     if (resultado[0]) {
-      setSelectedComuna("");
-      setFilteredCiudades([""]);
-      setSelectedComuna2("");
-      setFilteredCiudades2([""]);
+      setSelectedComuna('');
+      setFilteredCiudades(['']);
+      setSelectedComuna2('');
+      setFilteredCiudades2(['']);
       setCreateDireccionOrigen({
         id_ciudad: '',
         nombre: '',
@@ -736,7 +742,10 @@ const GestionEnv = () => {
                 >
                   <option value="">Seleccione un estado de envío</option>
                   {estadosEnvio.map((estado) => (
-                    <option key={estado.id_estado_envio} value={estado.id_estado_envio}>
+                    <option
+                      key={estado.id_estado_envio}
+                      value={estado.id_estado_envio}
+                    >
                       {estado.nombre}
                     </option>
                   ))}
@@ -799,9 +808,8 @@ const GestionEnv = () => {
                   <div key={index} className="search-result">
                     <h2>Resultados de la Búsqueda de Envios:</h2>
                     <p>
-                      <strong>Estado:</strong> {
-                      obtenerNombreEstadoPorId(asignacion.id_estado_envio)
-                      }
+                      <strong>Estado:</strong>{' '}
+                      {obtenerNombreEstadoPorId(asignacion.id_estado_envio)}
                     </p>
                     <p>
                       <strong>ID Repartidor:</strong> {asignacion.id_repartidor}
