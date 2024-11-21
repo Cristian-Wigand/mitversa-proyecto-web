@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Para redirigir al usuario si no es gerente
 import { filter, throttle } from 'lodash';
 import Conexiones from './conexiones';
+import Table from 'react-bootstrap/Table';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
 const conexiones = Conexiones();
 
@@ -291,6 +293,24 @@ const GestionVeh = () => {
       }
     }
   };
+  const convertir_fecha = (fecha) => {
+
+    const date = new Date(fecha);
+
+    // Obtener el día, mes, año, hora, minuto y segundo
+    const day = String(date.getDate()).padStart(2, '0'); // Asegurarse de que el día tenga 2 dígitos
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses empiezan en 0, por eso sumamos 1
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    // Construir la cadena con el formato deseado
+    const fecha_string = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+    
+    console.log('fecha_string',fecha_string);
+    return fecha_string
+  };
 
   return (
     <div>
@@ -494,110 +514,133 @@ const GestionVeh = () => {
         <div>
           {searchType === 'Vehiculo' ? (
             <>
-              {searchListV.length > 0 ? (
-                searchListV.map((asignacion, index) => (
-                  <div key={index} className="search-result">
-                    <h2>Resultados de la Búsqueda de Vehículos:</h2>
-                    <p>
-                      <strong>ID Vehiculo:</strong> {asignacion.id_vehiculo}
-                    </p>
-                    <p>
-                      <strong>Matricula:</strong> {asignacion.matricula}
-                    </p>
-                    <p>
-                      <strong>Marca:</strong> {asignacion.marca}
-                    </p>
-                    <p>
-                      <strong>Modelo:</strong> {asignacion.modelo}
-                    </p>
-                    <p>
-                      <strong>Estado:</strong> {asignacion.estado}
-                    </p>
-                    <p>
-                      <strong>Vehiculo creado el:</strong>{' '}
-                      {new Date(
-                        asignacion.vehiculo_creado_el,
-                      ).toLocaleDateString()}
-                    </p>
-                    <p>
-                      <strong>Vehiculo actualizado el:</strong>{' '}
-                      {asignacion.vehiculo_actualizado_el
-                        ? new Date(
-                            asignacion.vehiculo_actualizado_el,
-                          ).toLocaleDateString()
-                        : 'null'}
-                    </p>
-                    <button
-                      onClick={() => DeleteVehicle(asignacion.id_vehiculo)}
-                    >
-                      Eliminar Vehiculo
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <div className="search-result">
-                  <p>No se encontraron vehiculos.</p>
-                </div>
-              )}
-            </>
+            <h2>Resultados de la Búsqueda de Vehículos:</h2>
+            {searchListV.length > 0 ? (
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>ID Vehículo</th>
+                    <th>Matrícula</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Estado</th>
+                    <th>Vehículo Creado El</th>
+                    <th>Vehículo Actualizado El</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {searchListV.map((asignacion, index) => (
+                    <tr key={index}>
+                      <td>{asignacion.id_vehiculo}</td>
+                      <td>{asignacion.matricula}</td>
+                      <td>{asignacion.marca}</td>
+                      <td>{asignacion.modelo}</td>
+                      <td>{asignacion.estado}</td>
+                      <td>
+                        {asignacion.vehiculo_creado_el ?
+                        convertir_fecha(asignacion.vehiculo_creado_el): 'null'}
+                      </td>
+                      <td>
+                        {asignacion.vehiculo_actualizado_el
+                          ? convertir_fecha(asignacion.vehiculo_actualizado_el)
+                          : "null"}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                "¿Estás seguro de que deseas eliminar este vehículo?"
+                              )
+                            ) {
+                              DeleteVehicle(asignacion.id_vehiculo);
+                            }
+                          }}
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <div className="search-result">
+                <p>No se encontraron vehículos.</p>
+              </div>
+            )}
+          </>
+          
           ) : (
             <>
-              {searchListA.length > 0 ? (
-                searchListA.map((asignacion, index) => (
-                  <div key={index} className="search-result">
-                    <h2>Resultados de la Búsqueda de Asignacion:</h2>
-                    <p>
-                      <strong>ID Historial:</strong> {asignacion.id_historial}
-                    </p>
-                    <p>
-                      <strong>ID Repartidor:</strong> {asignacion.id_repartidor}
-                    </p>
-                    <p>
-                      <strong>ID Vehículo:</strong> {asignacion.id_vehiculo}
-                    </p>
-                    <p>
-                      <strong>Fecha de Asignación:</strong>{' '}
-                      {asignacion.fecha_asignacion
-                        ? new Date(
-                            asignacion.fecha_asignacion,
-                          ).toLocaleDateString()
-                        : 'null'}
-                    </p>
-                    <p>
-                      <strong>Fecha de Devolucion:</strong>{' '}
-                      {asignacion.fecha_devolucion
-                        ? new Date(
-                            asignacion.fecha_devolucion,
-                          ).toLocaleDateString()
-                        : 'null'}
-                    </p>
-                    <p>
-                      <strong>kilometraje inicial:</strong>{' '}
-                      {asignacion.kilometraje_inicial}
-                    </p>
-                    <p>
-                      <strong>kilometraje final:</strong>{' '}
-                      {asignacion.kilometraje_final
-                        ? asignacion.kilometraje_final
-                        : 'null'}
-                    </p>
-                    <p>
-                      <strong>Motivo:</strong>{' '}
-                      {asignacion.motivo ? asignacion.motivo : 'null'}
-                    </p>
-                    <button
-                      onClick={() => DeleteAssignment(asignacion.id_historial)}
-                    >
-                      Eliminar Asignacion
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <div className="search-result">
-                  <p>No se encontraron asignaciones.</p>
-                </div>
-              )}
-            </>
+  <h2>Resultados de la Búsqueda de Asignación:</h2>
+  {searchListA.length > 0 ? (
+    <Table striped bordered hover responsive>
+      <thead>
+        <tr>
+          <th>ID Historial</th>
+          <th>ID Repartidor</th>
+          <th>ID Vehículo</th>
+          <th>Fecha de Asignación</th>
+          <th>Fecha de Devolución</th>
+          <th>Kilometraje Inicial</th>
+          <th>Kilometraje Final</th>
+          <th>Motivo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {searchListA.map((asignacion, index) => (
+          <tr key={index}>
+            <td>{asignacion.id_historial}</td>
+            <td>{asignacion.id_repartidor}</td>
+            <td>{asignacion.id_vehiculo}</td>
+            <td>
+              {asignacion.fecha_asignacion
+                ? convertir_fecha(asignacion.fecha_asignacion)
+                : "null"}
+            </td>
+            <td>
+              {asignacion.fecha_devolucion
+                ? convertir_fecha(asignacion.fecha_devolucion)
+                : "null"}
+            </td>
+            <td>{asignacion.kilometraje_inicial}</td>
+            <td>
+              {asignacion.kilometraje_final
+                ? asignacion.kilometraje_final
+                : "null"}
+            </td>
+            <td>{asignacion.motivo ? asignacion.motivo : "null"}</td>
+            <td>
+              <button
+                className="btn btn-danger"
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      "¿Estás seguro de que deseas eliminar esta asignación?"
+                    )
+                  ) {
+                    DeleteAssignment(asignacion.id_historial);
+                  }
+                }}
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  ) : (
+    <div className="search-result">
+      <p>No se encontraron asignaciones.</p>
+    </div>
+  )}
+</>
+
           )}
         </div>
       </div>

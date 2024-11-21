@@ -74,7 +74,7 @@ const Conexiones = () => {
       return Promise.reject(`Error en la solicitud: ${response.status}`);
     }
     const data = await response.json();
-    console.log(successMessage, data);
+    //console.log(successMessage, data);
     if (nombre !== 'Direccion') {
       alert(`${nombre} ${successMessage}`);
     }
@@ -84,7 +84,7 @@ const Conexiones = () => {
     const api = diccionario(2, nombre);
     const fechas = diccionario(0, nombre);
     const numeros = diccionario(1, nombre);
-    console.log('filters', filters);
+    //console.log('filters', filters);
 
     try {
       const response = await fetch(`${api}`);
@@ -96,6 +96,7 @@ const Conexiones = () => {
       }
 
       const data = await response.json();
+      //console.log(data);
 
       // Filtrar los objetos según los filtros proporcionados
       const filtrados = data.filter((objeto) => {
@@ -111,17 +112,14 @@ const Conexiones = () => {
                 //console.log('BD:', objeto[key]);
                 const [datePart, timePart] = objeto[key].split('T');
                 const [yearO, monthO, dayO] = datePart.split('-').map(Number);
-                const objetoFecha = new Date(yearO, monthO - 1, dayO);
-
                 const [year, month, day] = filters[key].split('-').map(Number);
-                const filtroFecha = new Date(year, month - 1, day);
                 //console.log('Filtro:', filtroFecha);
                 //console.log('BD:', objetoFecha);
 
                 return (
-                  objetoFecha.getFullYear() === filtroFecha.getFullYear() &&
-                  objetoFecha.getMonth() === filtroFecha.getMonth() &&
-                  objetoFecha.getDate() === filtroFecha.getDate()
+                  yearO === year &&
+                  monthO === month &&
+                  dayO === day
                 );
               }
             }
@@ -148,7 +146,43 @@ const Conexiones = () => {
       if (filtrados.length == 0) {
         return [false];
       }
-      console.log('filtrados', filtrados); // Verifica qué datos han sido filtrados
+      //console.log('filtrados', filtrados); // Verifica qué datos han sido filtrados
+      return [true, filtrados];
+    } catch (error) {
+      alert(`Error de conexión con el servidor.(${nombre})`);
+      return [false];
+    }
+  };
+
+  const fetchSearch2 = async (nombre, filters) => {
+    const api = diccionario(2, nombre);
+    //console.log('filters', filters);
+
+    try {
+      const response = await fetch(`${api}`);
+
+      // Verifica si la respuesta es exitosa antes de intentar obtener los datos
+      if (!response.ok) {
+        alert(`Error al cargar el ${nombre}`);
+        return [false];
+      }
+
+      const data = await response.json();
+      //console.log(data);
+
+      // Filtrar los objetos según los filtros proporcionados
+      const filtrados = data.filter((objeto) => {
+        return Object.keys(filters).every((key) => {
+          if (objeto[key] === null) {
+            return objeto[key];
+          }
+          return objeto[key].toString().startsWith(filters[key].toString());
+        });
+      });
+      if (filtrados.length == 0) {
+        return [false];
+      }
+      //console.log('filtrados', filtrados); // Verifica qué datos han sido filtrados
       return [true, filtrados];
     } catch (error) {
       alert(`Error de conexión con el servidor.(${nombre})`);
@@ -160,7 +194,7 @@ const Conexiones = () => {
     let fechas;
     if (nombre == 'Envio') {
       fechas = [];
-      console.log('Fechas: envio', fechas);
+      //console.log('Fechas: envio', fechas);
     } else {
       fechas = diccionario(0, nombre);
     }
@@ -178,8 +212,8 @@ const Conexiones = () => {
         }
       }
     }
-    console.log('Create', create);
-    console.log('api', api);
+    //console.log('Create', create);
+    //console.log('api', api);
 
     // Realiza la solicitud con el objeto actualizado
     try {
@@ -219,7 +253,7 @@ const Conexiones = () => {
         }
       }
 
-      console.log('id', idObject);
+      //console.log('id', idObject);
       const response = await fetch(`${api}${idObject}/`, {
         method: 'PATCH', // Usualmente PATCH o PUT para actualizaciones
         headers: {
@@ -234,7 +268,7 @@ const Conexiones = () => {
       }
 
       const data = await response.json();
-      console.log(`Estado del ${nombre} actualizado:`, data);
+      //console.log(`Estado del ${nombre} actualizado:`, data);
       return true; // Indica que la actualización fue exitosa
     } catch (error) {
       console.error(`Error al actualizar el ${nombre}:`, error);
@@ -298,6 +332,7 @@ const Conexiones = () => {
   return {
     diccionario,
     fetchSearch,
+    fetchSearch2,
     SubmitCreate,
     updateObject,
     Delete,

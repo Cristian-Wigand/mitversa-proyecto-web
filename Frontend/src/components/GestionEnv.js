@@ -1,6 +1,8 @@
 import React, { useState, useEffect, act } from 'react';
 import { useNavigate } from 'react-router-dom'; // Para redirigir al usuario si no es gerente
 import { throttle } from 'lodash';
+import Table from 'react-bootstrap/Table';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
 import Conexiones from './conexiones';
 const conexiones = Conexiones();
@@ -12,6 +14,7 @@ const GestionEnv = () => {
   const [searchListE, setsearchListE] = useState([]);
   const [searchListP, setsearchListP] = useState([]);
   const [searchListD, setsearchListD] = useState([]);
+  const [direcciones, setDirecciones] = useState({});
   const navigate = useNavigate();
 
   const [createDireccion_origen, setCreateDireccionOrigen] = useState({
@@ -115,6 +118,7 @@ const GestionEnv = () => {
       setComunas(uniqueComunas);
       setAllComunas(data);
     };
+    
     const fetchCiudades = async (nombre) => {
       const resultado = await conexiones.traer_todo('Ciudad');
       if (resultado[0]) {
@@ -136,6 +140,24 @@ const GestionEnv = () => {
     fetchCiudades();
     fetchEstadosEnvio();
   }, []);
+  useEffect(() => {
+    const cargarDirecciones = async () => {
+      const nuevasDirecciones = {};
+      for (const asignacion of searchListE) {
+        if (asignacion.direccion_origen) {
+          nuevasDirecciones[asignacion.direccion_origen] = await buscar_direccion(asignacion.direccion_origen);
+        }
+        if (asignacion.direccion_destino) {
+          nuevasDirecciones[asignacion.direccion_destino] = await buscar_direccion(asignacion.direccion_destino);
+        }
+      }
+      setDirecciones(nuevasDirecciones);
+    };
+
+    if (searchListE.length > 0) {
+      cargarDirecciones();
+    }
+  }, [searchListE]);
 
   const obtenerNombreEstadoPorId = (id) => {
     const estado = estadosEnvio.find((estado) => estado.id_estado_envio === id);
@@ -300,7 +322,7 @@ const GestionEnv = () => {
   const SubmitSearch = async (e) => {
     e.preventDefault(); // Evita la recarga de la página
     if (searchType == 'envio') {
-      const resultado = await conexiones.fetchSearch('Envio', {
+      const resultado = await conexiones.fetchSearch2('Envio', {
         [selectedOption2]: searchEnvio[selectedOption2],
       });
       if (resultado[0]) {
@@ -439,6 +461,8 @@ const GestionEnv = () => {
         costo_total: '',
       });
     }
+    console.log('fetchSearch')
+    await conexiones.fetchSearch('Envio',createEnvio)
   };
 
   const DeleteEnvio = async (userId) => {
@@ -481,6 +505,48 @@ const GestionEnv = () => {
     }
   };
 
+  const convertir_fecha = (fecha) => {
+
+    const date = new Date(fecha);
+
+    // Obtener el día, mes, año, hora, minuto y segundo
+    const day = String(date.getDate()).padStart(2, '0'); // Asegurarse de que el día tenga 2 dígitos
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses empiezan en 0, por eso sumamos 1
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    // Construir la cadena con el formato deseado
+    const fecha_string = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+    
+    console.log(fecha_string);
+    return fecha_string
+  };
+
+  const buscar_direccion = async (id) => {
+    const resultado = await conexiones.fetchSearch("Direccion",{id_direccion:id})
+    if (!resultado[0]){
+      return 'Null'
+    }
+    const calle=resultado[1][0].calle
+    const numero=resultado[1][0].numero
+    const comuna=resultado[1][0].id_comuna
+    const resultado2 = await conexiones.fetchSearch("Comuna",{id_comuna:comuna})
+    if (!resultado2[0]){
+      return 'Null'
+    }
+    const ciudad=resultado2[1][0].id_ciudad
+    const comuna_nombre=resultado2[1][0].nombre
+    const resultado3 = await conexiones.fetchSearch("Ciudad",{id_ciudad:ciudad})
+    const ciudad_nombre=resultado3[1][0].nombre
+    if (numero === 'null'){
+      numero = ''
+    }
+    const direccion_string = `${comuna_nombre}, ${ciudad_nombre}, ${calle} ${numero}`
+    return direccion_string
+    }
+
   return (
     <div>
       <div className="menu-nav" style={{ top: `${menuTop}px` }}>
@@ -503,7 +569,7 @@ const GestionEnv = () => {
         {/* Formulario para crear envío */}
         <form className="form" onSubmit={SubmitCreateEnvio} id="envio">
           <h2>Crear Envío</h2>
-          <select
+          <select className='select-margin'
             name="id_estado_envio"
             onChange={CreateEnvio}
             value={createEnvio.id_estado_envio}
@@ -551,7 +617,7 @@ const GestionEnv = () => {
             required
           />
           <h3>Direccion Origen</h3>
-          <select
+          <select className='select-margin'
             name="comuna"
             onChange={ComunaChange}
             value={createDireccion_origen.nombre}
@@ -564,7 +630,7 @@ const GestionEnv = () => {
             ))}
           </select>
           {/* Mostrar la ciudad asociada */}
-          <select
+          <select className='select-margin'
             name="ciudad"
             onChange={(e) => CiudadChange(e, 0)} // Cambiar según la lógica
             value={createDireccion_origen.id_ciudad}
@@ -595,7 +661,7 @@ const GestionEnv = () => {
             required
           />
           <h3>Direccion Destino</h3>
-          <select
+          <select className='select-margin'
             name="comuna"
             onChange={ComunaChange2}
             value={createDireccion_destino.nombre}
@@ -608,7 +674,7 @@ const GestionEnv = () => {
             ))}
           </select>
           {/* Mostrar la ciudad asociada */}
-          <select
+          <select className='select-margin'
             name="ciudad"
             onChange={(e) => CiudadChange(e, 1)} // Cambiar según la lógica
             value={createDireccion_destino.id_ciudad}
@@ -711,14 +777,14 @@ const GestionEnv = () => {
         {/* Buscar */}
         <form className="form" onSubmit={SubmitSearch} id="Buscador">
           <h2>Buscador</h2>
-          <select value={searchType} onChange={SearchTypeChange}>
+          <select value={searchType} onChange={SearchTypeChange} className='select-margin'>
             <option value="envio">Envio</option>
             <option value="paquete">Paquete</option>
           </select>
 
           {searchType === 'envio' ? (
             <>
-              <select
+              <select className='select-margin'
                 name="criterioBusqueda"
                 onChange={Select2Change}
                 value={selectedOption2}
@@ -734,7 +800,7 @@ const GestionEnv = () => {
                 <option value="costo_total">Costo Total</option>
               </select>
               {selectedOption2 === 'id_estado_envio' ? (
-                <select
+                <select className='select-margin'
                   onChange={SearchEnvio}
                   value={searchEnvio[selectedOption2] || ''}
                   disabled={!selectedOption2}
@@ -771,7 +837,7 @@ const GestionEnv = () => {
             </>
           ) : (
             <>
-              <select
+              <select className='select-margin'
                 name="criterioBusqueda"
                 onChange={SelectChange}
                 value={selectedOption}
@@ -799,101 +865,118 @@ const GestionEnv = () => {
           )}
           <button type="submit">Buscar</button>
         </form>
-        {/* Resultados de búsqueda */}
         <div>
-          {searchType === 'envio' ? (
-            <>
-              {searchListE.length > 0 ? (
-                searchListE.map((asignacion, index) => (
-                  <div key={index} className="search-result">
-                    <h2>Resultados de la Búsqueda de Envios:</h2>
-                    <p>
-                      <strong>Estado:</strong>{' '}
-                      {obtenerNombreEstadoPorId(asignacion.id_estado_envio)}
-                    </p>
-                    <p>
-                      <strong>ID Repartidor:</strong> {asignacion.id_repartidor}
-                    </p>
-                    <p>
-                      <strong>ID Cliente:</strong> {asignacion.id_cliente}
-                    </p>
-                    <p>
-                      <strong>Fecha pedido inicio:</strong>{' '}
-                      {asignacion.fecha_pedido_inicio
-                        ? new Date(
-                            asignacion.fecha_pedido_inicio,
-                          ).toLocaleDateString()
-                        : 'null'}
-                    </p>
-                    <p>
-                      <strong>Fecha pedido fin:</strong>{' '}
-                      {asignacion.fecha_pedido_fin
-                        ? new Date(
-                            asignacion.fecha_pedido_fin,
-                          ).toLocaleDateString()
-                        : 'null'}
-                    </p>
-                    <p>
-                      <strong>ID Direccion Origen:</strong>{' '}
-                      {asignacion.direccion_origen}
-                    </p>
-                    <p>
-                      <strong>ID Direccion Destino:</strong>{' '}
-                      {asignacion.direccion_destino}
-                    </p>
-                    <p>
-                      <strong>Costo Total:</strong> {asignacion.costo_total}
-                    </p>
-                    <button onClick={() => DeleteEnvio(asignacion.id_envio)}>
-                      Eliminar Asignacion
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <div className="search-result">
-                  <p>No se encontraron Envios.</p>
-                </div>
-              )}
-            </>
-          ) : (
-            <>
-              {searchListP.length > 0 ? (
-                searchListP.map((asignacion, index) => (
-                  <div key={index} className="search-result">
-                    <h2>Resultados de la Búsqueda de Paquetes:</h2>
-                    <p>
-                      <strong>ID Envio:</strong> {asignacion.id_envio}
-                    </p>
-                    <p>
-                      <strong>Peso:</strong> {asignacion.peso}
-                    </p>
-                    <p>
-                      <strong>Largo:</strong> {asignacion.largo}
-                    </p>
-                    <p>
-                      <strong>Ancho:</strong> {asignacion.ancho}
-                    </p>
-                    <p>
-                      <strong>Alto:</strong> {asignacion.alto}
-                    </p>
-                    <p>
-                      <strong>Descripcion:</strong> {asignacion.descripcion}
-                    </p>
-                    <button
-                      onClick={() => DeletePaquete(asignacion.id_paquete)}
-                    >
-                      Eliminar Paquete
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <div className="search-result">
-                  <p>No se encontraron Paquetes.</p>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+  {searchType === "envio" ? (
+    <>
+    {searchListE.length > 0 ? (
+      <>
+        <h2>Resultados de la Búsqueda de Envíos:</h2>
+        <Table striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th>Estado</th>
+              <th>ID Repartidor</th>
+              <th>ID Cliente</th>
+              <th>Fecha Pedido Inicio</th>
+              <th>Fecha Pedido Fin</th>
+              <th>Dirección Origen</th>
+              <th>Dirección Destino</th>
+              <th>Costo Total</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {searchListE.map((asignacion, index) => (
+              <tr key={index}>
+                <td>{obtenerNombreEstadoPorId(asignacion.id_estado_envio)}</td>
+                <td>{asignacion.id_repartidor}</td>
+                <td>{asignacion.id_cliente}</td>
+                <td>
+                  {asignacion.fecha_pedido_inicio
+                    ? convertir_fecha(asignacion.fecha_pedido_inicio)
+                    : "null"}
+                </td>
+                <td>
+                  {asignacion.fecha_pedido_fin
+                    ? convertir_fecha(asignacion.fecha_pedido_fin)
+                    : "null"}
+                </td>
+                <td>{direcciones[asignacion.direccion_origen] || "Cargando..."}</td>
+                <td>{direcciones[asignacion.direccion_destino] || "Cargando..."}</td>
+                <td>{asignacion.costo_total}</td>
+                <td>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "¿Estás seguro de que deseas eliminar este envío?"
+                        )
+                      ) {
+                        DeleteEnvio(asignacion.id_envio);
+                      }
+                    }}
+                  >
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </>
+    ) : (
+      <p>No se encontraron Envíos.</p>
+    )}
+  </>
+  ) : (
+    <>
+      <h2>Resultados de la Búsqueda de Paquetes:</h2>
+      {searchListP.length > 0 ? (
+        <Table striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th>ID Envío</th>
+              <th>Peso</th>
+              <th>Largo</th>
+              <th>Ancho</th>
+              <th>Alto</th>
+              <th>Descripción</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {searchListP.map((asignacion) => (
+              <tr key={asignacion.id_paquete}>
+                <td>{asignacion.id_envio}</td>
+                <td>{asignacion.peso}</td>
+                <td>{asignacion.largo}</td>
+                <td>{asignacion.ancho}</td>
+                <td>{asignacion.alto}</td>
+                <td>{asignacion.descripcion}</td>
+                <td>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => {
+                      if (window.confirm("¿Estás seguro de que deseas eliminar este paquete?")) {
+                        DeletePaquete(asignacion.id_paquete);
+                      }
+                    }}
+                  >
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      ) : (
+        <p>No se encontraron Paquetes.</p>
+      )}
+    </>
+  )}
+</div>
+
       </div>
     </div>
   );

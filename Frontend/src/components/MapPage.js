@@ -11,14 +11,15 @@ const MapPage = () => {
 
   // Leer los parámetros de la URL para obtener las ciudades de origen y destino
   const params = new URLSearchParams(window.location.search);
-  const address1 = decodeURIComponent(params.get('origen')) || 'Victoria, Chile'; // Origen (si no se pasa, se usa un valor por defecto)
+  const address1 =
+    decodeURIComponent(params.get('origen')) || 'Victoria, Chile'; // Origen (si no se pasa, se usa un valor por defecto)
   const address2 = decodeURIComponent(params.get('destino')) || 'Temuco, Chile'; // Destino (valor por defecto)
 
   // Función para obtener las coordenadas de una dirección
   const getCoordinatesFromAddress = async (address) => {
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&addressdetails=1`
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&addressdetails=1`,
       );
       const data = await response.json();
       if (data.length > 0) {
@@ -27,19 +28,22 @@ const MapPage = () => {
           lon: parseFloat(data[0].lon),
         };
       } else {
-        console.error('No se encontraron coordenadas para la dirección:', address);
+        console.error(
+          'No se encontraron coordenadas para la dirección:',
+          address,
+        );
         throw new Error('No se encontraron coordenadas para la ciudad');
       }
     } catch (error) {
       console.error('Error al obtener las coordenadas:', error);
-      throw error;  // Propagar el error para manejarlo más arriba
+      throw error; // Propagar el error para manejarlo más arriba
     }
   };
 
   // Función para obtener la ruta entre dos coordenadas
   const getRoute = async (start, end) => {
     const response = await fetch(
-      `https://router.project-osrm.org/route/v1/driving/${start.lon},${start.lat};${end.lon},${end.lat}?overview=full&geometries=geojson`
+      `https://router.project-osrm.org/route/v1/driving/${start.lon},${start.lat};${end.lon},${end.lat}?overview=full&geometries=geojson`,
     );
     const data = await response.json();
     return data.routes[0].geometry.coordinates;
@@ -87,14 +91,16 @@ const MapPage = () => {
 
   return (
     <div className="map-container">
-      <h2>Ruta entre {address1} y {address2}</h2>
+      <h2>
+        Ruta entre {address1} y {address2}
+      </h2>
       <MapContainer
         center={[startCoords?.lat || 0, startCoords?.lon || 0]}
         zoom={6}
         style={{ height: '400px', width: '100%' }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        
+
         {/* Dibuja la ruta si existe */}
         {route.length > 0 && (
           <Polyline
@@ -107,9 +113,7 @@ const MapPage = () => {
         {startCoords && (
           <Marker position={[startCoords.lat, startCoords.lon]} />
         )}
-        {endCoords && (
-          <Marker position={[endCoords.lat, endCoords.lon]} />
-        )}
+        {endCoords && <Marker position={[endCoords.lat, endCoords.lon]} />}
       </MapContainer>
     </div>
   );
