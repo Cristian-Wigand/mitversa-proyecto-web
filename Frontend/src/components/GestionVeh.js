@@ -338,51 +338,64 @@ const GestionVeh = () => {
   };
 
   // Función para actualizar los datos del vehículo
-const handleUpdateVehiculo = async (vehiculo) => {
-  const marca = prompt('Ingrese la nueva marca:', vehiculo.marca) || vehiculo.marca;
-  const modelo = prompt('Ingrese el nuevo modelo:', vehiculo.modelo) || vehiculo.modelo;
+  const handleUpdateVehiculo = async (vehiculo) => {
+    const marca =
+      prompt('Ingrese la nueva marca:', vehiculo.marca) || vehiculo.marca;
+    const modelo =
+      prompt('Ingrese el nuevo modelo:', vehiculo.modelo) || vehiculo.modelo;
 
-  // Solo se actualiza el campo de fecha de actualización automáticamente
-  const vehiculoActualizado = {
-    marca: marca,
-    modelo: modelo,
-    vehiculo_actualizado_el: '', // Fecha actual
+    // Solo se actualiza el campo de fecha de actualización automáticamente
+    const vehiculoActualizado = {
+      marca: marca,
+      modelo: modelo,
+      vehiculo_actualizado_el: '', // Fecha actual
+    };
+
+    // Llamada para actualizar el vehículo
+    const resultado = await conexiones.updateObject(
+      'Vehiculo',
+      vehiculo.id_vehiculo,
+      vehiculoActualizado,
+    );
+    if (resultado) {
+      // Refrescar la lista de vehículos si la actualización fue exitosa
+      const resultado2 = await conexiones.fetchSearch('Vehiculo', {
+        [selectedOption2]: searchVehicle2[selectedOption2],
+      });
+      if (resultado2[0]) {
+        setsearchListV(resultado2[1]);
+      }
+    }
   };
 
-  // Llamada para actualizar el vehículo
-  const resultado = await conexiones.updateObject('Vehiculo', vehiculo.id_vehiculo, vehiculoActualizado);
-  if (resultado) {
-    // Refrescar la lista de vehículos si la actualización fue exitosa
-    const resultado2 = await conexiones.fetchSearch('Vehiculo', {
-      [selectedOption2]: searchVehicle2[selectedOption2],
-    });
-    if (resultado2[0]){
-      setsearchListV(resultado2[1]);
+  // Función para actualizar la asignación
+  const handleUpdateAsignacion = async (asignacion) => {
+    const fechaAsignacion =
+      prompt(
+        'Ingrese la nueva fecha de devolucion:',
+        convertir_fecha(asignacion.fecha_asignacion),
+      ) || asignacion.fecha_asignacion;
+
+    const asignacionActualizada = {
+      fecha_asignacion: fechaAsignacion,
+    };
+
+    // Llamada para actualizar la asignación
+    const resultado = await conexiones.updateObject(
+      'Asignacion',
+      asignacion.id_historial,
+      asignacionActualizada,
+    );
+    if (resultado) {
+      // Refrescar la lista de asignaciones si la actualización fue exitosa
+      const resultado2 = await conexiones.fetchSearch('Asignacion', {
+        [selectedOption]: searchassignmentR2[selectedOption],
+      });
+      if (resultado2[0]) {
+        setsearchListA(resultado2[1]);
+      }
     }
-  }
-};
-
-// Función para actualizar la asignación
-const handleUpdateAsignacion = async (asignacion) => {
-  const fechaAsignacion = prompt('Ingrese la nueva fecha de devolucion:', convertir_fecha(asignacion.fecha_asignacion)) || asignacion.fecha_asignacion;
-
-  const asignacionActualizada = {
-    fecha_asignacion: fechaAsignacion,
   };
-
-  // Llamada para actualizar la asignación
-  const resultado = await conexiones.updateObject('Asignacion', asignacion.id_historial, asignacionActualizada);
-  if (resultado) {
-    // Refrescar la lista de asignaciones si la actualización fue exitosa
-    const resultado2 = await conexiones.fetchSearch('Asignacion', {
-      [selectedOption]: searchassignmentR2[selectedOption],
-    });
-    if (resultado2[0]){
-      setsearchListA(resultado2[1]);
-    }
-  }
-};
-
 
   return (
     <div>
@@ -591,138 +604,138 @@ const handleUpdateAsignacion = async (asignacion) => {
 
         {/* Resultados de búsqueda */}
         <div>
-  {searchType === 'Vehiculo' ? (
-    <>
-      <h2>Resultados de la Búsqueda de Vehículos:</h2>
-      {searchListV.length > 0 ? (
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>ID Vehículo</th>
-              <th>Matrícula</th>
-              <th>Marca</th>
-              <th>Modelo</th>
-              <th>Estado</th>
-              <th>Vehículo Creado El</th>
-              <th>Vehículo Actualizado El</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {searchListV.map((vehiculo, index) => (
-              <tr key={index}>
-                <td>{vehiculo.id_vehiculo}</td>
-                <td>{vehiculo.matricula}</td>
-                <td>{vehiculo.marca}</td>
-                <td>{vehiculo.modelo}</td>
-                <td>{vehiculo.estado}</td>
-                <td>
-                  {vehiculo.vehiculo_creado_el
-                    ? convertir_fecha(vehiculo.vehiculo_creado_el)
-                    : 'null'}
-                </td>
-                <td>
-                  {vehiculo.vehiculo_actualizado_el
-                    ? convertir_fecha(vehiculo.vehiculo_actualizado_el)
-                    : 'null'}
-                </td>
-                <td>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => DeleteVehicle(vehiculo.id_vehiculo)}
-                  >
-                    Eliminar
-                  </button>
-                  {/* Botón de actualizar para vehículos */}
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handleUpdateVehiculo(vehiculo)}
-                  >
-                    Actualizar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      ) : (
-        <div className="search-result">
-          <p>No se encontraron vehículos.</p>
+          {searchType === 'Vehiculo' ? (
+            <>
+              <h2>Resultados de la Búsqueda de Vehículos:</h2>
+              {searchListV.length > 0 ? (
+                <Table striped bordered hover responsive>
+                  <thead>
+                    <tr>
+                      <th>ID Vehículo</th>
+                      <th>Matrícula</th>
+                      <th>Marca</th>
+                      <th>Modelo</th>
+                      <th>Estado</th>
+                      <th>Vehículo Creado El</th>
+                      <th>Vehículo Actualizado El</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {searchListV.map((vehiculo, index) => (
+                      <tr key={index}>
+                        <td>{vehiculo.id_vehiculo}</td>
+                        <td>{vehiculo.matricula}</td>
+                        <td>{vehiculo.marca}</td>
+                        <td>{vehiculo.modelo}</td>
+                        <td>{vehiculo.estado}</td>
+                        <td>
+                          {vehiculo.vehiculo_creado_el
+                            ? convertir_fecha(vehiculo.vehiculo_creado_el)
+                            : 'null'}
+                        </td>
+                        <td>
+                          {vehiculo.vehiculo_actualizado_el
+                            ? convertir_fecha(vehiculo.vehiculo_actualizado_el)
+                            : 'null'}
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => DeleteVehicle(vehiculo.id_vehiculo)}
+                          >
+                            Eliminar
+                          </button>
+                          {/* Botón de actualizar para vehículos */}
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => handleUpdateVehiculo(vehiculo)}
+                          >
+                            Actualizar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              ) : (
+                <div className="search-result">
+                  <p>No se encontraron vehículos.</p>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <h2>Resultados de la Búsqueda de Asignación:</h2>
+              {searchListA.length > 0 ? (
+                <Table striped bordered hover responsive>
+                  <thead>
+                    <tr>
+                      <th>ID Historial</th>
+                      <th>ID Repartidor</th>
+                      <th>ID Vehículo</th>
+                      <th>Fecha de Asignación</th>
+                      <th>Fecha de Devolución</th>
+                      <th>Kilometraje Inicial</th>
+                      <th>Kilometraje Final</th>
+                      <th>Motivo</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {searchListA.map((asignacion, index) => (
+                      <tr key={index}>
+                        <td>{asignacion.id_historial}</td>
+                        <td>{asignacion.id_repartidor}</td>
+                        <td>{asignacion.id_vehiculo}</td>
+                        <td>
+                          {asignacion.fecha_asignacion
+                            ? convertir_fecha(asignacion.fecha_asignacion)
+                            : 'null'}
+                        </td>
+                        <td>
+                          {asignacion.fecha_devolucion
+                            ? convertir_fecha(asignacion.fecha_devolucion)
+                            : 'null'}
+                        </td>
+                        <td>{asignacion.kilometraje_inicial}</td>
+                        <td>
+                          {asignacion.kilometraje_final
+                            ? asignacion.kilometraje_final
+                            : 'null'}
+                        </td>
+                        <td>
+                          {asignacion.motivo ? asignacion.motivo : 'null'}
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() =>
+                              DeleteAssignment(asignacion.id_historial)
+                            }
+                          >
+                            Eliminar
+                          </button>
+                          {/* Botón de actualizar para asignación */}
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => handleUpdateAsignacion(asignacion)}
+                          >
+                            Actualizar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              ) : (
+                <div className="search-result">
+                  <p>No se encontraron asignaciones.</p>
+                </div>
+              )}
+            </>
+          )}
         </div>
-      )}
-    </>
-  ) : (
-    <>
-      <h2>Resultados de la Búsqueda de Asignación:</h2>
-      {searchListA.length > 0 ? (
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>ID Historial</th>
-              <th>ID Repartidor</th>
-              <th>ID Vehículo</th>
-              <th>Fecha de Asignación</th>
-              <th>Fecha de Devolución</th>
-              <th>Kilometraje Inicial</th>
-              <th>Kilometraje Final</th>
-              <th>Motivo</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {searchListA.map((asignacion, index) => (
-              <tr key={index}>
-                <td>{asignacion.id_historial}</td>
-                <td>{asignacion.id_repartidor}</td>
-                <td>{asignacion.id_vehiculo}</td>
-                <td>
-                  {asignacion.fecha_asignacion
-                    ? convertir_fecha(asignacion.fecha_asignacion)
-                    : 'null'}
-                </td>
-                <td>
-                  {asignacion.fecha_devolucion
-                    ? convertir_fecha(asignacion.fecha_devolucion)
-                    : 'null'}
-                </td>
-                <td>{asignacion.kilometraje_inicial}</td>
-                <td>
-                  {asignacion.kilometraje_final
-                    ? asignacion.kilometraje_final
-                    : 'null'}
-                </td>
-                <td>
-                  {asignacion.motivo ? asignacion.motivo : 'null'}
-                </td>
-                <td>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => DeleteAssignment(asignacion.id_historial)}
-                  >
-                    Eliminar
-                  </button>
-                  {/* Botón de actualizar para asignación */}
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handleUpdateAsignacion(asignacion)}
-                  >
-                    Actualizar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      ) : (
-        <div className="search-result">
-          <p>No se encontraron asignaciones.</p>
-        </div>
-      )}
-    </>
-  )}
-</div>
-
-
       </div>
     </div>
   );

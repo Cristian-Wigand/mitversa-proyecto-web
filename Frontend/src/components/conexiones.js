@@ -84,7 +84,7 @@ const Conexiones = () => {
     const api = diccionario(2, nombre);
     const fechas = diccionario(0, nombre);
     const numeros = diccionario(1, nombre);
-    //console.log('filters', filters);
+    console.log('filters', filters);
 
     try {
       const response = await fetch(`${api}`);
@@ -116,11 +116,7 @@ const Conexiones = () => {
                 //console.log('Filtro:', filtroFecha);
                 //console.log('BD:', objetoFecha);
 
-                return (
-                  yearO === year &&
-                  monthO === month &&
-                  dayO === day
-                );
+                return yearO === year && monthO === month && dayO === day;
               }
             }
           }
@@ -140,42 +136,6 @@ const Conexiones = () => {
             }
           }
           // Comparación estándar para otros valores
-          return objeto[key].toString() === filters[key];
-        });
-      });
-      if (filtrados.length == 0) {
-        return [false];
-      }
-      //console.log('filtrados', filtrados); // Verifica qué datos han sido filtrados
-      return [true, filtrados];
-    } catch (error) {
-      alert(`Error de conexión con el servidor.(${nombre})`);
-      return [false];
-    }
-  };
-
-  const fetchSearch2 = async (nombre, filters) => {
-    const api = diccionario(2, nombre);
-    //console.log('filters', filters);
-
-    try {
-      const response = await fetch(`${api}`);
-
-      // Verifica si la respuesta es exitosa antes de intentar obtener los datos
-      if (!response.ok) {
-        alert(`Error al cargar el ${nombre}`);
-        return [false];
-      }
-
-      const data = await response.json();
-      //console.log(data);
-
-      // Filtrar los objetos según los filtros proporcionados
-      const filtrados = data.filter((objeto) => {
-        return Object.keys(filters).every((key) => {
-          if (objeto[key] === null) {
-            return objeto[key];
-          }
           return objeto[key].toString().startsWith(filters[key].toString());
         });
       });
@@ -189,9 +149,73 @@ const Conexiones = () => {
       return [false];
     }
   };
+  const fetchSearch2 = async (nombre, filters) => {
+    const api = diccionario(2, nombre);
+    const fechas = diccionario(0, nombre); // Lista de claves que son fechas
+    const numeros = diccionario(1, nombre); // Lista de claves que son números
+
+    console.log('filters2', filters);
+
+    try {
+      const response = await fetch(`${api}`);
+
+      // Verifica si la respuesta es exitosa antes de intentar obtener los datos
+      if (!response.ok) {
+        console.error(`Error al cargar el recurso: ${nombre}`);
+        return [false];
+      }
+
+      const data = await response.json();
+
+      // Filtrar los objetos según los filtros proporcionados
+      const filtrados = data.filter((objeto) => {
+        return Object.keys(filters).every((key) => {
+          console.log('objeto[key], filters[key]', objeto[key], filters[key]);
+
+          // Si el objeto tiene valores nulos, los ignoramos
+          if (objeto[key] === null) return false;
+
+          // Manejo de filtros por fechas
+          if (fechas.includes(key)) {
+            return filters[key].some((element) => {
+              const [yearO, monthO, dayO] = objeto[key]
+                .split('T')[0] // Separar la fecha (ISO 8601)
+                .split('-')
+                .map(Number);
+              const [year, month, day] = element.split('-').map(Number);
+              return yearO === year && monthO === month && dayO === day;
+            });
+          }
+
+          // Manejo de filtros por números
+          if (numeros.includes(key)) {
+            return filters[key].some(
+              (element) => Number(objeto[key]) === Number(element),
+            );
+          }
+
+          // Comparación estándar para otros tipos de valores
+          return filters[key].some((element) =>
+            objeto[key].toString().startsWith(element.toString()),
+          );
+        });
+      });
+      console.log('filtrados', filtrados);
+      // Si no se encontraron coincidencias
+      if (filtrados.length === 0) {
+        return [false];
+      }
+
+      return [true, filtrados];
+    } catch (error) {
+      console.error(`Error de conexión con el servidor: ${nombre}`, error);
+      return [false];
+    }
+  };
 
   const SubmitCreate = async (nombre, create) => {
     let fechas;
+    console.log('Create', create);
     if (nombre == 'Envio') {
       fechas = [];
       //console.log('Fechas: envio', fechas);
@@ -252,6 +276,7 @@ const Conexiones = () => {
           }
         }
       }
+      console.log('cambio', cambio);
 
       //console.log('id', idObject);
       const response = await fetch(`${api}${idObject}/`, {
@@ -269,8 +294,10 @@ const Conexiones = () => {
 
       const data = await response.json();
       //console.log(`Estado del ${nombre} actualizado:`, data);
+      alert(`El ${nombre} se ah actualizado`);
       return true; // Indica que la actualización fue exitosa
     } catch (error) {
+      alert(`Error al actualizar el ${nombre}:`, error);
       console.error(`Error al actualizar el ${nombre}:`, error);
       return false; // Indica que hubo un error
     }

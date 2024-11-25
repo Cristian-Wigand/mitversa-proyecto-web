@@ -2,10 +2,15 @@ import React, { useState, useEffect } from 'react';
 import '../Css/UserManagementPage.css';
 import '../App.css';
 import { throttle } from 'lodash';
+import Table from 'react-bootstrap/Table';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Conexiones from './conexiones';
+const conexiones = Conexiones();
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState([]);
   const [searchEmail, setSearchEmail] = useState('');
+  const [selectedOption, setSelectedOption] = useState(''); // Direccion Almacena solo el criterio seleccionado
   const [searchResult, setSearchResult] = useState(null);
   const [createUserData, setCreateUserData] = useState({
     nombre: '',
@@ -16,10 +21,29 @@ const UserManagementPage = () => {
   });
   const [tipoUsuario, setTipoUsuario] = useState('cliente');
   const [errorMessage, setErrorMessage] = useState('');
+  const [searchListU, setsearchListU] = useState([]);
   const [menuTop, setMenuTop] = useState(150);
 
+  const [searchUsuario, setSearchUsuario] = useState({
+    id_usuario: '',
+    nombre: '',
+    apellido: '',
+    email: '',
+    tipo_usuario: '',
+    usuario_creado_el: '',
+    usuario_actualizado_el: '',
+  });
+  const [searchUsuario2, setSearchUsuario2] = useState({
+    id_usuario: '',
+    nombre: '',
+    apellido: '',
+    email: '',
+    tipo_usuario: '',
+    usuario_creado_el: '',
+    usuario_actualizado_el: '',
+  });
+
   useEffect(() => {
-    fetchUsers();
     const handleScroll = throttle(() => {
       const scrollY = window.scrollY;
       setMenuTop(scrollY <= 150 ? 150 : scrollY);
@@ -29,35 +53,27 @@ const UserManagementPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(
-        'https://mitversa.christianferrer.me/api/usuarios/',
-      );
-      const data = await response.json();
-      if (response.ok) {
-        setUsers(data);
-      } else {
-        setErrorMessage('Error al cargar los usuarios.');
-      }
-    } catch (error) {
-      setErrorMessage('Error de conexión con el servidor.');
-    }
-  };
-
   const handleSearchChange = (e) => {
     setSearchEmail(e.target.value);
   };
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    const user = users.find((user) => user.email === searchEmail);
-    if (user) {
-      setSearchResult(user);
-      setErrorMessage('');
+  const SearchUsuario = (e) => {
+    const { name, value } = e.target;
+
+    // Permite un valor vacío para el campo
+    if (name === 'id_usuario') {
+      if (value === '' || Number(value) > 0) {
+        setSearchUsuario((prevState) => ({
+          ...prevState,
+          [name]: value, // Guarda el valor directamente
+        }));
+      }
     } else {
-      setSearchResult(null);
-      setErrorMessage('Usuario no encontrado.');
+      // Actualiza otros campos normalmente
+      setSearchUsuario({
+        ...searchUsuario,
+        [e.target.name]: e.target.value,
+      });
     }
   };
 
@@ -77,75 +93,117 @@ const UserManagementPage = () => {
       email: createUserData.email,
       password: createUserData.password,
       tipo_usuario: tipoUsuario,
-      usuario_creado_el: new Date().toISOString(),
+      usuario_creado_el: '',
       usuario_actualizado_el: null,
     };
-
-    try {
-      const response = await fetch(
-        'https://mitversa.christianferrer.me/api/usuarios/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData),
-        },
-      );
-
-      if (response.ok) {
-        alert('Usuario creado exitosamente');
-        fetchUsers(); // Volver a cargar la lista de usuarios
-        setCreateUserData({
-          nombre: '',
-          apellido: '',
-          email: '',
-          password: '',
-          confirmpassword: '',
-        }); // Limpiar campos
-        setTipoUsuario('cliente'); // Restablecer el tipo de usuario
-      } else {
-        const data = await response.json();
-        console.error(data);
-        setErrorMessage(data.message || 'Error al crear el usuario.');
-      }
-    } catch (error) {
-      setErrorMessage('Error de conexión con el servidor.');
+    const resultado = conexiones.SubmitCreate('Usuario', userData);
+    if (resultado) {
+      setCreateUserData({
+        nombre: '',
+        apellido: '',
+        email: '',
+        password: '',
+        confirmpassword: '',
+      }); // Limpiar campos
+      setTipoUsuario('cliente'); // Restablecer el tipo de usuario
+    }
+  };
+  const SelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+  const SubmitSearch = async (e) => {
+    e.preventDefault(); // Evita la recarga de la página
+    const resultado = await conexiones.fetchSearch('Usuario', {
+      [selectedOption]: searchUsuario[selectedOption],
+    });
+    if (resultado[0]) {
+      setsearchListU(resultado[1]);
+      setSearchUsuario2({
+        id_usuario: searchUsuario.id_usuario,
+        nombre: searchUsuario.nombre,
+        apellido: searchUsuario.apellido,
+        email: searchUsuario.email,
+        tipo_usuario: searchUsuario.tipo_usuario,
+        usuario_creado_el: searchUsuario.usuario_creado_el,
+        usuario_actualizado_el: searchUsuario.usuario_actualizado_el,
+      });
+      setSearchUsuario({
+        id_usuario: '',
+        nombre: '',
+        apellido: '',
+        email: '',
+        tipo_usuario: '',
+        usuario_creado_el: '',
+        usuario_actualizado_el: '',
+      });
+    } else {
+      setsearchListU([]);
     }
   };
 
-  const token = localStorage.getItem('token'); // O la forma que uses para almacenar tu token
-
   const handleDeleteUser = async (userId) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-      try {
-        const response = await fetch(
-          `https://mitversa.christianferrer.me/api/usuarios/${userId}/`,
-          {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`, // Si estás usando autenticación
-            },
-          },
-        );
+    const resultado = conexiones.Delete('Usuario', userId);
+    if (resultado) {
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => user.id_usuario !== userId),
+      ); // Actualiza la lista de usuarios
+      setSearchResult(null); // Limpiar el resultado de búsqueda
+    }
+  };
+  const handleUpdateUser = async (usuario) => {
+    const nombre =
+      prompt('Ingrese el nuevo nombre:', usuario.nombre) || usuario.nombre;
+    const apellido =
+      prompt('Ingrese el nuevo apellido:', usuario.apellido) ||
+      usuario.apellido;
+    const email =
+      prompt('Ingrese el nuevo correo:', usuario.email) || usuario.email;
 
-        if (response.ok) {
-          alert('Usuario eliminado exitosamente.');
-          setUsers((prevUsers) =>
-            prevUsers.filter((user) => user.id_usuario !== userId),
-          ); // Actualiza la lista de usuarios
-          setSearchResult(null); // Limpiar el resultado de búsqueda
-        } else {
-          const errorData = await response.json();
-          alert(
-            `Error: ${errorData.detail || 'No se pudo eliminar el usuario.'}`,
-          );
-        }
-      } catch (error) {
-        alert(`Error: ${error.message}`);
+    if (
+      nombre === usuario.nombre &&
+      apellido === usuario.apellido &&
+      email === usuario.email
+    ) {
+      return false;
+    }
+    const cambio = {
+      nombre: nombre,
+      apellido: apellido,
+      email: email,
+      usuario_actualizado_el: '',
+    };
+    const resultado = await conexiones.updateObject(
+      'Usuario',
+      usuario.id_usuario,
+      cambio,
+    );
+    if (resultado) {
+      const resultado2 = await conexiones.fetchSearch('Usuario', {
+        [selectedOption]: searchUsuario2[selectedOption],
+      });
+      if (resultado2[0]) {
+        setsearchListU(resultado2[1]);
+      } else {
+        setsearchListU([]);
       }
     }
+  };
+
+  const convertir_fecha = (fecha) => {
+    const date = new Date(fecha);
+
+    // Obtener el día, mes, año, hora, minuto y segundo
+    const day = String(date.getDate()).padStart(2, '0'); // Asegurarse de que el día tenga 2 dígitos
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses empiezan en 0, por eso sumamos 1
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    // Construir la cadena con el formato deseado
+    const fecha_string = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+
+    return fecha_string;
   };
 
   return (
@@ -163,40 +221,131 @@ const UserManagementPage = () => {
       <h1>Gestión de Usuarios</h1>
 
       {/* Buscador de usuario */}
-      <form className="form" onSubmit={handleSearchSubmit} id="buscar_usuario">
-        <h2>Buscar Usuario por Email</h2>
-        <input
-          type="email"
-          placeholder="Correo Electrónico"
-          value={searchEmail}
-          onChange={handleSearchChange}
-          required
-        />
-        <button type="submit">Buscar</button>
-      </form>
-
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-      {searchResult && (
-        <div className="search-result">
-          <h2>Resultados de la Búsqueda:</h2>
-          <p>
-            <strong>Nombre:</strong> {searchResult.nombre}
-          </p>
-          <p>
-            <strong>Apellido:</strong> {searchResult.apellido}
-          </p>
-          <p>
-            <strong>Email:</strong> {searchResult.email}
-          </p>
-          <p>
-            <strong>Tipo de usuario:</strong> {searchResult.tipo_usuario}
-          </p>
-          <button onClick={() => handleDeleteUser(searchResult.id_usuario)}>
-            Eliminar Usuario
-          </button>
-        </div>
-      )}
+      {/* Buscar */}
+      <>
+        <form className="form" onSubmit={SubmitSearch} id="buscar_usuario">
+          <h2>Buscador</h2>
+          <>
+            <select
+              className="select-margin"
+              name="criterioBusqueda"
+              onChange={SelectChange}
+              value={selectedOption}
+            >
+              <option value="">Selecciona un criterio</option>
+              <option value="id_usuario">ID Usuario</option>
+              <option value="nombre">Nombre</option>
+              <option value="apellido">Apellido</option>
+              <option value="email">Email</option>
+              <option value="tipo_usuario">Tipo de usuario</option>
+              <option value="usuario_creado_el">
+                Fecha de creación de Usuario
+              </option>
+              <option value="usuario_actualizado_el">
+                Última fecha de actualización de Usuario
+              </option>
+            </select>
+            {selectedOption === 'tipo_usuario' ? (
+              <select
+                className="select-margin"
+                value={searchUsuario[selectedOption] || ''}
+                onChange={SearchUsuario}
+                name={selectedOption}
+              >
+                <option value="cliente">Cliente</option>
+                <option value="gerente">Gerente</option>
+                <option value="repartidor">Repartidor</option>
+              </select>
+            ) : (
+              <input
+                type={
+                  selectedOption === 'usuario_creado_el' ||
+                  selectedOption === 'usuario_actualizado_el'
+                    ? 'date'
+                    : selectedOption === 'id_usuario'
+                      ? 'number'
+                      : 'string'
+                }
+                min={selectedOption === 'id_usuario' ? '1' : undefined}
+                step={selectedOption === 'id_usuario' ? '1' : undefined}
+                name={selectedOption}
+                placeholder={`Ingresa ${selectedOption}`}
+                value={searchUsuario[selectedOption] || ''}
+                onChange={SearchUsuario}
+                disabled={!selectedOption}
+                required
+              />
+            )}
+          </>
+          <button type="submit">Buscar</button>
+        </form>
+        <>
+          {searchListU.length > 0 ? (
+            <>
+              <h2>Resultados de la Búsqueda de Usuarios:</h2>
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>ID Usuario</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Tipo de usuario</th>
+                    <th>Usuario creado el</th>
+                    <th>Usuario actualizado el</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {searchListU.map((usuario, index) => (
+                    <tr key={index}>
+                      <td>{usuario.id_usuario}</td>
+                      <td>{usuario.nombre}</td>
+                      <td>{usuario.apellido}</td>
+                      <td>{usuario.email}</td>
+                      <td>{usuario.tipo_usuario}</td>
+                      <td>
+                        {usuario.usuario_creado_el
+                          ? convertir_fecha(usuario.usuario_creado_el)
+                          : 'null'}
+                      </td>
+                      <td>
+                        {usuario.usuario_actualizado_el
+                          ? convertir_fecha(usuario.usuario_actualizado_el)
+                          : 'null'}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                '¿Estás seguro de que deseas eliminar este usuario?',
+                              )
+                            ) {
+                              handleDeleteUser(usuario.id_usuario);
+                            }
+                          }}
+                        >
+                          Eliminar
+                        </button>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleUpdateUser(usuario)}
+                        >
+                          Actualizar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </>
+          ) : (
+            <p>No se encontraron usuarios.</p>
+          )}
+        </>
+      </>
 
       {/* Crear Usuario */}
       <form

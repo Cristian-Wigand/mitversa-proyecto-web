@@ -6,6 +6,7 @@ const conexiones = Conexiones();
 
 const PackageCard = () => {
   const navigate = useNavigate();
+  const [envioData, setEnvioData] = useState([]);
   const [packageData, setPackageData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [estadoEnvioData, setEstadoEnvioData] = useState([]);
@@ -36,7 +37,6 @@ const PackageCard = () => {
       }));
     }
   }, [navigate]);
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,11 +48,21 @@ const PackageCard = () => {
           id_repartidor: `${id_usuario_r}`,
         });
 
-        console.log('resultado[0]', resultado[0]);
+        //console.log('resultado[0]', resultado[0]);
 
         if (resultado[0]) {
-          setPackageData(resultado[1]);
-          console.log('resultado[1]', resultado[1]);
+          const list_id_envio = [];
+          for (const element of resultado[1]) {
+            list_id_envio.push(element.id_envio);
+          }
+          const resultado2 = await conexiones.fetchSearch2('Paquete', {
+            id_envio: list_id_envio,
+          });
+          if (resultado2[0]) {
+            setPackageData(resultado2[1]);
+          }
+          setEnvioData(resultado[1]);
+          //console.log('resultado[1]', resultado[1]);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -83,20 +93,30 @@ const PackageCard = () => {
 
   const SubmitSearch = async (e) => {
     e.preventDefault();
-  
+
     // Hacer la búsqueda con los filtros aplicados
     const resultado = await conexiones.fetchSearch('Envio', {
       id_repartidor: searchEnvio['id_repartidor'], // Mantener id_repartidor constante
       [selectedOption2]: searchEnvio[selectedOption2], // Usar el filtro seleccionado
     });
-  
+
     // Si hay resultados, actualizar los datos del paquete, si no, asignar un array vacío
     if (resultado[0]) {
-      setPackageData(resultado[1]);
+      const list_id_envio = [];
+      for (const element of resultado[1]) {
+        list_id_envio.push(element.id_envio);
+      }
+      const resultado2 = await conexiones.fetchSearch2('Paquete', {
+        id_envio: list_id_envio,
+      });
+      if (resultado2[0]) {
+        setPackageData(resultado2[1]);
+      }
+      setEnvioData(resultado[1]);
     } else {
-      setPackageData([]);
+      setEnvioData([]);
     }
-  
+
     // Aquí actualizamos el estado pero **sin modificar id_repartidor**
     setSearchEnvio((prevState) => ({
       ...prevState, // Mantenemos los valores previos
@@ -110,13 +130,13 @@ const PackageCard = () => {
       costo_total: '',
       // id_repartidor no se toca, ya que no lo estamos modificando
     }));
-  };  
+  };
 
   // Manejo de estado de envío (Estado_envio)
   useEffect(() => {
     const fetchEstadoEnvio = async () => {
       const data = await Promise.all(
-        packageData.map(async (envio) => {
+        envioData.map(async (envio) => {
           const estado = await Search('Estado_envio', {
             id_estado_envio: envio.id_estado_envio,
           });
@@ -126,16 +146,16 @@ const PackageCard = () => {
       setEstadoEnvioData(data);
     };
 
-    if (packageData.length > 0) {
+    if (envioData.length > 0) {
       fetchEstadoEnvio();
     }
-  }, [packageData]);
+  }, [envioData]);
 
   // Manejo de datos de Usuario
   useEffect(() => {
     const fetchUsuario = async () => {
       const data = await Promise.all(
-        packageData.map(async (envio) => {
+        envioData.map(async (envio) => {
           const usuario = await Search('Usuario', {
             id_usuario: envio.id_cliente,
           });
@@ -145,10 +165,10 @@ const PackageCard = () => {
       setUsuarioData(data);
     };
 
-    if (packageData.length > 0) {
+    if (envioData.length > 0) {
       fetchUsuario();
     }
-  }, [packageData]);
+  }, [envioData]);
 
   // Función asincrónica para hacer la búsqueda
   const Search = async (nombre, filter) => {
@@ -162,6 +182,17 @@ const PackageCard = () => {
     } catch (error) {
       console.error('Error en Search:', error);
     }
+  };
+  const handleVisualizarEstado = (paquete, result, estadoEnvio, usuario) => {
+    // Redirigir a la página "EstadoEnvio" y pasar los datos como estado
+    navigate('/EstadoPaquete', {
+      state: {
+        paquete,
+        envio: result,
+        estadoEnvio: estadoEnvio,
+        usuario: usuario,
+      },
+    });
   };
 
   // Mostrar la pantalla de carga
@@ -220,34 +251,63 @@ const PackageCard = () => {
       {/* Resultados de búsqueda */}
       <div className="package-list">
         {packageData.length === 0 ? (
-          <div>No hay envíos pendientes</div>
+          <div>No hay paquetes</div>
         ) : (
-          packageData.map((envio, index) => (
-            <div className="package-card" key={envio.id_envio}>
-              <div className="package-header">
-                Ordenado el: {formatDate(envio.fecha_pedido_inicio)} Llega el:{' '}
-                {formatDate(envio.fecha_pedido_fin)}
-              </div>
-              <div className="package-content">
-                <div className="package-id">ID: {envio.id_envio}</div>
-                <div className="package-details">
-                  <p>
-                    <strong>Cliente:</strong>{' '}
-                    {usuarioData[index]
-                      ? `${usuarioData[index].nombre} ${usuarioData[index].apellido}` 
-                      : 'Cargando cliente...'}
-                  </p>
-                  <p>
-                    <strong>Estado:</strong>{' '}
-                    {estadoEnvioData[index]
-                      ? estadoEnvioData[index].nombre
-                      : 'Cargando estado...'}
-                  </p>
+          packageData.map((paquete) => {
+            // Buscar el objeto con id_envio correspondiente en envioData
+            const result = envioData.find(
+              (item) => item.id_envio === paquete.id_envio,
+            );
+            // Buscar el usuario correspondiente a este paquete usando el id_cliente
+            const usuario = usuarioData.find(
+              (user) => user.id_usuario === result?.id_cliente,
+            );
+            // Buscar el estado correspondiente a este paquete (de estadoEnvioData)
+            const estadoEnvio = estadoEnvioData.find(
+              (estado) => estado.id_estado_envio === result?.id_estado_envio,
+            );
+
+            return (
+              <div className="package-card" key={paquete.id_envio}>
+                <div className="package-header">
+                  Ordenado el:{' '}
+                  {result ? formatDate(result.fecha_pedido_inicio) : ''} Llega
+                  el: {result ? formatDate(result.fecha_pedido_fin) : ''}
                 </div>
-                <button className="status-button">Visualizar estado</button>
+                <div className="package-content">
+                  <div className="package-id">
+                    ID envio: {result?.id_envio}
+                    <br></br>ID Paquete: {paquete.id_paquete}
+                  </div>
+                  <div className="package-details">
+                    <p>
+                      <strong>Cliente:</strong>{' '}
+                      {usuario
+                        ? `${usuario.nombre} ${usuario.apellido}`
+                        : 'Cargando cliente...'}
+                    </p>
+                    <p>
+                      <strong>Estado:</strong>{' '}
+                      {estadoEnvio ? estadoEnvio.nombre : 'Cargando estado...'}
+                    </p>
+                  </div>
+                  <button
+                    className="status-button"
+                    onClick={() =>
+                      handleVisualizarEstado(
+                        paquete,
+                        result,
+                        estadoEnvio,
+                        usuario,
+                      )
+                    }
+                  >
+                    Visualizar estado
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>
