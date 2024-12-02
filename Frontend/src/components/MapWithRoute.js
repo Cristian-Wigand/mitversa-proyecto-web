@@ -71,7 +71,7 @@ const MapWithRoute = ({ address1, address2, address3 }) => {
   }
 
   const polylineStyle = {
-    color: 'red',
+    color: 'blue',
     weight: 5,
     opacity: 0.7,
   };
@@ -109,6 +109,12 @@ const MapWithRoute = ({ address1, address2, address3 }) => {
           </Marker>
         )}
       </MapContainer>
+
+      {/* Recuadro en la esquina superior derecha con punto rojo */}
+      <div className="location-box">
+        <div className="location-marker"></div>
+        <p>Última Ubicación</p>
+      </div>
     </div>
   );
 };
