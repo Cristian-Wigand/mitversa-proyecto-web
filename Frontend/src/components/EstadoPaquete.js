@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { MapContainer, TileLayer, Polyline } from 'react-leaflet';
 import '../App.css';
 import Conexiones from './conexiones';
+import 'leaflet/dist/leaflet.css';
+import '../Css/MapWithRoute.css'; 
+import MapWithRoute from './MapWithRoute';
 const conexiones = Conexiones();
 
 const EstadoPaquete = () => {
+  const [direccionOrigen, setDireccionOrigen] = useState(null);
+  const [direccionDestino, setDireccionDestino] = useState(null);
   const location = useLocation();
   const navigate = useNavigate(); // Aquí se obtiene la función navigate
   const { paquete, envio, estadoEnvio, cliente } = location.state || {};
   const [envio_ultimo, setEnvio_ultimo] = useState(envio);
   const [estadoEnvio_ultimo, setEstadoEnvioUltimo] = useState(estadoEnvio);
   const [listHistorialEnvio, setListHistorialEnvio] = useState([]);
-  const [ultimoEstado, setUltimoEstado] = useState();
+  const [ultimoEstado, setUltimoEstado] = useState({ detalles: '' });
+  const [ultimaDireccion, setUltimaDireccion] = useState();
   const [textoExpandido, setTextoExpandido] = useState(false);
   const [comunas, setComunas] = useState([]);
   const [ciudades, setCiudades] = useState([]);
@@ -58,26 +65,33 @@ const EstadoPaquete = () => {
         const resultado = await conexiones.fetchSearch('Historial_envio', {
           id_envio: envio.id_envio,
         });
+        console.log('resultado actualizar env', resultado);
         if (resultado[0]) {
           const historial = resultado[1];
           setListHistorialEnvio(historial);
-  
+
           if (historial.length > 0) {
             const reciente = historial.reduce((masReciente, actual) => {
               return new Date(actual.fecha) > new Date(masReciente.fecha)
                 ? actual
                 : masReciente;
             });
+            const ultimadirec = await buscar_direccion(reciente.direccion);
+            setUltimaDireccion(ultimadirec);
+            console.log('ultimaDireccion después de setUltimaDireccion', ultimadirec); 
             setUltimoEstado(reciente);
           } else {
             setUltimoEstado({ detalles: '' });
+            setUltimaDireccion('Null');
           }
+        } else {
+          setUltimoEstado({ detalles: '' });
         }
       } catch (error) {
         console.error('Error al obtener los datos del historial:', error);
       }
     };
-  
+
     const envio_y_estado = async () => {
       try {
         const resultado = await conexiones.fetchSearch('Envio', {
@@ -86,7 +100,7 @@ const EstadoPaquete = () => {
         if (resultado[0]) {
           const envioData = resultado[1];
           setEnvio_ultimo(envioData);
-  
+
           const resultado2 = await conexiones.fetchSearch('Estado_envio', {
             id_estado_envio: envioData[0].id_estado_envio,
           });
@@ -102,13 +116,12 @@ const EstadoPaquete = () => {
         console.error('Error al obtener los datos de envío o estado:', error);
       }
     };
-  
+
     if (envio.id_envio) {
       fetchData();
       envio_y_estado();
     }
   }, [envio.id_envio]);
-  
 
   useEffect(() => {
     // Fetch comunas, ciudades y estados de envío
@@ -148,6 +161,26 @@ const EstadoPaquete = () => {
     fetchCiudades();
     fetchEstadosEnvio();
   }, []);
+
+  // Usar useEffect para cargar las direcciones cuando el componente se monta
+  useEffect(() => {
+    const cargarDirecciones = async () => {
+      if (envio?.direccion_origen) {
+        const direccionOrigen = await buscar_direccion(envio.direccion_origen);
+        console.log("Direccion Origen:", direccionOrigen[1]);
+        setDireccionOrigen(direccionOrigen);
+      }
+      if (envio?.direccion_destino) {
+        const direccionDestino = await buscar_direccion(
+          envio.direccion_destino,
+        );
+        console.log("Direccion Destino:", direccionDestino);
+        setDireccionDestino(direccionDestino);
+      }
+    };
+
+    cargarDirecciones();
+  }, [envio]); // Ejecutar cuando el objeto 'envio' cambie
 
   const ComunaChange = (e) => {
     const selectedNombreComuna = e.target.value;
@@ -269,7 +302,7 @@ const EstadoPaquete = () => {
         return;
       }
     }
-    if (createHistorial.detalles !== ultimoEstado.detalles) {
+    if (createHistorial.detalles !== (ultimoEstado.detalles || null)) {
       const resultado2 = await conexiones.SubmitCreate(
         'Historial_envio',
         createHistorial,
@@ -301,28 +334,29 @@ const EstadoPaquete = () => {
   // Texto completo y versión abreviada
   // Ordenar de más reciente a más antiguo
   // Ordenar de más reciente a más antiguo
-listHistorialEnvio.sort((a, b) => b.fecha - a.fecha);
+  listHistorialEnvio.sort((a, b) => b.fecha - a.fecha);
 
-// Invertir el orden de los detalles para que el más reciente aparezca primero
-// Generar el texto completo, con los detalles y la fecha
-const textoCompleto = [...listHistorialEnvio]
-  .reverse()
-  .map((obj) => {
-    // Determinamos las clases según la condición
-    const name1 = ultimoEstado.detalles === obj.detalles ? 'ver1_especial' : 'ver1';
-    const name2 = ultimoEstado.detalles === obj.detalles ? 'ver2_especial' : 'ver2';
-    console.log('ultimoEstado',ultimoEstado,ultimoEstado.detalles)
+  // Invertir el orden de los detalles para que el más reciente aparezca primero
+  // Generar el texto completo, con los detalles y la fecha
+  const textoCompleto = [...listHistorialEnvio]
+    .reverse()
+    .map((obj) => {
+      // Determinamos las clases según la condición
+      const name1 =
+        ultimoEstado.detalles === obj.detalles ? 'ver1_especial' : 'ver1';
+      const name2 =
+        ultimoEstado.detalles === obj.detalles ? 'ver2_especial' : 'ver2';
+      console.log('ultimoEstado', ultimoEstado, ultimoEstado.detalles);
 
-    // Retornamos la plantilla HTML con las clases correspondientes
-    return `
+      // Retornamos la plantilla HTML con las clases correspondientes
+      return `
       <div class="historial-item">
         <span class="${name1}">${obj.detalles}</span>
         <span class="${name2}">${convertir_fecha(obj.fecha)}</span>
       </div>
     `;
-  })
-  .join('');
-
+    })
+    .join('');
 
   const textoCorto = textoCompleto.slice(0, 50) + '...';
   console.log('listHistorialEnvio', listHistorialEnvio);
@@ -338,6 +372,11 @@ const textoCompleto = [...listHistorialEnvio]
     // Redirigir a la página "Visualizar paquete"
     navigate('/VisualizarPaquete');
   };
+
+  console.log(ultimaDireccion)
+
+
+  
   return (
     <div>
       <button className="status-back" onClick={() => back()}>
@@ -460,25 +499,39 @@ const textoCompleto = [...listHistorialEnvio]
           <h2 className="h2-color">Detalles del paquete:</h2>
           <p className="h2-color">
             Descripción: {paquete.descripcion}
+            <br />
+            direccionOrigen: {direccionOrigen ? `${direccionOrigen[2]} ${direccionOrigen[3]}, ${direccionOrigen[1]}` : "Cargando..."}
+            <br />
+            direccionDestino: {direccionDestino ? `${direccionDestino[2]} ${direccionDestino[3]}, ${direccionDestino[1]}` : "Cargando..."}
+            <br />
+            Ultima Direccion: {ultimaDireccion ? `${ultimaDireccion[2]} ${ultimaDireccion[3]}, ${ultimaDireccion[1]}` : "Cargando..."}
             <br /> Dimensiones: {paquete.largo}x{paquete.ancho}x{paquete.alto}
             <br /> Peso: {paquete.peso}
           </p>
         </div>
         <div className="estado-envio">
-  <h2 className="h2-color">Estado del envío</h2>
-  <p
-    className="h2-color"
-    dangerouslySetInnerHTML={{
-      __html: textoExpandido ? textoCompleto : textoCorto
-    }}
-  />
-  <button
-    className="toggle-texto-boton"
-    onClick={() => setTextoExpandido(!textoExpandido)}
-  >
-    {textoExpandido ? 'Mostrar menos' : 'Mostrar más'}
-  </button>
-</div>
+          <h2 className="h2-color">Estado del envío</h2>
+          <p
+            className="h2-color"
+            dangerouslySetInnerHTML={{
+              __html: textoExpandido ? textoCompleto : textoCorto,
+            }}
+          />
+          <button
+            className="toggle-texto-boton"
+            onClick={() => setTextoExpandido(!textoExpandido)}
+          >
+            {textoExpandido ? 'Mostrar menos' : 'Mostrar más'}
+          </button>
+        </div>
+        <div>
+          <h1>Estado del Paquete</h1>
+          {direccionOrigen && direccionDestino && ultimaDireccion && direccionOrigen[1] && direccionDestino[1] && ultimaDireccion[1] ? (
+  <MapWithRoute address1={`${direccionOrigen[2]} ${direccionOrigen[3]}, ${direccionOrigen[1]}`} address2={`${direccionDestino[2]} ${direccionDestino[3]}, ${direccionDestino[1]}`} address3={`${ultimaDireccion[2]} ${ultimaDireccion[3]}, ${ultimaDireccion[1]}`} />
+) : (
+  <p>Cargando el mapa...</p>
+)}
+        </div>
 
       </div>
     </div>
