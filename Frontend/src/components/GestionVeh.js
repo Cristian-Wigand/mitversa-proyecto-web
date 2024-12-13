@@ -320,21 +320,22 @@ const GestionVeh = () => {
       }
     }
   };
-  const convertir_fecha = (fecha) => {
-    const date = new Date(fecha);
+  const convertir_fecha = (fechaUTC) => {
+    const date = new Date(fechaUTC);
 
-    // Obtener el día, mes, año, hora, minuto y segundo
-    const day = String(date.getDate()).padStart(2, '0'); // Asegurarse de que el día tenga 2 dígitos
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses empiezan en 0, por eso sumamos 1
+    // Ajustar manualmente a UTC-3 para Chile (sumando 3 horas)
+    const offsetChile = 3; // UTC-3 para horario de Chile
+    date.setHours(date.getHours() + offsetChile);
+
+    // Formatear la fecha
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
 
-    // Construir la cadena con el formato deseado
-    const fecha_string = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
-
-    return fecha_string;
+    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
   };
 
   // Función para actualizar los datos del vehículo

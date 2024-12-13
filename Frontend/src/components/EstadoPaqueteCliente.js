@@ -39,26 +39,12 @@ const EstadoPaquete = () => {
     detalles: '',
     direccion: '',
   });
-  const [actualizarEnv, setActualizarEnv] = useState({
-    id_estado_envio: '',
-    id_repartidor: '',
-    id_cliente: '',
-    fecha_pedido_inicio: '',
-    fecha_pedido_fin: '',
-    direccion_origen: '',
-    direccion_destino: '',
-    costo_total: '',
-  });
-
   // Estado para controlar si el formulario está activo
   const [activeForm, setActiveForm] = useState(null);
   const [estadoGeneral, setEstadoGeneral] = useState();
 
   const CreateHistorial = (e) => {
     setCreateHistorial({ ...createHistorial, [e.target.name]: e.target.value });
-  };
-  const ActualizarEnv = (e) => {
-    setActualizarEnv({ ...actualizarEnv, [e.target.name]: e.target.value });
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -129,31 +115,6 @@ const EstadoPaquete = () => {
   }, []);
 
   useEffect(() => {
-    // Fetch comunas, ciudades y estados de envío
-    const fetchComunas = async () => {
-      let data;
-      const resultado = await conexiones.traer_todo('Comuna');
-      if (resultado[0]) {
-        data = resultado[1];
-      } else {
-        console.log('Error en fetchCiudades ');
-      }
-      const uniqueComunas = Array.from(
-        new Set(data.map((comuna) => comuna.nombre)),
-      ).map((nombre) => data.find((comuna) => comuna.nombre === nombre));
-      setComunas(uniqueComunas);
-      setAllComunas(data);
-    };
-
-    const fetchCiudades = async (nombre) => {
-      const resultado = await conexiones.traer_todo('Ciudad');
-      if (resultado[0]) {
-        setCiudades(resultado[1]);
-      } else {
-        console.log('Error en fetchCiudades ');
-      }
-    };
-
     const fetchEstadosEnvio = async () => {
       const resultado = await conexiones.traer_todo('Estado_envio');
       if (resultado[0]) {
@@ -162,8 +123,6 @@ const EstadoPaquete = () => {
         console.log('Error en fetchEstadosEnvio ');
       }
     };
-    fetchComunas();
-    fetchCiudades();
     fetchEstadosEnvio();
   }, []);
 
@@ -262,85 +221,6 @@ const EstadoPaquete = () => {
     return direccion_list;
   };
 
-  const actualizarEstado = async (e) => {
-    e.preventDefault();
-    const id_comuna_origen = await conexiones.fetchSearch('Comuna', {
-      nombre: createDireccion.nombre,
-      id_ciudad: createDireccion.id_ciudad,
-    });
-    if (!id_comuna_origen[0]) {
-      console.log('Error en comuna origen');
-      return alert('Error en comuna origen');
-    }
-    const direc_origen = {
-      id_comuna: id_comuna_origen[1][0].id_comuna,
-      calle: createDireccion.calle,
-      numero: createDireccion.numero,
-    };
-    let direccion_origen_id; // Declarar fuera del bloque
-    let direccion_origen;
-
-    direccion_origen = await conexiones.SubmitCreate('Direccion', direc_origen);
-
-    if (direccion_origen[0]) {
-      console.log('direccion_origen[1].id_direccion;');
-      console.log(direccion_origen[1]);
-      direccion_origen_id = direccion_origen[1].id_direccion;
-    } else {
-      direccion_origen = await conexiones.fetchSearch(
-        'Direccion',
-        direc_origen,
-      );
-      if (!direccion_origen[0]) {
-        return alert('Error en direccion_origen');
-      }
-      console.log('direccion_origen[1]', direccion_origen[1]);
-      direccion_origen_id = direccion_origen[1][0].id_direccion; // Asignar sin 'const'
-    }
-    createHistorial.direccion = direccion_origen_id;
-
-    if (estadoGeneral !== estadoEnvio.id_estado_envio) {
-      if (id !== selectRepartidor) {
-        if (
-          window.confirm(
-            `¿Estás seguro de cambiar de repartidor a repartidor ${selectRepartidor}?`,
-          )
-        ) {
-          const resultado = await conexiones.updateObject(
-            'Envio',
-            envio.id_envio,
-            {
-              id_estado_envio: actualizarEnv.id_estado_envio,
-              id_repartidor: selectRepartidor,
-            },
-          );
-          if (!resultado) {
-            return;
-          } else {
-            navigate('/VisualizarPaquete');
-          }
-        }
-      }
-    } else {
-      const resultado = await conexiones.updateObject('Envio', envio.id_envio, {
-        id_estado_envio: actualizarEnv.id_estado_envio,
-      });
-      if (!resultado) {
-        return;
-      }
-    }
-    if (createHistorial.detalles !== (ultimoEstado.detalles || null)) {
-      const resultado2 = await conexiones.SubmitCreate(
-        'Historial_envio',
-        createHistorial,
-      );
-      if (!resultado2[0]) {
-        alert('Error en Crear Historial_envio');
-        return;
-      }
-      window.location.reload();
-    }
-  };
   const convertir_fecha = (fechaUTC) => {
     const date = new Date(fechaUTC);
 
@@ -414,7 +294,7 @@ const EstadoPaquete = () => {
 
   const back = () => {
     // Redirigir a la página "Visualizar paquete"
-    navigate('/VisualizarPaquete');
+    navigate('/VisualizarPaqueteCliente');
   };
   return (
     <div>
@@ -439,110 +319,7 @@ const EstadoPaquete = () => {
               </span>
             ))}
           </span>
-          <button
-            className="actualizar-estado-boton"
-            onClick={() => toggleForm('estado')}
-          >
-            Actualizar estado
-          </button>
         </div>
-
-        {/* Formulario para actualizar estado */}
-        {activeForm === 'estado' && (
-          <form className="update-form" onSubmit={actualizarEstado}>
-            {/* Select de estado */}
-            <select
-              className="select-margin"
-              name="id_estado_envio"
-              value={actualizarEnv.id_estado_envio}
-              onChange={ActualizarEnv}
-            >
-              <option value="">Seleccione un estado de envío</option>
-              {estadosEnvio.map((estado) => (
-                <option
-                  key={estado.id_estado_envio}
-                  value={estado.id_estado_envio}
-                >
-                  {estado.nombre}
-                </option>
-              ))}
-            </select>
-            <input
-              type="text"
-              name="detalles"
-              value={createHistorial.detalles}
-              onChange={CreateHistorial}
-              placeholder="Actualizar estado actual"
-              required
-            />
-            {/*Direccion*/}
-            <select
-              className="select-margin"
-              name="comuna"
-              onChange={ComunaChange}
-              value={createDireccion.nombre}
-            >
-              <option value="">Seleccione una Region</option>
-              {comunas.map((comuna) => (
-                <option key={comuna.id_comuna} value={comuna.nombre}>
-                  {comuna.nombre}
-                </option>
-              ))}
-            </select>
-            {/* Mostrar la ciudad asociada */}
-            <select
-              className="select-margin"
-              name="ciudad"
-              onChange={(e) => CiudadChange(e, 0)} // Cambiar según la lógica
-              value={createDireccion.id_ciudad}
-            >
-              <option value="">Seleccione una comuna</option>
-              {filteredCiudades.map((ciudad) => (
-                <option key={ciudad.id_ciudad} value={ciudad.id_ciudad}>
-                  {ciudad.nombre}
-                </option>
-              ))}
-            </select>
-            <input
-              type="text"
-              name="calle"
-              placeholder="Calle"
-              value={createDireccion.calle}
-              onChange={CreateDireccion}
-              required
-            />
-            <input
-              type="number"
-              name="numero"
-              placeholder="Número"
-              value={createDireccion.numero}
-              onChange={CreateDireccion}
-              min="1"
-              step="1"
-              required
-            />
-            <input
-              type="number"
-              name="id_repartidor"
-              placeholder="Id repartidor"
-              value={selectRepartidor} // Enlaza el estado con el valor del input
-              onChange={SelectRepartidor} // Llama a handleChange para actualizar el estado
-              min="1"
-              step="1"
-              required
-            />
-            <button type="submit" className="submit-button">
-              Guardar
-            </button>
-            <button
-              type="button"
-              className="discard-button"
-              onClick={() => setActiveForm(null)} // Cierra el formulario
-            >
-              Descartar
-            </button>
-          </form>
-        )}
 
         <div className="contenido-paquete">
           <h2 className="h2-color">Detalles del paquete:</h2>

@@ -13,13 +13,16 @@ import GestionVeh from './components/GestionVeh';
 import ReportsPage from './components/ReportsPage';
 import Register from './components/Register';
 import MapWithRoute from './components/MapWithRoute';
-import MostrarEnvios from './components/TestEnvios';
 
 import './App.css';
 import VisualizarPaquete from './components/VisualizarPaquete';
 import EstadoPaquete from './components/EstadoPaquete';
+import VisualizarPaqueteCliente from './components/VisualizarPaqueteCliente';
+import EstadoPaqueteCliente from './components/EstadoPaqueteCliente';
 import MapPage from './components/MapPage'; // Asegúrate de importar MapPage
 import TestEnvios from './components/TestEnvios';
+import EstadoEnvio from './components/VisualizarEstado';
+import VehiculosRepartidor from './components/vehiculosRepartidor';
 
 const App = () => {
   return (
@@ -49,9 +52,22 @@ const App = () => {
           <Route path="/ReportsPage" element={<ReportsPage />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/VisualizarPaquete" element={<VisualizarPaquete />} />
+          <Route
+            path="/VehiculosRepartidor"
+            element={<VehiculosRepartidor />}
+          />
+          <Route
+            path="/VisualizarPaqueteCliente"
+            element={<VisualizarPaqueteCliente />}
+          />
           <Route path="/EstadoPaquete" element={<EstadoPaquete />} />
+          <Route
+            path="/EstadoPaqueteCliente"
+            element={<EstadoPaqueteCliente />}
+          />
           <Route path="/map-route" element={<MapWithRoute />} />
           <Route path="/MostrarEnvios" element={<TestEnvios />} />
+          <Route path="/estadoEnvio" element={<EstadoEnvio />} />
           {/* Ruta para ver los envíos */}
           <Route path="/envios" element={<TestEnvios />} />
           {/* Ruta para mostrar el mapa de la ruta de un envío */}

@@ -287,6 +287,9 @@ button:hover {
   background-color: #a68140;
 }
 
+.izquierda {
+  text-align: left; /* Alinea el texto a la izquierda */
+}
 .primary-button,
 .secondary-button {
   padding: 1rem 2.5rem;
@@ -332,8 +335,65 @@ button:hover {
 }
 
 .estado-ruta {
-  font-size: 1rem;
+  font-size: 1rem; /* Tamaño de la fuente */
   margin-bottom: 1rem;
+  display: flex; /* Usar flexbox */
+  align-items: center; /* Centrar verticalmente */
+  justify-content: space-between; /* Separar texto y botón */
+}
+.actualizar-estado-boton {
+  background-color: rgba(253, 219, 68, 0.507); /* Color azul */
+  color: white; /* Texto blanco */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Bordes redondeados */
+  padding: 0.5rem 1rem; /* Espaciado interno */
+  font-size: 0.9rem; /* Tamaño del texto */
+  cursor: pointer; /* Cambiar cursor a mano */
+  transition: background-color 0.3s ease; /* Transición para hover */
+}
+.actualizar-estado-boton:hover {
+  background-color: rgb(255, 196, 0); /* Color más oscuro al pasar el cursor */
+}
+
+.status-back {
+  position: relative;
+  left: 50px; /* Mueve el botón 50px hacia la derecha */
+  top: 90px; /* Mueve el botón 20px hacia abajo */
+}
+
+.historial-item {
+  display: flex;
+  justify-content: space-between; /* Distribuye los elementos a los extremos */
+  align-items: center; /* Alinea verticalmente los textos */
+  margin: 5px 0; /* Espaciado entre elementos */
+}
+
+.ver1 {
+  text-align: left;
+  flex: 1; /* Ocupa el espacio disponible a la izquierda */
+  font-size: 19px;
+  color: #333;
+}
+.ver1_especial {
+  text-align: left;
+  flex: 1; /* Ocupa el espacio disponible a la izquierda */
+  font-size: 21px;
+  color: #c4a416;
+}
+.ver2_especial {
+  text-align: right;
+  flex-basis: 150px; /* Reserva un ancho fijo mínimo para la fecha */
+  font-size: 20px;
+  color: #c4a416;
+  white-space: nowrap; /* Evita que la fecha haga un salto de línea */
+}
+
+.ver2 {
+  text-align: right;
+  flex-basis: 150px; /* Reserva un ancho fijo mínimo para la fecha */
+  font-size: 18px;
+  color: #666;
+  white-space: nowrap; /* Evita que la fecha haga un salto de línea */
 }
 
 .contenido-paquete,
@@ -351,7 +411,7 @@ h2 {
 }
 
 .h2-color {
-  color: #ffd000;
+  color: #61552d;
 }
 
 /*-------------------- FOOTER------------------ */
@@ -526,40 +586,42 @@ h2 {
   display: none;
 }
 
-/* Estilos de paquete */
 .package-card {
-  background-color: #d3d3d3;
-  border: 1px solid #ccc;
+  background-color: #d3d3d3; /* Color de fondo de las tarjetas */
+  border: 1px solid #ffffff; /* Borde Container */
   border-radius: 2px;
   padding: 1rem;
-  margin: 10rem auto;
+  margin: 1rem auto; /* Reducido el margen entre las tarjetas */
   max-width: 800px;
-  width: 100%;
+  width: 100%; /* Asegura que la tarjeta ocupe el ancho máximo permitido */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Agrega sombra para mejorar la apariencia */
+  /* Centrar la tarjeta */
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex-direction: column; /* Asegúrate de que el contenido se apile verticalmente */
+  align-items: center; /* Centra horizontalmente el contenido dentro de la tarjeta */
 }
 
 .package-header {
+  /* Cuadro TITULO  */
   font-weight: bold;
   padding: 0.5rem;
-  background-color: #eee;
+  background-color: #eee; /* Color del encabezado */
   border-bottom: 1px solid #ccc;
-  width: 100%;
-  text-align: center;
+  width: 100%; /* Asegura que el encabezado ocupe todo el ancho */
+  text-align: center; /* Centrar el texto del encabezado */
 }
 
 .package-content {
   display: flex;
   align-items: center;
-  padding: 1rem 0;
-  width: 100%;
+  padding: 0.5rem 0; /* Reducido el padding vertical */
+  width: 90%; /* Asegura que el contenido ocupe todo el ancho */
 }
 
 .package-id {
   font-weight: bold;
-  margin-right: 1rem;
+  margin-right: 1rem; /* Reducido el margen derecho */
+  width: 120px;
 }
 
 .package-description {
@@ -569,14 +631,18 @@ h2 {
 }
 
 .status-button {
-  background-color: #b89c68;
+  background-color: #b89c68; /* Color del botón */
   color: #fff;
   border: none;
   border-radius: 20px;
-  padding: 0.5rem 1rem;
+  padding: 0.7rem 0.9rem;
   cursor: pointer;
   font-weight: bold;
-  margin-top: 1rem;
+  margin-top: 1rem; /* Agrega un margen superior para espaciarlo del contenido */
+}
+
+.package-details {
+  padding: 0.1rem 4rem;
 }
 
 .status-button:hover {
@@ -621,7 +687,7 @@ h2 {
   max-width: 400px;
   width: 90%;
 }
-.select-margin{
+.select-margin {
   margin-bottom: 18px; /* Añade espacio debajo del select */
 }
 

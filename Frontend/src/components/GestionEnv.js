@@ -10,10 +10,11 @@ const conexiones = Conexiones();
 const GestionEnv = () => {
   const [searchType, setSearchType] = useState('envio'); // Estado para el tipo de búsqueda
   const [selectedOption, setSelectedOption] = useState(''); // Direccion Almacena solo el criterio seleccionado
+  const [selectedOption11, setSelectedOption11] = useState(''); // Direccion Almacena solo el criterio seleccionado
   const [selectedOption2, setSelectedOption2] = useState(''); // Envio Almacena solo el criterio seleccionado
+  const [selectedOption22, setSelectedOption22] = useState(''); // Envio Almacena solo el criterio seleccionado
   const [searchListE, setsearchListE] = useState([]);
   const [searchListP, setsearchListP] = useState([]);
-  const [searchListD, setsearchListD] = useState([]);
   const [direcciones, setDirecciones] = useState({});
   const navigate = useNavigate();
 
@@ -57,6 +58,16 @@ const GestionEnv = () => {
     direccion_destino: '',
     costo_total: '',
   });
+  const [searchEnvio2, setSearchEnvio2] = useState({
+    id_estado_envio: '',
+    id_repartidor: '',
+    id_cliente: '',
+    fecha_pedido_inicio: '',
+    fecha_pedido_fin: '',
+    direccion_origen: '',
+    direccion_destino: '',
+    costo_total: '',
+  });
   const [searchPaquete, setSearchPaquete] = useState({
     id_envio: '',
     peso: '',
@@ -65,10 +76,13 @@ const GestionEnv = () => {
     alto: '',
     descripcion: '',
   });
-  const [searchDireccion, setSearchDireccion] = useState({
-    id_comuna: '',
-    calle: '',
-    numero: '',
+  const [searchPaquete2, setSearchPaquete2] = useState({
+    id_envio: '',
+    peso: '',
+    largo: '',
+    ancho: '',
+    alto: '',
+    descripcion: '',
   });
 
   const [comunas, setComunas] = useState([]);
@@ -118,7 +132,7 @@ const GestionEnv = () => {
       setComunas(uniqueComunas);
       setAllComunas(data);
     };
-    
+
     const fetchCiudades = async (nombre) => {
       const resultado = await conexiones.traer_todo('Ciudad');
       if (resultado[0]) {
@@ -145,10 +159,12 @@ const GestionEnv = () => {
       const nuevasDirecciones = {};
       for (const asignacion of searchListE) {
         if (asignacion.direccion_origen) {
-          nuevasDirecciones[asignacion.direccion_origen] = await buscar_direccion(asignacion.direccion_origen);
+          nuevasDirecciones[asignacion.direccion_origen] =
+            await buscar_direccion(asignacion.direccion_origen);
         }
         if (asignacion.direccion_destino) {
-          nuevasDirecciones[asignacion.direccion_destino] = await buscar_direccion(asignacion.direccion_destino);
+          nuevasDirecciones[asignacion.direccion_destino] =
+            await buscar_direccion(asignacion.direccion_destino);
         }
       }
       setDirecciones(nuevasDirecciones);
@@ -299,35 +315,27 @@ const GestionEnv = () => {
       });
     }
   };
-  const SearchDireccion = (e) => {
-    const { name, value } = e.target;
-
-    // Permite un valor vacío para el campo
-    if (name === 'numero') {
-      if (value === '' || Number(value) > 0) {
-        setSearchDireccion((prevState) => ({
-          ...prevState,
-          [name]: value, // Guarda el valor directamente
-        }));
-      }
-    } else {
-      // Actualiza otros campos normalmente
-      setSearchDireccion({
-        ...searchDireccion,
-        [e.target.name]: e.target.value,
-      });
-    }
-  };
 
   const SubmitSearch = async (e) => {
     e.preventDefault(); // Evita la recarga de la página
     if (searchType == 'envio') {
-      const resultado = await conexiones.fetchSearch2('Envio', {
+      const resultado = await conexiones.fetchSearch('Envio', {
         [selectedOption2]: searchEnvio[selectedOption2],
       });
       if (resultado[0]) {
         setsearchListE(resultado[1]);
+        setSelectedOption22(selectedOption2);
         setSelectedOption2('');
+        setSearchEnvio2({
+          id_estado_envio: searchEnvio.id_estado_envio,
+          id_repartidor: searchEnvio.id_repartidor,
+          id_cliente: searchEnvio.id_cliente,
+          fecha_pedido_inicio: searchEnvio.fecha_pedido_inicio,
+          fecha_pedido_fin: searchEnvio.fecha_pedido_fin,
+          direccion_origen: searchEnvio.direccion_origen,
+          direccion_destino: searchEnvio.direccion_destino,
+          costo_total: searchEnvio.costo_total,
+        });
         setSearchEnvio({
           id_estado_envio: '',
           id_repartidor: '',
@@ -347,7 +355,16 @@ const GestionEnv = () => {
       });
       if (resultado2[0]) {
         setsearchListP(resultado2[1]);
+        setSelectedOption11(selectedOption);
         setSelectedOption('');
+        setSearchPaquete2({
+          id_envio: searchPaquete.id_envio,
+          peso: searchPaquete.peso,
+          largo: searchPaquete.largo,
+          ancho: searchPaquete.ancho,
+          alto: searchPaquete.alto,
+          descripcion: searchPaquete.descripcion,
+        });
         setSearchPaquete({
           id_envio: '',
           peso: '',
@@ -434,6 +451,19 @@ const GestionEnv = () => {
 
     const resultado = await conexiones.SubmitCreate('Envio', createEnvio);
     if (resultado[0]) {
+      const Historial_envio = {
+        id_envio: resultado[1].id_envio,
+        fecha: '',
+        detalles: 'Pendiente, en espera',
+        direccion: resultado[1].direccion_origen,
+      };
+      const resultado2 = await conexiones.SubmitCreate(
+        'Historial_envio',
+        Historial_envio,
+      );
+      if (!resultado2[0]) {
+        alert('Error en Historial Envio');
+      }
       setSelectedComuna('');
       setFilteredCiudades(['']);
       setSelectedComuna2('');
@@ -461,15 +491,15 @@ const GestionEnv = () => {
         costo_total: '',
       });
     }
-    console.log('fetchSearch')
-    await conexiones.fetchSearch('Envio',createEnvio)
+    console.log('fetchSearch');
+    await conexiones.fetchSearch('Envio', createEnvio);
   };
 
   const DeleteEnvio = async (userId) => {
-    const resultado = conexiones.Delete('Envio', userId);
-    if (resultado[0]) {
+    const resultado = await conexiones.Delete('Envio', userId);
+    if (resultado) {
       const resultado2 = await conexiones.fetchSearch('Envio', {
-        [selectedOption2]: searchEnvio[selectedOption2],
+        [selectedOption22]: searchEnvio2[selectedOption22],
       });
       if (resultado2[0]) {
         setsearchListE(resultado2[1]);
@@ -478,11 +508,13 @@ const GestionEnv = () => {
   };
 
   const DeletePaquete = async (userId) => {
-    const resultado = conexiones.Delete('Paquete', userId);
+    const resultado = await conexiones.Delete('Paquete', userId);
     if (resultado) {
+      console.log('Resultado Delete paquete', resultado);
       const resultado2 = await conexiones.fetchSearch('Paquete', {
-        [selectedOption]: searchPaquete[selectedOption],
+        [selectedOption11]: searchPaquete2[selectedOption11],
       });
+      console.log('Resultado[2] Delete paquete', resultado2);
       if (resultado2[0]) {
         setsearchListP(resultado2[1]);
       }
@@ -505,47 +537,52 @@ const GestionEnv = () => {
     }
   };
 
-  const convertir_fecha = (fecha) => {
+  const convertir_fecha = (fechaUTC) => {
+    const date = new Date(fechaUTC);
 
-    const date = new Date(fecha);
+    // Ajustar manualmente a UTC-3 para Chile (sumando 3 horas)
+    const offsetChile = 3; // UTC-3 para horario de Chile
+    date.setHours(date.getHours() + offsetChile);
 
-    // Obtener el día, mes, año, hora, minuto y segundo
-    const day = String(date.getDate()).padStart(2, '0'); // Asegurarse de que el día tenga 2 dígitos
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses empiezan en 0, por eso sumamos 1
+    // Formatear la fecha
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
 
-    // Construir la cadena con el formato deseado
-    const fecha_string = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
-    
-    console.log(fecha_string);
-    return fecha_string
+    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
   };
 
   const buscar_direccion = async (id) => {
-    const resultado = await conexiones.fetchSearch("Direccion",{id_direccion:id})
-    if (!resultado[0]){
-      return 'Null'
+    const resultado = await conexiones.fetchSearch('Direccion', {
+      id_direccion: id,
+    });
+    if (!resultado[0]) {
+      return 'Null';
     }
-    const calle=resultado[1][0].calle
-    const numero=resultado[1][0].numero
-    const comuna=resultado[1][0].id_comuna
-    const resultado2 = await conexiones.fetchSearch("Comuna",{id_comuna:comuna})
-    if (!resultado2[0]){
-      return 'Null'
+    const calle = resultado[1][0].calle;
+    const numero = resultado[1][0].numero;
+    const comuna = resultado[1][0].id_comuna;
+    const resultado2 = await conexiones.fetchSearch('Comuna', {
+      id_comuna: comuna,
+    });
+    if (!resultado2[0]) {
+      return 'Null';
     }
-    const ciudad=resultado2[1][0].id_ciudad
-    const comuna_nombre=resultado2[1][0].nombre
-    const resultado3 = await conexiones.fetchSearch("Ciudad",{id_ciudad:ciudad})
-    const ciudad_nombre=resultado3[1][0].nombre
-    if (numero === 'null'){
-      numero = ''
+    const ciudad = resultado2[1][0].id_ciudad;
+    const comuna_nombre = resultado2[1][0].nombre;
+    const resultado3 = await conexiones.fetchSearch('Ciudad', {
+      id_ciudad: ciudad,
+    });
+    const ciudad_nombre = resultado3[1][0].nombre;
+    if (numero === 'null') {
+      numero = '';
     }
-    const direccion_string = `${comuna_nombre}, ${ciudad_nombre}, ${calle} ${numero}`
-    return direccion_string
-    }
+    const direccion_string = `${comuna_nombre}, ${ciudad_nombre}, ${calle} ${numero}`;
+    return direccion_string;
+  };
 
   return (
     <div>
@@ -569,7 +606,8 @@ const GestionEnv = () => {
         {/* Formulario para crear envío */}
         <form className="form" onSubmit={SubmitCreateEnvio} id="envio">
           <h2>Crear Envío</h2>
-          <select className='select-margin'
+          <select
+            className="select-margin"
             name="id_estado_envio"
             onChange={CreateEnvio}
             value={createEnvio.id_estado_envio}
@@ -617,7 +655,8 @@ const GestionEnv = () => {
             required
           />
           <h3>Direccion Origen</h3>
-          <select className='select-margin'
+          <select
+            className="select-margin"
             name="comuna"
             onChange={ComunaChange}
             value={createDireccion_origen.nombre}
@@ -630,7 +669,8 @@ const GestionEnv = () => {
             ))}
           </select>
           {/* Mostrar la ciudad asociada */}
-          <select className='select-margin'
+          <select
+            className="select-margin"
             name="ciudad"
             onChange={(e) => CiudadChange(e, 0)} // Cambiar según la lógica
             value={createDireccion_origen.id_ciudad}
@@ -661,7 +701,8 @@ const GestionEnv = () => {
             required
           />
           <h3>Direccion Destino</h3>
-          <select className='select-margin'
+          <select
+            className="select-margin"
             name="comuna"
             onChange={ComunaChange2}
             value={createDireccion_destino.nombre}
@@ -674,7 +715,8 @@ const GestionEnv = () => {
             ))}
           </select>
           {/* Mostrar la ciudad asociada */}
-          <select className='select-margin'
+          <select
+            className="select-margin"
             name="ciudad"
             onChange={(e) => CiudadChange(e, 1)} // Cambiar según la lógica
             value={createDireccion_destino.id_ciudad}
@@ -775,16 +817,21 @@ const GestionEnv = () => {
           <button type="submit">Crear Paquete</button>
         </form>
         {/* Buscar */}
-        <form className="form" onSubmit={SubmitSearch} id="Buscador">
+        <form className="form" onSubmit={SubmitSearch} id="buscador">
           <h2>Buscador</h2>
-          <select value={searchType} onChange={SearchTypeChange} className='select-margin'>
+          <select
+            value={searchType}
+            onChange={SearchTypeChange}
+            className="select-margin"
+          >
             <option value="envio">Envio</option>
             <option value="paquete">Paquete</option>
           </select>
 
           {searchType === 'envio' ? (
             <>
-              <select className='select-margin'
+              <select
+                className="select-margin"
                 name="criterioBusqueda"
                 onChange={Select2Change}
                 value={selectedOption2}
@@ -800,7 +847,8 @@ const GestionEnv = () => {
                 <option value="costo_total">Costo Total</option>
               </select>
               {selectedOption2 === 'id_estado_envio' ? (
-                <select className='select-margin'
+                <select
+                  className="select-margin"
                   onChange={SearchEnvio}
                   value={searchEnvio[selectedOption2] || ''}
                   disabled={!selectedOption2}
@@ -837,7 +885,8 @@ const GestionEnv = () => {
             </>
           ) : (
             <>
-              <select className='select-margin'
+              <select
+                className="select-margin"
                 name="criterioBusqueda"
                 onChange={SelectChange}
                 value={selectedOption}
@@ -866,117 +915,124 @@ const GestionEnv = () => {
           <button type="submit">Buscar</button>
         </form>
         <div>
-  {searchType === "envio" ? (
-    <>
-    {searchListE.length > 0 ? (
-      <>
-        <h2>Resultados de la Búsqueda de Envíos:</h2>
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>Estado</th>
-              <th>ID Repartidor</th>
-              <th>ID Cliente</th>
-              <th>Fecha Pedido Inicio</th>
-              <th>Fecha Pedido Fin</th>
-              <th>Dirección Origen</th>
-              <th>Dirección Destino</th>
-              <th>Costo Total</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {searchListE.map((asignacion, index) => (
-              <tr key={index}>
-                <td>{obtenerNombreEstadoPorId(asignacion.id_estado_envio)}</td>
-                <td>{asignacion.id_repartidor}</td>
-                <td>{asignacion.id_cliente}</td>
-                <td>
-                  {asignacion.fecha_pedido_inicio
-                    ? convertir_fecha(asignacion.fecha_pedido_inicio)
-                    : "null"}
-                </td>
-                <td>
-                  {asignacion.fecha_pedido_fin
-                    ? convertir_fecha(asignacion.fecha_pedido_fin)
-                    : "null"}
-                </td>
-                <td>{direcciones[asignacion.direccion_origen] || "Cargando..."}</td>
-                <td>{direcciones[asignacion.direccion_destino] || "Cargando..."}</td>
-                <td>{asignacion.costo_total}</td>
-                <td>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          "¿Estás seguro de que deseas eliminar este envío?"
-                        )
-                      ) {
-                        DeleteEnvio(asignacion.id_envio);
-                      }
-                    }}
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </>
-    ) : (
-      <p>No se encontraron Envíos.</p>
-    )}
-  </>
-  ) : (
-    <>
-      <h2>Resultados de la Búsqueda de Paquetes:</h2>
-      {searchListP.length > 0 ? (
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>ID Envío</th>
-              <th>Peso</th>
-              <th>Largo</th>
-              <th>Ancho</th>
-              <th>Alto</th>
-              <th>Descripción</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {searchListP.map((asignacion) => (
-              <tr key={asignacion.id_paquete}>
-                <td>{asignacion.id_envio}</td>
-                <td>{asignacion.peso}</td>
-                <td>{asignacion.largo}</td>
-                <td>{asignacion.ancho}</td>
-                <td>{asignacion.alto}</td>
-                <td>{asignacion.descripcion}</td>
-                <td>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => {
-                      if (window.confirm("¿Estás seguro de que deseas eliminar este paquete?")) {
-                        DeletePaquete(asignacion.id_paquete);
-                      }
-                    }}
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      ) : (
-        <p>No se encontraron Paquetes.</p>
-      )}
-    </>
-  )}
-</div>
-
+          {searchType === 'envio' ? (
+            <>
+              {searchListE.length > 0 ? (
+                <>
+                  <h2>Resultados de la Búsqueda de Envíos:</h2>
+                  <Table striped bordered hover responsive>
+                    <thead>
+                      <tr>
+                        <th>ID Envio</th>
+                        <th>Estado</th>
+                        <th>ID Repartidor</th>
+                        <th>ID Cliente</th>
+                        <th>Fecha Pedido Inicio</th>
+                        <th>Fecha Pedido Fin</th>
+                        <th>Dirección Origen</th>
+                        <th>Dirección Destino</th>
+                        <th>Costo Total</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {searchListE.map((asignacion, index) => (
+                        <tr key={index}>
+                          <td>{asignacion.id_envio}</td>
+                          <td>
+                            {obtenerNombreEstadoPorId(
+                              asignacion.id_estado_envio,
+                            )}
+                          </td>
+                          <td>{asignacion.id_repartidor}</td>
+                          <td>{asignacion.id_cliente}</td>
+                          <td>
+                            {asignacion.fecha_pedido_inicio
+                              ? convertir_fecha(asignacion.fecha_pedido_inicio)
+                              : 'null'}
+                          </td>
+                          <td>
+                            {asignacion.fecha_pedido_fin
+                              ? convertir_fecha(asignacion.fecha_pedido_fin)
+                              : 'null'}
+                          </td>
+                          <td>
+                            {direcciones[asignacion.direccion_origen] ||
+                              'Cargando...'}
+                          </td>
+                          <td>
+                            {direcciones[asignacion.direccion_destino] ||
+                              'Cargando...'}
+                          </td>
+                          <td>{asignacion.costo_total}</td>
+                          <td>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => {
+                                {
+                                  DeleteEnvio(asignacion.id_envio);
+                                }
+                              }}
+                            >
+                              Eliminar
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </>
+              ) : (
+                <p>No se encontraron Envíos.</p>
+              )}
+            </>
+          ) : (
+            <>
+              <h2>Resultados de la Búsqueda de Paquetes:</h2>
+              {searchListP.length > 0 ? (
+                <Table striped bordered hover responsive>
+                  <thead>
+                    <tr>
+                      <th>ID Envío</th>
+                      <th>Peso</th>
+                      <th>Largo</th>
+                      <th>Ancho</th>
+                      <th>Alto</th>
+                      <th>Descripción</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {searchListP.map((asignacion) => (
+                      <tr key={asignacion.id_paquete}>
+                        <td>{asignacion.id_envio}</td>
+                        <td>{asignacion.peso}</td>
+                        <td>{asignacion.largo}</td>
+                        <td>{asignacion.ancho}</td>
+                        <td>{asignacion.alto}</td>
+                        <td>{asignacion.descripcion}</td>
+                        <td>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => {
+                              {
+                                DeletePaquete(asignacion.id_paquete);
+                              }
+                            }}
+                          >
+                            Eliminar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              ) : (
+                <p>No se encontraron Paquetes.</p>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -45,13 +45,14 @@ const NavBar = () => {
         <div className="dropdown-content">
           <Link to="/profilepage">Ver perfil</Link>
           <Link to="/VisualizarPaquete">Mis Paquetes</Link>
+          <Link to="/VehiculosRepartidor">Mis Vehiculos</Link>
         </div>
       );
     } else if (tipoUsuario === 'cliente') {
       return (
         <div className="dropdown-content">
           <Link to="/profilepage">Ver perfil</Link>
-          <Link to="/EstadoPaquete">Historial envíos</Link>
+          <Link to="/VisualizarPaqueteCliente">Mis paquetes</Link>
         </div>
       );
     } else {

@@ -9,6 +9,8 @@ const ProfilePage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [apellido, setApellido] = useState('');
+  const [tipo, setTipo] = useState('');
+  const [id, setId] = useState('');
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newName, setNewName] = useState('');
@@ -21,6 +23,10 @@ const ProfilePage = () => {
     const storedName = sessionStorage.getItem('nombreUsuario');
     const storedEmail = sessionStorage.getItem('emailUsuario');
     const storedApellido = sessionStorage.getItem('apellidoUsuario');
+    const storedId = sessionStorage.getItem('userId');
+    const storedTipo = sessionStorage.getItem('tipoUsuario');
+    if (storedId) setId(storedId);
+    if (storedTipo) setTipo(storedTipo);
     if (storedName) setName(storedName);
     if (storedEmail) setEmail(storedEmail);
     if (storedApellido) setApellido(storedApellido);
@@ -319,6 +325,16 @@ const ProfilePage = () => {
                 </button>
               </form>
             )}
+          </div>
+          <div className="profile-detail">
+            <p>
+              <strong>ID: </strong> {id}
+            </p>
+          </div>
+          <div className="profile-detail">
+            <p>
+              <strong>Tipo de Usuario: </strong> {tipo}
+            </p>
           </div>
         </div>
       </div>

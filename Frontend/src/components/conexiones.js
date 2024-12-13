@@ -75,7 +75,7 @@ const Conexiones = () => {
     }
     const data = await response.json();
     //console.log(successMessage, data);
-    if (nombre !== 'Direccion') {
+    if (nombre !== 'Direccion' && nombre !== 'Historial_envio') {
       alert(`${nombre} ${successMessage}`);
     }
     return { success: true, data };
@@ -213,6 +213,61 @@ const Conexiones = () => {
     }
   };
 
+  const fetchSearch3 = async (nombre, filters, arreglo) => {
+    const api = diccionario(2, nombre);
+    const fechas = diccionario(0, nombre);
+    const numeros = diccionario(1, nombre);
+    console.log('filters', filters);
+  
+    try {
+      // Filtrar los objetos según los filtros proporcionados
+      const filtrados = arreglo.filter((objeto) => {
+        return Object.keys(filters).every((key) => {
+          if (objeto[key] === null) {
+            return objeto[key];
+          }
+          if (fechas.length > 0) {
+            // Obtener parámetros que sean fechas
+            for (const elemento of fechas) {
+              if (key === `${elemento}`) {
+                const [datePart, timePart] = objeto[key].split('T');
+                const [yearO, monthO, dayO] = datePart.split('-').map(Number);
+                const [year, month, day] = filters[key].split('-').map(Number);
+                return yearO === year && monthO === month && dayO === day;
+              }
+            }
+          }
+          if (numeros.length > 0) {
+            for (const elemento of numeros) {
+              if (key === `${elemento}`) {
+                return Number(objeto[key]) === Number(filters[key]);
+              }
+            }
+          }
+          // Comparación estándar para otros valores
+          return objeto[key].toString().startsWith(filters[key].toString());
+        });
+      });
+  
+      if (filtrados.length === 0) {
+        return [false];
+      }
+  
+      // Si el nombre es "asignacion", devolver solo el primer id_vehiculo encontrado
+      if (nombre === 'asignacion') {
+        const idVehiculo = filtrados[0]?.id_vehiculo ?? null;
+        return idVehiculo ? [true, [{ id_vehiculo: idVehiculo }]] : [false];
+      }
+  
+      // Para otros casos, devolver los datos filtrados completos
+      return [true, filtrados];
+    } catch (error) {
+      alert(`Error de conexión con el servidor.(${nombre})`);
+      return [false];
+    }
+  };
+  
+
   const SubmitCreate = async (nombre, create) => {
     let fechas;
     console.log('Create', create);
@@ -254,7 +309,7 @@ const Conexiones = () => {
       return [result.success, result.data]; // Devuelve el éxito de la operación
     } catch (error) {
       console.error('Error:', error);
-      if (nombre !== 'Direccion') {
+      if (nombre !== 'Direccion' && nombre !== 'Historial_envio') {
         alert(`Hubo un error al crear ${nombre}: ` + error);
       }
       return [false]; // Indica que hubo un error
@@ -294,7 +349,9 @@ const Conexiones = () => {
 
       const data = await response.json();
       //console.log(`Estado del ${nombre} actualizado:`, data);
-      alert(`El ${nombre} se ah actualizado`);
+      if (nombre !== 'Vehiculo') {
+        alert(`El ${nombre} se ah actualizado`);
+      }
       return true; // Indica que la actualización fue exitosa
     } catch (error) {
       alert(`Error al actualizar el ${nombre}:`, error);
@@ -360,6 +417,7 @@ const Conexiones = () => {
     diccionario,
     fetchSearch,
     fetchSearch2,
+    fetchSearch3,
     SubmitCreate,
     updateObject,
     Delete,
