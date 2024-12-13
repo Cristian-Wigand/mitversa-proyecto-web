@@ -1,12 +1,13 @@
 .reports-page {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   background-color: #efe4b0; /* Fondo claro */
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   text-align: center;
-  padding-top: 150px; /* Espacio para el NavBar */
+  padding-top: 80px; /* Espacio para el NavBar */
+  margin-top: 60px;
 }
 
 h1,
@@ -21,6 +22,7 @@ h2 {
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 30px;
+  margin-top: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -33,4 +35,38 @@ h2 {
 .charts-content p {
   margin: 10px 0;
   font-size: 1.1rem;
+}
+
+.table-box {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #efe4b0;
+  color: white;
+}
+
+.chart {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.charts-box {
+  margin-top: 20px;
 }

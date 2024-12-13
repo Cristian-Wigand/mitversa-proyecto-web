@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
-import '../Css/ProfilePage.css';
+import React, { useState, useEffect } from 'react';
+import '../App.css';
 import perfildefault from '../Assets/default-profile.jpg';
 import backgroundperfil from '../Assets/backgroundperfil.png';
 
 const ProfilePage = () => {
   const [activeForm, setActiveForm] = useState(null);
 
-  const [name, setName] = useState('Nombre del Cliente');
-  const [email, setEmail] = useState('cliente@correo.com');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [tipo, setTipo] = useState('');
+  const [id, setId] = useState('');
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newName, setNewName] = useState('');
@@ -15,22 +18,158 @@ const ProfilePage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-  const handleUpdateName = (e) => {
+  // Carga los datos del usuario del sessionStorage al montar el componente
+  useEffect(() => {
+    const storedName = sessionStorage.getItem('nombreUsuario');
+    const storedEmail = sessionStorage.getItem('emailUsuario');
+    const storedApellido = sessionStorage.getItem('apellidoUsuario');
+    const storedId = sessionStorage.getItem('userId');
+    const storedTipo = sessionStorage.getItem('tipoUsuario');
+    if (storedId) setId(storedId);
+    if (storedTipo) setTipo(storedTipo);
+    if (storedName) setName(storedName);
+    if (storedEmail) setEmail(storedEmail);
+    if (storedApellido) setApellido(storedApellido);
+  }, []);
+
+  const handleUpdateName = async (e) => {
     e.preventDefault();
     setActiveForm(null); // Cierra el formulario
-    // Lógica para actualizar el nombre
+
+    const userId = sessionStorage.getItem('userId');
+    const tipo = sessionStorage.getItem('tipoUsuario');
+    const UsuarioCreado = sessionStorage.getItem('FechaCreacion');
+
+    const currentUserData = {
+      nombre: newName || name,
+      apellido: apellido,
+      email: email,
+      tipo_usuario: tipo,
+      usuario_creado_el: UsuarioCreado || '2024-10-21T07:29:56Z',
+      password: currentPassword || '',
+    };
+
+    try {
+      const response = await fetch(
+        `https://mitversa.christianferrer.me/api/usuarios/${userId}/`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(currentUserData),
+        },
+      );
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setName(updatedUser.nombre);
+        alert('Nombre actualizado con éxito.');
+        sessionStorage.setItem('nombreUsuario', updatedUser.nombre);
+      } else {
+        const errorData = await response.json();
+        console.error('Error al actualizar el nombre:', errorData);
+        alert(
+          `Error al actualizar el nombre: ${errorData.detail || 'Revisa los datos enviados'}`,
+        );
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
-  const handleUpdateEmail = (e) => {
+  const handleUpdateEmail = async (e) => {
     e.preventDefault();
     setActiveForm(null); // Cierra el formulario
-    // Lógica para actualizar el correo
+
+    const userId = sessionStorage.getItem('userId');
+    const tipo = sessionStorage.getItem('tipoUsuario');
+    const UsuarioCreado = sessionStorage.getItem('FechaCreacion');
+
+    const currentUserData = {
+      nombre: name,
+      apellido: apellido,
+      email: newEmail || email,
+      tipo_usuario: tipo,
+      usuario_creado_el: UsuarioCreado || '2024-10-21T07:29:56Z',
+      password: currentPassword || '',
+    };
+
+    try {
+      const response = await fetch(
+        `https://mitversa.christianferrer.me/api/usuarios/${userId}/`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(currentUserData),
+        },
+      );
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setEmail(updatedUser.email);
+        alert('Correo actualizado con éxito.');
+        sessionStorage.setItem('emailUsuario', updatedUser.email);
+      } else {
+        const errorData = await response.json();
+        console.error('Error al actualizar el correo:', errorData);
+        alert(
+          `Error al actualizar el correo: ${errorData.detail || 'Revisa los datos enviados'}`,
+        );
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
-  const handleUpdatePassword = (e) => {
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
     setActiveForm(null); // Cierra el formulario
-    // Lógica para actualizar la contraseña
+
+    if (newPassword !== confirmNewPassword) {
+      alert('Las contraseñas no coinciden.');
+      return;
+    }
+
+    const userId = sessionStorage.getItem('userId');
+    const tipo = sessionStorage.getItem('tipoUsuario');
+    const UsuarioCreado = sessionStorage.getItem('FechaCreacion');
+
+    const currentUserData = {
+      nombre: name,
+      apellido: apellido,
+      email: email,
+      tipo_usuario: tipo,
+      usuario_creado_el: UsuarioCreado || '2024-10-21T07:29:56Z',
+      password: newPassword || currentPassword,
+    };
+
+    try {
+      const response = await fetch(
+        `https://mitversa.christianferrer.me/api/usuarios/${userId}/`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(currentUserData),
+        },
+      );
+
+      if (response.ok) {
+        alert('Contraseña actualizada con éxito.');
+      } else {
+        const errorData = await response.json();
+        console.error('Error al actualizar la contraseña:', errorData);
+        alert(
+          `Error al actualizar la contraseña: ${errorData.detail || 'Revisa los datos enviados'}`,
+        );
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const toggleForm = (form) => {
@@ -39,7 +178,6 @@ const ProfilePage = () => {
 
   const discardChanges = () => {
     setActiveForm(null); // Cierra el formulario sin guardar cambios
-    // Resetea los campos si es necesario
     setCurrentPassword('');
     setNewName('');
     setNewEmail('');
@@ -53,11 +191,14 @@ const ProfilePage = () => {
         <div className="perfil-background-container">
           <img src={backgroundperfil} alt="" />
         </div>
+
         {/* Primer Rectángulo: Nombre */}
         <div className="profile-box">
           <div className="profile-pic-name">
             <img src={perfildefault} alt="Profile" className="profile-pic" />
-            <h2 className="profile-name">{name}</h2>
+            <h2 className="profile-name">
+              {name} {apellido}
+            </h2>
           </div>
           <div className="update-option">
             <button
@@ -184,6 +325,16 @@ const ProfilePage = () => {
                 </button>
               </form>
             )}
+          </div>
+          <div className="profile-detail">
+            <p>
+              <strong>ID: </strong> {id}
+            </p>
+          </div>
+          <div className="profile-detail">
+            <p>
+              <strong>Tipo de Usuario: </strong> {tipo}
+            </p>
           </div>
         </div>
       </div>

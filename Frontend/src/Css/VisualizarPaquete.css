@@ -1,0 +1,81 @@
+.package-card {
+  background-color: #d3d3d3; /* Color de fondo de las tarjetas */
+  border: 1px solid #ffffff; /* Borde Container*/
+  border-radius: 2px;
+  padding: 1rem;
+  margin: 10rem auto; /* Margen automático para centrar horizontalmente */
+  max-width: 800px;
+  width: 100%; /* Asegura que la tarjeta ocupe el ancho máximo permitido */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Agrega sombra para mejorar la apariencia */
+  /* Centrar la tarjeta */
+  display: flex;
+  flex-direction: column; /* Asegúrate de que el contenido se apile verticalmente */
+  align-items: center; /* Centra horizontalmente el contenido dentro de la tarjeta */
+}
+
+.package-header {
+  /*Cuadro TITULO  */
+  font-weight: bold;
+  padding: 0.5rem;
+  background-color: #eee; /* Color del encabezado */
+  border-bottom: 1px solid #ccc;
+  width: 100%; /* Asegura que el encabezado ocupe todo el ancho */
+  text-align: center; /* Centrar el texto del encabezado */
+}
+
+.package-content {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  width: 70%; /* Asegura que el contenido ocupe todo el ancho */
+}
+
+.package-id {
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.package-description {
+  flex: 1;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.status-button {
+  background-color: #b89c68; /* Color del botón */
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 0.7rem 0.9rem;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 1rem; /* Agrega un margen superior para espaciarlo del contenido */
+}
+
+.package-details {
+  padding: 0.1rem 4rem;
+}
+
+.status-button:hover {
+  background-color: #a88b5f;
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+  .package-card {
+    padding: 0.5rem; /* Reduce el padding en pantallas pequeñas */
+  }
+
+  .package-header {
+    font-size: 1.2rem; /* Tamaño de fuente más pequeño en pantallas pequeñas */
+  }
+
+  .package-description {
+    font-size: 0.8rem; /* Tamaño de fuente más pequeño en pantallas pequeñas */
+  }
+
+  .status-button {
+    padding: 0.4rem 0.8rem; /* Reduce el padding del botón en pantallas pequeñas */
+    font-size: 0.9rem; /* Tamaño de fuente más pequeño en pantallas pequeñas */
+  }
+}
